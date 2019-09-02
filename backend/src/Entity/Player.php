@@ -122,4 +122,9 @@ class Player
 
         return $this;
     }
+
+    public function getQpoints() {
+        return 10 ** ($this->eloRating/400);
+    }
+
 }

@@ -19,45 +19,16 @@ class History
     /**
      * @ORM\Column(type="integer")
      */
-    private $playerOneId;
-
-    /**
-     * @ORM\Column(type="integer")
-     */
-    private $playerTwoId;
-
-    /**
-     * @ORM\Column(type="integer")
-     */
     private $winnerId;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $loserId;
 
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getPlayerOneId(): ?int
-    {
-        return $this->playerOneId;
-    }
-
-    public function setPlayerOneId(int $playerOneId): self
-    {
-        $this->playerOneId = $playerOneId;
-
-        return $this;
-    }
-
-    public function getPlayerTwoId(): ?int
-    {
-        return $this->playerTwoId;
-    }
-
-    public function setPlayerTwoId(int $playerTwoId): self
-    {
-        $this->playerTwoId = $playerTwoId;
-
-        return $this;
     }
 
     public function getWinnerId(): ?int
@@ -69,6 +40,18 @@ class History
     {
         $this->winnerId = $winnerId;
 
+        return $this;
+    }
+
+    public function getLoserId(): ?int
+    {
+        return $this->loserId;
+    }
+
+    public function setLoserId(int $loserId): self
+    {
+        $this->loserId = $loserId;
+        
         return $this;
     }
 }
