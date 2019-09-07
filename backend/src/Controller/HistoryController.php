@@ -16,9 +16,7 @@ class HistoryController extends AbstractController {
     public function historyAdd(Request $req, HistoryModel $hm) {
         $body = $req->getContent();
         $data = json_decode($body, true);
-        $winnerId = $data['winnerId'];
-        $loserId = $data['loserId'];
-        return new JsonResponse($hm->addHistory($winnerId, $loserId));
+        return new JsonResponse($hm->addHistory($data['winnerId'], $data['loserId'], $data['proofUrl']));
     }
 
     /**

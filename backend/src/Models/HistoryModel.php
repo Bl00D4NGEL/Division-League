@@ -19,9 +19,9 @@ class HistoryModel  {
         $this->serializer = $serializer;
     }
 
-    public function addHistory(int $winnerId, int $loserId): array {
+    public function addHistory(int $winnerId, int $loserId, string $proofUrl): array {
     if ($winnerId !== '' && $loserId !== '') {
-        $historyObject = $this->insertHistory($winnerId, $loserId);
+        $historyObject = $this->insertHistory($winnerId, $loserId, $proofUrl);
         $changes = $this->updateEloForPlayers($winnerId, $loserId);
         
         $this->em->flush();
@@ -39,10 +39,11 @@ class HistoryModel  {
     }
 }
 
-private function insertHistory(int $winnerId, int $loserId): History {
+private function insertHistory(int $winnerId, int $loserId, string $proofUrl): History {
     $historyEntry = new History();
     $historyEntry->setWinnerId($winnerId);
     $historyEntry->setLoserId($loserId);
+    $historyEntry->setProofUrl($proofUrl);
     $this->em->persist($historyEntry);
     return $historyEntry;
 }
@@ -79,6 +80,7 @@ public function getHistory(): array {
             $responseHistories[] = [
                 "winner" => json_decode($playerMap[$historyObject->getWinnerId()]),
                 "loser" => json_decode($playerMap[$historyObject->getLoserId()]),
+                "proofUrl" => $historyObject->getProofUrl(),
                 "id" => $historyObject->getId()
             ];
         }

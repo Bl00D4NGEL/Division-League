@@ -47,12 +47,14 @@ export default class HistoryTable extends React.Component {
 
     generateHistoryTable() {
         const historyTableRows = this.state.historyEntries.map((entry) => {
-            console.log(entry);
             return (
                 <tr key={entry.id}>
                     <td>{entry.id}</td>
                     <td>{entry.winner.name}</td>
                     <td>{entry.loser.name}</td>
+                    <td>
+                        <a href={entry.proofUrl} target="_blank">Link</a>
+                    </td>
                 </tr>
             )
         });
@@ -63,6 +65,7 @@ export default class HistoryTable extends React.Component {
                         <td>ID</td>
                         <td>Winner</td>
                         <td>Loser</td>
+                        <td>Proof</td>
                     </tr>
                 </thead>
                 <tbody>

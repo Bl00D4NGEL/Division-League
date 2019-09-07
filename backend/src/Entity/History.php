@@ -26,6 +26,11 @@ class History
      */
     private $loserId;
 
+    /**
+     * @ORM\Column(type="string")
+     */
+    private $proofUrl;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -52,6 +57,16 @@ class History
     {
         $this->loserId = $loserId;
         
+        return $this;
+    }
+
+    public function getProofUrl(): ?string {
+        return $this->proofUrl;
+    }
+
+    public function setProofUrl(string $proofUrl): self {
+        $this->proofUrl = $proofUrl;
+
         return $this;
     }
 }

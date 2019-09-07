@@ -8,11 +8,13 @@ export default class PlayerMatchAdd extends React.Component {
         this.state = {
             players: props.players,
             winner: props.players[0],
-            loser: props.players[1]
+            loser: props.players[1],
+            proofUrl: undefined
         };
 
         this.loadData = props.reloadData;
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleProofUrlChange = this.handleProofUrlChange.bind(this);
         this.handleSelectChange = this.handleSelectChange.bind(this);
     }
 
@@ -33,6 +35,7 @@ export default class PlayerMatchAdd extends React.Component {
         const data = {
             winnerId: this.state.winner.id,
             loserId: this.state.loser.id,
+            proofUrl: this.state.proofUrl
         };
         const url = "http://localhost:8000/history/add";
         this.sendRequestWithDataToUrl(data, url);
@@ -56,6 +59,10 @@ export default class PlayerMatchAdd extends React.Component {
             });
             self.loadData();
         });
+    }
+
+    handleProofUrlChange(e) {
+        this.setState({proofUrl: e.target.value});
     }
 
     handleSelectChange(e) {
@@ -86,6 +93,9 @@ export default class PlayerMatchAdd extends React.Component {
                     players={this.state.players}
                     onChange={this.handleSelectChange}
                 />
+                <label>Proof:
+                    <input type="text" required pattern="https?://.+\..+" onChange={this.handleProofUrlChange}></input>
+                </label>
                 <input type="submit" value="Submit" />
                 {
                     this.state.changes !== undefined
