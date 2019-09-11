@@ -33,7 +33,7 @@ class HistoryController extends AbstractController
     public function historyAdd(Request $request)
     {
         $req = $this->serializer->deserialize($request->getContent(), AddHistoryRequest::class, 'json');
-        return new JsonResponse($this->historyModel->addHistory($req));
+        return $this->historyModel->addHistory($req);
     }
 
     /**
@@ -42,6 +42,6 @@ class HistoryController extends AbstractController
      */
     public function historyGetAll()
     {
-        return new JsonResponse($this->historyModel->getHistoryAll());
+        return $this->historyModel->getHistoryAll();
     }
 }

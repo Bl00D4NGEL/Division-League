@@ -22,11 +22,9 @@ export default class PlayerMatchAdd extends React.Component {
         e.preventDefault();
         if (isLoserAndWinnerNotSet(this.state)) {
             alert("Please select a winner and a loser!");
-        }
-        else if (areOpponentsEqual(this.state)) {
+        } else if (areOpponentsEqual(this.state)) {
             alert("Invalid matchup! Player cannot compete against themself: " + this.state.winner.name);
-        }
-        else {
+        } else {
             this.addHistory();
         }
     }
@@ -43,21 +41,26 @@ export default class PlayerMatchAdd extends React.Component {
 
     sendRequestWithDataToUrl(data, url) {
         const self = this;
-        const req = new Request(url, { method: "POST", body: JSON.stringify(data) });
+        const req = new Request(url, {method: "POST", body: JSON.stringify(data)});
         fetch(req).then(function (data) {
             return data.json();
-        }).then(function (data) {
-            const winner = self.state.winner;
-            winner.elo += data.changes.winner;
+        }).then(function (responseData) {
+            const data = responseData.data;
+            if (responseData.status === 'success') {
+                const winner = self.state.winner;
+                winner.elo += data.changes.winner;
 
-            const loser = self.state.loser;
-            loser.elo += data.changes.loser;
-            self.setState({
-                winner: winner,
-                loser: loser,
-                changes: data.changes,
-            });
-            self.loadData();
+                const loser = self.state.loser;
+                loser.elo += data.changes.loser;
+                self.setState({
+                    winner: winner,
+                    loser: loser,
+                    changes: data.changes,
+                });
+                self.loadData();
+            } else {
+                // TODO: Set error state
+            }
         });
     }
 
@@ -94,9 +97,9 @@ export default class PlayerMatchAdd extends React.Component {
                     onChange={this.handleSelectChange}
                 />
                 <label>Proof:
-                    <input type="text" required pattern="https?://.+\..+" onChange={this.handleProofUrlChange} />
+                    <input type="text" required pattern="https?://.+\..+" onChange={this.handleProofUrlChange}/>
                 </label>
-                <input type="submit" value="Submit" />
+                <input type="submit" value="Submit"/>
                 {
                     this.state.changes !== undefined
                         ? <EloChangeDisplay {...this.state} />
@@ -110,7 +113,7 @@ export default class PlayerMatchAdd extends React.Component {
 class EloChangeDisplay extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { ...props };
+        this.state = {...props};
     }
 
     render() {
@@ -121,9 +124,18 @@ class EloChangeDisplay extends React.Component {
             <div>
                 <span>Results:</span>
                 <div>
-                    <div>{this.state.winner.name} wins against {this.state.loser.name}</div><br />
-                    <div>{this.state.winner.name} moves from {this.state.winner.elo - this.state.changes.winner} to {this.state.winner.elo} elo (+{this.state.changes.winner})</div><br />
-                    <div>{this.state.loser.name} moves from {this.state.loser.elo - this.state.changes.loser} to {this.state.loser.elo} elo ({this.state.changes.loser})</div><br />
+                    <div>{this.state.winner.name} wins against {this.state.loser.name}</div>
+                    <br/>
+                    <div>{this.state.winner.name} moves
+                        from {this.state.winner.elo - this.state.changes.winner} to {this.state.winner.elo} elo
+                        (+{this.state.changes.winner})
+                    </div>
+                    <br/>
+                    <div>{this.state.loser.name} moves
+                        from {this.state.loser.elo - this.state.changes.loser} to {this.state.loser.elo} elo
+                        ({this.state.changes.loser})
+                    </div>
+                    <br/>
                 </div>
             </div>
         )
@@ -133,7 +145,6 @@ class EloChangeDisplay extends React.Component {
         return !(isLoserAndWinnerNotSet(this.state) || areOpponentsEqual(this.state) || this.state.changes === undefined);
     }
 }
-
 
 
 function isLoserAndWinnerNotSet(state) {

@@ -5,7 +5,8 @@ namespace App\Models;
 use App\Repository\HistoryRepository;
 use App\Repository\PlayerRepository;
 use App\Resource\AddHistoryRequest;
-use App\Resource\Response\ErrorResponse;
+use App\Resource\JsonResponse\ErrorResponse;
+use App\Resource\JsonResponse\SuccessResponse;
 use Doctrine\ORM\EntityManagerInterface;
 use JMS\Serializer\SerializerInterface;
 
@@ -13,6 +14,7 @@ use App\Entity\Player;
 use App\Entity\History;
 
 use App\Helper\EloChangeCalculator;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class HistoryModel
 {
@@ -28,22 +30,24 @@ class HistoryModel
         $this->serializer = $serializer;
     }
 
-    public function addHistory(AddHistoryRequest $request): array
+    /**
+     * @param AddHistoryRequest $request
+     * @return JsonResponse
+     */
+    public function addHistory(AddHistoryRequest $request): JsonResponse
     {
         if ($request->isValid()) {
             $historyObject = $this->insertHistory($request);
             $changes = $this->updateEloForPlayers($request);
 
             $this->entityManager->flush();
-            return array(
-                "success" => true,
+
+            return new SuccessResponse([
                 "historyId" => $historyObject->getId(),
                 "changes" => $changes,
-            );
+            ]);
         } else {
-            $response = new ErrorResponse();
-            $response->message = 'Sent data is not sufficient';
-            return $response->asArray();
+            return new ErrorResponse('Sent data is not sufficient');
         }
     }
 
@@ -73,7 +77,7 @@ class HistoryModel
         return $eloCalc->updatePlayers();
     }
 
-    public function getHistoryAll(): array
+    public function getHistoryAll(): JsonResponse
     {
         /** @var PlayerRepository $playerRepository */
         $playerRepository = $this->entityManager->getRepository(Player::class);
@@ -96,7 +100,7 @@ class HistoryModel
                 "id" => $historyObject->getId()
             ];
         }
-        return $responseHistories;
+        return new SuccessResponse($responseHistories);
     }
 
 
