@@ -1,4 +1,5 @@
 import React from 'react';
+import Config from './Config';
 
 export default class HistoryTable extends React.Component {
     constructor(props) {
@@ -11,7 +12,7 @@ export default class HistoryTable extends React.Component {
 
 
     load() {
-        fetch('http://localhost:8000/history/get')
+        fetch(Config.historyEndpoint('get'))
             .then(res => res.json())
             .then(
                 (result) => {
