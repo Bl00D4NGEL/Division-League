@@ -4,22 +4,25 @@ namespace App\Helper;
 
 use App\Entity\Player;
 
-class EloChangeCalculator {
+class EloChangeCalculator
+{
     /** @var Player */
     private $winner;
 
     /** @var Player */
     private $loser;
 
-    private function getKFactor(): float {
-        $kFactor =  ($this->winner->getEloRating() + $this->loser->getEloRating()) / 100;
+    private function getKFactor(): float
+    {
+        $kFactor = ($this->winner->getEloRating() + $this->loser->getEloRating()) / 100;
         if ($kFactor < 16) {
             $kFactor = 16;
         }
         return $kFactor;
     }
 
-    private function calculateEloChanges(): array {
+    private function calculateEloChanges(): array
+    {
         $winChanceWinner = $this->getWinChanceForPlayers($this->winner, $this->loser);
         $changes = array(
             "winner" => $this->getEloChangeForWin($winChanceWinner),
@@ -28,27 +31,33 @@ class EloChangeCalculator {
         return $changes;
     }
 
-    private function getWinChanceForPlayers(Player $p1, Player $p2): float {
+    private function getWinChanceForPlayers(Player $p1, Player $p2): float
+    {
         return $p1->getQpoints() / ($p1->getQpoints() + $p2->getQpoints());
     }
 
-    private function getEloChangeForWin(float $winFactor): int {
+    private function getEloChangeForWin(float $winFactor): int
+    {
         return ceil($this->getKFactor() * (1 - $winFactor));
     }
 
-    private function getEloChangeForLose(float $winFactor): int {
+    private function getEloChangeForLose(float $winFactor): int
+    {
         return ceil($this->getKFactor() * (0 - $winFactor));
     }
 
-    public function setWinner(Player $winner) {
+    public function setWinner(Player $winner)
+    {
         $this->winner = $winner;
     }
-    
-    public function setLoser(Player $loser) {
+
+    public function setLoser(Player $loser)
+    {
         $this->loser = $loser;
     }
 
-    public function updatePlayers(): array {
+    public function updatePlayers(): array
+    {
         $changes = $this->calculateEloChanges();
         $this->winner->setWins($this->winner->getWins() + 1);
         $this->winner->setEloRating($this->winner->getEloRating() + $changes['winner']);
@@ -58,4 +67,4 @@ class EloChangeCalculator {
 
         return $changes;
     }
-  }
+}

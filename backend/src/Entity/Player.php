@@ -127,4 +127,14 @@ class Player
         return 10 ** ($this->eloRating/400);
     }
 
+    public function asArray() {
+        return [
+            "wins" => $this->getWins(),
+            "loses" => $this->getLoses(),
+            "elo" => $this->getEloRating(),
+            "name" => $this->getName(),
+            "id" => $this->getId(),
+            "playerId" => $this->getPlayerId()
+        ];
+    }
 }
