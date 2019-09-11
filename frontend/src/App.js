@@ -11,7 +11,7 @@ class App extends React.Component {
       error: null,
       isLoaded: false,
       players: []
-    }
+    };
     this.loadData = this.loadData.bind(this);
   }
 
@@ -20,7 +20,7 @@ class App extends React.Component {
   }
 
   loadData() {
-    fetch('http://localhost:8000')
+    fetch('http://localhost:8000/player/get/all')
       .then(res => res.json())
       .then(
         (result) => {

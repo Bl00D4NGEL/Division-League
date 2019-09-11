@@ -33,8 +33,8 @@ export default class PlayerMatchAdd extends React.Component {
 
     addHistory() {
         const data = {
-            winnerId: this.state.winner.id,
-            loserId: this.state.loser.id,
+            winner: this.state.winner.id,
+            loser: this.state.loser.id,
             proofUrl: this.state.proofUrl
         };
         const url = "http://localhost:8000/history/add";
@@ -94,7 +94,7 @@ export default class PlayerMatchAdd extends React.Component {
                     onChange={this.handleSelectChange}
                 />
                 <label>Proof:
-                    <input type="text" required pattern="https?://.+\..+" onChange={this.handleProofUrlChange}></input>
+                    <input type="text" required pattern="https?://.+\..+" onChange={this.handleProofUrlChange} />
                 </label>
                 <input type="submit" value="Submit" />
                 {

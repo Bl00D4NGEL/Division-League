@@ -11,7 +11,7 @@ export default class HistoryTable extends React.Component {
 
 
     load() {
-        fetch('http://localhost:8000/history/get')
+        fetch('http://localhost:8000/history/get/all')
             .then(res => res.json())
             .then(
                 (result) => {
@@ -58,7 +58,7 @@ export default class HistoryTable extends React.Component {
                 </tr>
             )
         });
-        const historyTable = (
+        return (
             <table>
                 <thead>
                     <tr>
@@ -73,6 +73,5 @@ export default class HistoryTable extends React.Component {
                 </tbody>
             </table>
         );
-        return historyTable;
     }
 }
