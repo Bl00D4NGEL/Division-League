@@ -12,6 +12,12 @@ class EloChangeCalculator
     /** @var Player */
     private $loser;
 
+    public function __construct(Player $winner, Player $loser)
+    {
+        $this->winner = $winner;
+        $this->loser = $loser;
+    }
+
     private function getKFactor(): float
     {
         $kFactor = ($this->winner->getEloRating() + $this->loser->getEloRating()) / 100;
@@ -46,16 +52,9 @@ class EloChangeCalculator
         return ceil($this->getKFactor() * (0 - $winFactor));
     }
 
-    public function setWinner(Player $winner)
-    {
-        $this->winner = $winner;
-    }
-
-    public function setLoser(Player $loser)
-    {
-        $this->loser = $loser;
-    }
-
+    /**
+     * @return array Array of changes
+     */
     public function updatePlayers(): array
     {
         $changes = $this->calculateEloChanges();

@@ -40,7 +40,7 @@ class PlayerModel
                 "playerId" => $player->getId()
             ]);
         } else {
-            return new ErrorResponse('Sent data is not sufficient');
+            return new ErrorResponse(ErrorResponse::INVALID_DATA_SENT);
         }
     }
 

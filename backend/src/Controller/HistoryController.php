@@ -2,8 +2,11 @@
 
 namespace App\Controller;
 
+use App\Entity\History;
 use App\Resource\AddHistoryRequest;
+use App\Resource\GetHistoryRequest;
 use JMS\Serializer\SerializerInterface;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -43,5 +46,27 @@ class HistoryController extends AbstractController
     public function historyGetAll()
     {
         return $this->historyModel->getHistoryAll();
+    }
+
+
+    /**
+     * @Route("/history/get/recent", name="history_get_all")
+     * @return JsonResponse
+     */
+    public function historyGetRecent()
+    {
+        return $this->historyModel->getHistoryRecent();
+    }
+
+    /**
+     * @Route("/history/get/filter", name="history_get")
+     * @param Request $request
+     * @return Response
+     */
+    public function historyGet(Request $request) {
+        $history = $this->serializer->deserialize($request->getContent(), History::class, 'json');
+        $req = $this->serializer->deserialize($request->getContent(), GetHistoryRequest::class, 'json');
+        $req->history = $history;
+        return $this->historyModel->getHistory($req);
     }
 }

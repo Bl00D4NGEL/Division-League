@@ -19,12 +19,12 @@ class History
     /**
      * @ORM\Column(type="integer")
      */
-    private $winnerId;
+    private $winner;
 
     /**
      * @ORM\Column(type="integer")
      */
-    private $loserId;
+    private $loser;
 
     /**
      * @ORM\Column(type="string")
@@ -36,26 +36,26 @@ class History
         return $this->id;
     }
 
-    public function getWinnerId(): ?int
+    public function getWinner(): ?int
     {
-        return $this->winnerId;
+        return $this->winner;
     }
 
-    public function setWinnerId(int $winnerId): self
+    public function setWinner(int $winner): self
     {
-        $this->winnerId = $winnerId;
+        $this->winner = $winner;
 
         return $this;
     }
 
-    public function getLoserId(): ?int
+    public function getLoser(): ?int
     {
-        return $this->loserId;
+        return $this->loser;
     }
 
-    public function setLoserId(int $loserId): self
+    public function setLoser(int $loser): self
     {
-        $this->loserId = $loserId;
+        $this->loser = $loser;
         
         return $this;
     }
@@ -68,5 +68,16 @@ class History
         $this->proofUrl = $proofUrl;
 
         return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function asArray(): array {
+        $data = [];
+        foreach($this as $field => $value) {
+            $data[$field] = $value;
+        }
+        return $data;
     }
 }
