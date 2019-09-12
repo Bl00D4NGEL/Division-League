@@ -26,7 +26,7 @@ class App extends React.Component {
         (result) => {
           this.setState(
             {
-              players: result,
+              players: result.data,
               isLoaded: true
             }
           )

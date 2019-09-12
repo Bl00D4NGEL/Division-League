@@ -42,7 +42,7 @@ class HistoryRepository extends ServiceEntityRepository
      * @return History[]
      */
     public function findLastEntries(int $limit = 100): array {
-        return $this->findBy(array(), array('id', 'DESC'), $limit);
+        return $this->findBy([], ['id' => 'DESC'], $limit);
     }
 
     // /**
