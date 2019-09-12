@@ -54,7 +54,7 @@ export default class HistoryTable extends React.Component {
                     <td>{entry.winner.name}</td>
                     <td>{entry.loser.name}</td>
                     <td>
-                        <a href={entry.proofUrl} target="_blank">Link</a>
+                        <a href={entry.proofUrl} target="_blank" rel="noopener noreferrer">Link</a>
                     </td>
                 </tr>
             )
