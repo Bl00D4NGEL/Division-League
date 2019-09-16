@@ -88,7 +88,7 @@ class HistoryModel
 
     public function getHistoryRecent(): JsonResponse
     {
-        return $this->createHistoryResponse($this->getHistoryRepository()->findLastEntries(20));
+        return $this->createHistoryResponse($this->getHistoryRepository()->findLastEntries(5));
     }
 
     /**
@@ -150,7 +150,8 @@ class HistoryModel
      * @param History[] $histories
      * @return SuccessResponse
      */
-    private function createHistoryResponse(array $histories) {
+    private function createHistoryResponse(array $histories)
+    {
         return new SuccessResponse($this->createResponseHistories($histories));
     }
 

@@ -12,7 +12,7 @@ export default class HistoryTable extends React.Component {
 
 
     load() {
-        fetch(Config.historyEndpoint('get/recent'))
+        fetch(Config.recentHistoryEndpoint().url())
             .then(res => res.json())
             .then(
                 (result) => {
@@ -33,8 +33,7 @@ export default class HistoryTable extends React.Component {
     }
 
     render() {
-
-        const { error, isLoaded } = this.state;
+        const {error, isLoaded} = this.state;
         if (error) {
             return <div>Error: {error.message}</div>;
         } else if (!isLoaded) {
@@ -62,15 +61,15 @@ export default class HistoryTable extends React.Component {
         return (
             <table>
                 <thead>
-                    <tr>
-                        <td>ID</td>
-                        <td>Winner</td>
-                        <td>Loser</td>
-                        <td>Proof</td>
-                    </tr>
+                <tr>
+                    <td>ID</td>
+                    <td>Winner</td>
+                    <td>Loser</td>
+                    <td>Proof</td>
+                </tr>
                 </thead>
                 <tbody>
-                    {historyTableRows}
+                {historyTableRows}
                 </tbody>
             </table>
         );

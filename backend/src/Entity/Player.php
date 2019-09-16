@@ -94,7 +94,7 @@ class Player
 
     public function setDivision(string $division): self
     {
-        $this->division = $division;
+        $this->division = strtoupper($division);
 
         return $this;
     }
@@ -123,11 +123,13 @@ class Player
         return $this;
     }
 
-    public function getQpoints() {
-        return 10 ** ($this->eloRating/400);
+    public function getQpoints()
+    {
+        return 10 ** ($this->eloRating / 400);
     }
 
-    public function asArray() {
+    public function asArray()
+    {
         return [
             "wins" => $this->getWins(),
             "loses" => $this->getLoses(),

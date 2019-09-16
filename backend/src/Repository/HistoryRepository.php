@@ -19,6 +19,11 @@ class HistoryRepository extends ServiceEntityRepository
         parent::__construct($registry, History::class);
     }
 
+    /**
+     * @param History $history
+     * @param int $limit
+     * @return mixed
+     */
     public function findWithHistoryEntity(History $history, int $limit = 0)
     {
         $qb = $this->createQueryBuilder('h');
@@ -41,7 +46,8 @@ class HistoryRepository extends ServiceEntityRepository
      * @param int $limit The maximum amount of entries to return
      * @return History[]
      */
-    public function findLastEntries(int $limit = 100): array {
+    public function findLastEntries(int $limit = 100): array
+    {
         return $this->findBy([], ['id' => 'DESC'], $limit);
     }
 

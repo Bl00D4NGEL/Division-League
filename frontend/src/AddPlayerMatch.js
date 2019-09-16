@@ -1,7 +1,9 @@
 import React from 'react';
 import PlayerSelect from './PlayerSelect';
+import Config from "./Config";
+import EloChangeDisplay from "./EloChangeDisplay";
 
-export default class PlayerMatchAdd extends React.Component {
+export default class AddPlayerMatch extends React.Component {
     constructor(props) {
         super(props);
 
@@ -35,13 +37,12 @@ export default class PlayerMatchAdd extends React.Component {
             loser: this.state.loser.id,
             proofUrl: this.state.proofUrl
         };
-        const url = "http://localhost:8000/history/add";
-        this.sendRequestWithDataToUrl(data, url);
+        this.sendRequestWithDataToUrl(data, Config.addHistoryEndPoint());
     }
 
-    sendRequestWithDataToUrl(data, url) {
+    sendRequestWithDataToUrl(data, endpoint) {
         const self = this;
-        const req = new Request(url, {method: "POST", body: JSON.stringify(data)});
+        const req = new Request(endpoint.url(), {method: endpoint.method(), body: JSON.stringify(data)});
         fetch(req).then(function (data) {
             return data.json();
         }).then(function (responseData) {
@@ -110,43 +111,6 @@ export default class PlayerMatchAdd extends React.Component {
     }
 }
 
-class EloChangeDisplay extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {...props};
-    }
-
-    render() {
-        if (!this.shouldRender()) {
-            return null;
-        }
-        return (
-            <div>
-                <span>Results:</span>
-                <div>
-                    <div>{this.state.winner.name} wins against {this.state.loser.name}</div>
-                    <br/>
-                    <div>{this.state.winner.name} moves
-                        from {this.state.winner.elo - this.state.changes.winner} to {this.state.winner.elo} elo
-                        (+{this.state.changes.winner})
-                    </div>
-                    <br/>
-                    <div>{this.state.loser.name} moves
-                        from {this.state.loser.elo - this.state.changes.loser} to {this.state.loser.elo} elo
-                        ({this.state.changes.loser})
-                    </div>
-                    <br/>
-                </div>
-            </div>
-        )
-    }
-
-    shouldRender() {
-        return !(isLoserAndWinnerNotSet(this.state) || areOpponentsEqual(this.state) || this.state.changes === undefined);
-    }
-}
-
-
 function isLoserAndWinnerNotSet(state) {
     return !(state.winner.id !== null && state.loser.id !== null);
 }
@@ -154,4 +118,3 @@ function isLoserAndWinnerNotSet(state) {
 function areOpponentsEqual(state) {
     return (state.winner.id === state.loser.id);
 }
-
