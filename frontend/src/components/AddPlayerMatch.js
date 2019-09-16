@@ -1,6 +1,6 @@
 import React from 'react';
 import PlayerSelect from './PlayerSelect';
-import Config from "./Config";
+import Config from "../Config";
 import EloChangeDisplay from "./EloChangeDisplay";
 
 export default class AddPlayerMatch extends React.Component {

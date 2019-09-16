@@ -1,5 +1,5 @@
 import React from 'react';
-import Config from "./Config";
+import Config from "../Config";
 
 export default class AddPlayer extends React.Component {
     constructor(props) {

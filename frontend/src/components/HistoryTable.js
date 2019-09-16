@@ -1,5 +1,6 @@
 import React from 'react';
-import Config from './Config';
+import Config from '../Config';
+import Table from './styling/Table';
 
 export default class HistoryTable extends React.Component {
     constructor(props) {
@@ -46,32 +47,17 @@ export default class HistoryTable extends React.Component {
     }
 
     generateHistoryTable() {
-        const historyTableRows = this.state.historyEntries.map((entry) => {
-            return (
-                <tr key={entry.id}>
-                    <td>{entry.id}</td>
-                    <td>{entry.winner.name}</td>
-                    <td>{entry.loser.name}</td>
-                    <td>
-                        <a href={entry.proofUrl} target="_blank" rel="noopener noreferrer">Link</a>
-                    </td>
-                </tr>
-            )
+        const rows = this.state.historyEntries.map((entry) => {
+            return [
+                entry.id,
+                entry.winner.name,
+                entry.loser.name,
+                <a href={entry.proofUrl} target="_blank" rel="noopener noreferrer">Link</a>
+            ];
         });
+
         return (
-            <table>
-                <thead>
-                <tr>
-                    <td>ID</td>
-                    <td>Winner</td>
-                    <td>Loser</td>
-                    <td>Proof</td>
-                </tr>
-                </thead>
-                <tbody>
-                {historyTableRows}
-                </tbody>
-            </table>
+            <Table tableHead={['ID', 'Winner', 'Loser', 'Proof']} tableData={rows}/>
         );
     }
 }
