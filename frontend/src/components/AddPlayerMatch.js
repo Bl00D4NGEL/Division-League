@@ -1,7 +1,9 @@
 import React from 'react';
-import PlayerSelect from './PlayerSelect';
 import Config from "../Config";
 import EloChangeDisplay from "./EloChangeDisplay";
+import WinnerSelect from "./helpers/PlayerSelect/WinnerSelect";
+import LoserSelect from "./helpers/PlayerSelect/LoserSelect";
+import TextInput from "./styling/TextInput";
 
 export default class AddPlayerMatch extends React.Component {
     constructor(props) {
@@ -70,7 +72,7 @@ export default class AddPlayerMatch extends React.Component {
     }
 
     handleSelectChange(e) {
-        const type = e.target.attributes.winorlose.value;
+        const type = e.target.attributes.getNamedItem('type').value;
         const value = e.target.value;
         const change = {
             [type]: JSON.parse(value),
@@ -82,23 +84,20 @@ export default class AddPlayerMatch extends React.Component {
     render() {
         return (
             <form onSubmit={this.handleSubmit}>
-                <PlayerSelect
-                    defaultValue={JSON.stringify(this.state.winner)}
-                    type="winner"
-                    label="Winner"
+                <WinnerSelect
+                defaultValue={JSON.stringify(this.state.winner)}
+                players={this.state.players}
+                onChange={this.handleSelectChange}
+                />
+
+                <LoserSelect
+                    defaultValue={JSON.stringify(this.state.loser)}
                     players={this.state.players}
                     onChange={this.handleSelectChange}
                 />
 
-                <PlayerSelect
-                    defaultValue={JSON.stringify(this.state.loser)}
-                    type="loser"
-                    label="Loser"
-                    players={this.state.players}
-                    onChange={this.handleSelectChange}
-                />
                 <label>Proof:
-                    <input type="text" required pattern="https?://.+\..+" onChange={this.handleProofUrlChange}/>
+                    <TextInput required pattern="https?://.+\..+" onChange={this.handleProofUrlChange}/>
                 </label>
                 <input type="submit" value="Submit"/>
                 {

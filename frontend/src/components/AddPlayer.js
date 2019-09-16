@@ -1,5 +1,7 @@
 import React from 'react';
 import Config from "../Config";
+import TextInput from "./styling/TextInput";
+import Label from "./styling/Label";
 
 export default class AddPlayer extends React.Component {
     constructor(props) {
@@ -24,10 +26,11 @@ export default class AddPlayer extends React.Component {
     }
 
     handleInputChange(e) {
-        const type = e.target.attributes.playerValue.value;
+        const key = e.target.attributes.getNamedItem('key').value;
         const value = e.target.value;
         const change = {
-            [type]: value,
+            [key]: JSON.parse(value),
+            changes: undefined
         };
         this.setState(change);
     }
@@ -35,15 +38,18 @@ export default class AddPlayer extends React.Component {
     render() {
         return (
             <form onSubmit={this.handleSubmit}>
-                <label>Name:
-                    <input playerValue="name" type="text" required onChange={this.handleInputChange}/>
-                </label>
-                <label>Division:
-                    <input playerValue="division" type="text" required onChange={this.handleInputChange}/>
-                </label>
-                <label>Player ID:
-                    <input playerValue="playerId" type="text" required onChange={this.handleInputChange}/>
-                </label>
+                <Label
+                    text='Name:'
+                    formField={<TextInput data={{key: 'name'}} required onChange={this.handleInputChange}/>}
+                />
+                <Label
+                    text='Division:'
+                    formField={<TextInput data={{key: 'division'}} required onChange={this.handleInputChange}/>}
+                />
+                <Label
+                    text='Player ID:'
+                    formField={<TextInput data={{key: 'playerId'}} required onChange={this.handleInputChange}/>}
+                />
                 <input type="submit" value="Add Player"/>
             </form>
         );

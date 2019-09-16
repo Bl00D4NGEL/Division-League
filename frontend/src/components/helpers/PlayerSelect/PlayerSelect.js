@@ -1,14 +1,15 @@
 import React from 'react';
-import CustomSelect from "./styling/Select";
+import CustomSelect from "../../styling/Select";
 
 export default class PlayerSelect extends React.Component {
     constructor(props) {
         super(props);
         this.labelText = props.label;
-        this.type = props.type;
         this.players = props.players;
-        this.changeHandler = props.onChange;
+        this.onChange = props.onChange;
         this.defaultValue = props.defaultValue;
+
+        this.state = {data: props.data};
 
         this.selectChange = this.selectChange.bind(this);
     }
@@ -17,7 +18,7 @@ export default class PlayerSelect extends React.Component {
         this.setState({
             defaultValue: e.target.value
         });
-        this.changeHandler(e);
+        this.onChange(e);
     }
 
     render() {
@@ -25,6 +26,7 @@ export default class PlayerSelect extends React.Component {
             <label>
                 {this.labelText}:
                 <CustomSelect
+                    {...this.state}
                     onChange={this.selectChange}
                     defaultValue={this.defaultValue}
                     options={this.generateOptions()}
@@ -34,6 +36,12 @@ export default class PlayerSelect extends React.Component {
     }
 
     generateOptions() {
-        return this.players;
+        return this.players.map((x) => {
+            return {
+                key: x.id,
+                value: JSON.stringify(x),
+                name: x.name,
+            }
+        });
     }
 }

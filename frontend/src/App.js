@@ -1,8 +1,8 @@
 import React from 'react';
 import './App.css';
 import AddPlayerMatch from './components/AddPlayerMatch';
-import PlayerTable from './components/PlayerTable';
-import HistoryTable from './components/HistoryTable';
+import PlayerTable from './components/helpers/PlayerTable/PlayerTable';
+import HistoryTable from './components/helpers/HistoryTable/HistoryTable';
 import Config from "./Config";
 import AddPlayer from "./components/AddPlayer";
 
