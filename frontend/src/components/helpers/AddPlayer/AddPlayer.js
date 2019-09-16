@@ -1,7 +1,9 @@
 import React from 'react';
-import Config from "../Config";
-import TextInput from "./styling/TextInput";
-import Label from "./styling/Label";
+import Config from "../../../Config";
+import TextInput from "../../styling/TextInput";
+import Label from "../../styling/Label";
+import SubmitInput from "../../styling/SubmitInput";
+import CustomForm from "../../styling/Form";
 
 export default class AddPlayer extends React.Component {
     constructor(props) {
@@ -26,10 +28,10 @@ export default class AddPlayer extends React.Component {
     }
 
     handleInputChange(e) {
-        const key = e.target.attributes.getNamedItem('key').value;
+        const key = JSON.parse(e.target.attributes.getNamedItem('data').value).type;
         const value = e.target.value;
         const change = {
-            [key]: JSON.parse(value),
+            [key]: value,
             changes: undefined
         };
         this.setState(change);
@@ -37,21 +39,10 @@ export default class AddPlayer extends React.Component {
 
     render() {
         return (
-            <form onSubmit={this.handleSubmit}>
-                <Label
-                    text='Name:'
-                    formField={<TextInput data={{key: 'name'}} required onChange={this.handleInputChange}/>}
-                />
-                <Label
-                    text='Division:'
-                    formField={<TextInput data={{key: 'division'}} required onChange={this.handleInputChange}/>}
-                />
-                <Label
-                    text='Player ID:'
-                    formField={<TextInput data={{key: 'playerId'}} required onChange={this.handleInputChange}/>}
-                />
-                <input type="submit" value="Add Player"/>
-            </form>
+            <CustomForm
+                onSubmit={this.handleSubmit}
+                formFields={this.generateFormFields()}
+            />
         );
     }
 
@@ -80,5 +71,27 @@ export default class AddPlayer extends React.Component {
         }).then(function (responseData) {
             console.log(responseData);
         });
+    }
+
+    generateFormFields() {
+        return <div>
+            <Label
+                text='Name:'
+                formField={this.generateTextInput('name')}
+            />
+            <Label
+                text='Division:'
+                formField={this.generateTextInput('division')}
+            />
+            <Label
+                text='Player ID:'
+                formField={this.generateTextInput('playerId')}
+            />
+            <SubmitInput value="Add Player"/>
+        </div>
+    }
+
+    generateTextInput(key) {
+        return <TextInput data={JSON.stringify({type: key})} required onChange={this.handleInputChange}/>;
     }
 }
