@@ -1,4 +1,5 @@
 import React from 'react';
+import CustomSelect from "./styling/Select";
 
 export default class PlayerSelect extends React.Component {
     constructor(props) {
@@ -18,26 +19,21 @@ export default class PlayerSelect extends React.Component {
         });
         this.changeHandler(e);
     }
+
     render() {
         return (
             <label>
                 {this.labelText}:
-                <select
-                    winorlose={this.type}
+                <CustomSelect
                     onChange={this.selectChange}
                     defaultValue={this.defaultValue}
-                >
-                    {this.generatePlayerSelectOptions()}
-                </select>
+                    options={this.generateOptions()}
+                />
             </label>
         );
     }
 
-    generatePlayerSelectOptions() {
-        return this.players.map((p) => {
-            return (
-                <option key={p.id} value={JSON.stringify(p)}>{p.name}</option>
-            );
-        });
+    generateOptions() {
+        return this.players;
     }
 }
