@@ -2,8 +2,8 @@ import React from 'react';
 import Config from "../../Config";
 import TextInput from "../styling/TextInput";
 import Label from "../styling/Label";
-import SubmitInput from "../styling/SubmitInput";
 import CustomForm from "../styling/Form";
+import SubmitInput from "../styling/SubmitInput";
 
 export default class AddPlayer extends React.Component {
     constructor(props) {

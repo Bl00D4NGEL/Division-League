@@ -4,9 +4,9 @@ import EloChangeDisplay from "../views/EloChangeDisplay/EloChangeDisplay";
 import WinnerSelect from "../PlayerSelect/WinnerSelect";
 import LoserSelect from "../PlayerSelect/LoserSelect";
 import TextInput from "../styling/TextInput";
+import CustomForm from "../styling/Form";
 import Label from "../styling/Label";
 import SubmitInput from "../styling/SubmitInput";
-import CustomForm from "../styling/Form";
 
 export default class AddPlayerMatch extends React.Component {
     constructor(props) {
