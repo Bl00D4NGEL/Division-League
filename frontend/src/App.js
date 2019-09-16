@@ -1,10 +1,10 @@
 import React from 'react';
 import './App.css';
-import AddPlayerMatch from './components/AddPlayerMatch';
-import PlayerTable from './components/helpers/PlayerTable/PlayerTable';
-import HistoryTable from './components/helpers/HistoryTable/HistoryTable';
+import AddPlayerMatch from './components/AddPlayerMatch/AddPlayerMatch';
+import PlayerTable from './components/PlayerTable/PlayerTable';
+import HistoryTable from './components/HistoryTable/HistoryTable';
 import Config from "./Config";
-import AddPlayer from "./components/AddPlayer";
+import AddPlayer from "./components/AddPlayer/AddPlayer";
 
 class App extends React.Component {
     constructor(props) {

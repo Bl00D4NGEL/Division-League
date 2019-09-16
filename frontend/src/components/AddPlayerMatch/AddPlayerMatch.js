@@ -1,9 +1,12 @@
 import React from 'react';
-import Config from "../Config";
-import EloChangeDisplay from "./EloChangeDisplay";
-import WinnerSelect from "./helpers/PlayerSelect/WinnerSelect";
-import LoserSelect from "./helpers/PlayerSelect/LoserSelect";
-import TextInput from "./styling/TextInput";
+import Config from "../../Config";
+import EloChangeDisplay from "../views/EloChangeDisplay/EloChangeDisplay";
+import WinnerSelect from "../PlayerSelect/WinnerSelect";
+import LoserSelect from "../PlayerSelect/LoserSelect";
+import TextInput from "../styling/TextInput";
+import Label from "../styling/Label";
+import SubmitInput from "../styling/SubmitInput";
+import CustomForm from "../styling/Form";
 
 export default class AddPlayerMatch extends React.Component {
     constructor(props) {
@@ -83,30 +86,38 @@ export default class AddPlayerMatch extends React.Component {
 
     render() {
         return (
-            <form onSubmit={this.handleSubmit}>
-                <WinnerSelect
+            <CustomForm
+                onSubmit={this.handleSubmit}
+                formFields={this.generateFormFields()}
+            />
+        );
+    }
+
+    generateFormFields() {
+        return <div>
+            <WinnerSelect
                 defaultValue={JSON.stringify(this.state.winner)}
                 players={this.state.players}
                 onChange={this.handleSelectChange}
-                />
+            />
 
-                <LoserSelect
-                    defaultValue={JSON.stringify(this.state.loser)}
-                    players={this.state.players}
-                    onChange={this.handleSelectChange}
-                />
+            <LoserSelect
+                defaultValue={JSON.stringify(this.state.loser)}
+                players={this.state.players}
+                onChange={this.handleSelectChange}
+            />
 
-                <label>Proof:
-                    <TextInput required pattern="https?://.+\..+" onChange={this.handleProofUrlChange}/>
-                </label>
-                <input type="submit" value="Submit"/>
-                {
-                    this.state.changes !== undefined
-                        ? <EloChangeDisplay {...this.state} />
-                        : null
-                }
-            </form>
-        );
+            <Label
+                text='Proof:'
+                formField={<TextInput required pattern="https?://.+\..+" onChange={this.handleProofUrlChange}/>}
+            />
+            <SubmitInput value='Add History'/>
+            {
+                this.state.changes !== undefined
+                    ? <EloChangeDisplay {...this.state} />
+                    : null
+            }
+        </div>
     }
 }
 

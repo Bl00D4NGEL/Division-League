@@ -1,5 +1,5 @@
 import React from 'react';
-import Table from "../../styling/Table";
+import Table from "../styling/Table";
 
 export default class PlayerTable extends React.Component {
     constructor(props) {
