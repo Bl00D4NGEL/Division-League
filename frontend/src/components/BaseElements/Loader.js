@@ -1,5 +1,8 @@
 import React from "react";
 
+/**
+ * @return {null}
+ */
 export default function Loader(props) {
     const {error, isLoaded} = props;
     if (error) {
@@ -11,7 +14,6 @@ export default function Loader(props) {
             </div>
         );
     } else {
-        props.content = props.content !== undefined ? props.content : null;
-        return props.content;
+        return props.content !== undefined ? props.content : null;
     }
 }

@@ -33,3 +33,8 @@ export default function CustomTable(props) {
         </table>
     );
 }
+
+CustomTable.propTypes = {
+    tableHead: React.PropTypes.array,
+    tableData: React.PropTypes.array
+};
