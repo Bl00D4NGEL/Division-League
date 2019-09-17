@@ -1,10 +1,12 @@
 import React from 'react';
 import './App.css';
-import AddPlayerMatch from './components/AddPlayerMatch/AddPlayerMatch';
+import AddHistory from './components/AddHistory/AddHistory';
 import PlayerTable from './components/PlayerTable/PlayerTable';
 import HistoryTable from './components/HistoryTable/HistoryTable';
 import Config from "./Config";
 import AddPlayer from "./components/AddPlayer/AddPlayer";
+import CustomRequest from "./components/CustomRequest/CustomRequest";
+import Loader from "./components/BaseElements/Loader";
 
 class App extends React.Component {
     constructor(props) {
@@ -15,7 +17,6 @@ class App extends React.Component {
             players: []
         };
         this.loadData = this.loadData.bind(this);
-        this.getPlayers = this.getPlayers.bind(this);
     }
 
     componentDidMount() {
@@ -23,51 +24,40 @@ class App extends React.Component {
     }
 
     loadData() {
-        fetch(Config.getAllPlayersEndpoint().url())
-            .then(res => res.json())
-            .then(
-                (result) => {
-                    this.setState(
-                        {
-                            players: result.data,
-                            isLoaded: true
-                        }
-                    )
-                },
-                (error) => {
-                    this.setState({
-                        isLoaded: true,
-                        error
-                    });
-                }
-            )
-    }
-
-    getPlayers() {
-        return this.state.players;
+        new CustomRequest(
+            Config.getAllPlayersEndpoint(),
+            (result) => {
+                this.setState(
+                    {
+                        players: result.data,
+                        isLoaded: true
+                    }
+                )
+            },
+            (error) => {
+                this.setState({
+                    isLoaded: true,
+                    error
+                });
+            }
+        )
+            .execute();
     }
 
     render() {
-        const {error, isLoaded} = this.state;
-        if (error) {
-            return <div>Error: {error.message}</div>;
-        } else if (!isLoaded) {
-            return (
+        return <Loader
+            error={this.state.error}
+            isLoaded={this.state.isLoaded}
+            content={
                 <div className="App">
-                    Loading...
-                </div>
-            );
-        } else {
-            return (
-                <div className="App">
-                    <PlayerTable players={this.state.players} reloadData={this.getPlayers}/>
-                    <AddPlayerMatch players={this.state.players} reloadData={this.loadData}/>
+                    <PlayerTable players={this.state.players}/>
+                    <AddHistory onAdd={this.loadData} players={this.state.players}/>
 
                     <HistoryTable/>
                     <AddPlayer/>
                 </div>
-            );
-        }
+            }
+        />
     }
 }
 

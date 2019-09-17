@@ -1,9 +1,10 @@
 import React from 'react';
 import Config from "../../Config";
-import TextInput from "../styling/TextInput";
-import Label from "../styling/Label";
-import CustomForm from "../styling/Form";
-import SubmitInput from "../styling/SubmitInput";
+import TextInput from "../BaseElements/TextInput";
+import Label from "../BaseElements/Label";
+import CustomForm from "../BaseElements/Form";
+import SubmitInput from "../BaseElements/SubmitInput";
+import CustomRequest from "../CustomRequest/CustomRequest";
 
 export default class AddPlayer extends React.Component {
     constructor(props) {
@@ -18,7 +19,6 @@ export default class AddPlayer extends React.Component {
     }
 
     handleSubmit(e) {
-        debugger;
         e.preventDefault();
         if (this.areRequiredFieldsSet()) {
             this.addPlayer();
@@ -60,17 +60,7 @@ export default class AddPlayer extends React.Component {
             division: this.state.division,
             playerId: this.state.playerId
         };
-        this.sendRequestWithDataToUrl(data, Config.addPlayerEndPoint());
-    }
-
-
-    sendRequestWithDataToUrl(data, endpoint) {
-        const req = new Request(endpoint.url(), {method: endpoint.method(), body: JSON.stringify(data)});
-        fetch(req).then(function (data) {
-            return data.json();
-        }).then(function (responseData) {
-            console.log(responseData);
-        });
+        new CustomRequest(Config.addPlayerEndPoint()).execute(data);
     }
 
     generateFormFields() {

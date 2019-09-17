@@ -1,4 +1,5 @@
 import * as React from "react";
+import WinnerLoserValidator from "../Validators/WinnerLoserValidator";
 
 export default class EloChangeDisplay extends React.Component {
     constructor(props) {
@@ -32,14 +33,6 @@ export default class EloChangeDisplay extends React.Component {
     }
 
     shouldRender() {
-        return !(isLoserAndWinnerNotSet(this.state) || areOpponentsEqual(this.state) || this.state.changes === undefined);
+        return !(WinnerLoserValidator.isLoserAndWinnerNotSet(this.state) || WinnerLoserValidator.areOpponentsEqual(this.state) || this.state.changes === undefined);
     }
-}
-
-function isLoserAndWinnerNotSet(state) {
-    return !(state.winner.id !== null && state.loser.id !== null);
-}
-
-function areOpponentsEqual(state) {
-    return (state.winner.id === state.loser.id);
 }

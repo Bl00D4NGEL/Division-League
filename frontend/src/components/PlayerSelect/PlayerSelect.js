@@ -1,5 +1,5 @@
 import React from 'react';
-import CustomSelect from "../styling/Select";
+import CustomSelect from "../BaseElements/Select";
 
 export default class PlayerSelect extends React.Component {
     constructor(props) {

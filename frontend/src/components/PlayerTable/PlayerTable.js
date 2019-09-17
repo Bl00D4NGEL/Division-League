@@ -1,23 +1,22 @@
 import React from 'react';
-import Table from "../styling/Table";
+import Table from "../BaseElements/Table";
 
 export default class PlayerTable extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {
-            players: props.players.sort(function (a, b) {
-                return b.elo - a.elo;
-            })
-        };
-
-        this.reloadDataFunction = props.reloadData;
     }
 
     render() {
-        const rows = this.reloadDataFunction().map((entry) => {
+        return (
+            <Table tableHead={['Player', 'Elo', 'Wins', 'Loses', 'Win rate']} tableData={this.generateRows()}/>
+        );
+    }
+
+    generateRows() {
+        return this.props.players.map((entry) => {
             const matches = entry.loses + entry.wins || 1;
             const winRate = ((entry.wins || 1) / matches * 100).toPrecision(4);
-
+            console.log(entry);
             return [
                 entry.name,
                 entry.elo,
@@ -26,9 +25,5 @@ export default class PlayerTable extends React.Component {
                 winRate + ' %'
             ];
         });
-
-        return (
-            <Table tableHead={['Player', 'Elo', 'Wins', 'Loses', 'Win rate']} tableData={rows}/>
-        );
     }
 }

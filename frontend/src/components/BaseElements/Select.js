@@ -1,7 +1,6 @@
 import React from 'react';
 
 export default function CustomSelect(props) {
-    console.log(props, props.data);
     return (
         <select
             onChange={props.onChange}

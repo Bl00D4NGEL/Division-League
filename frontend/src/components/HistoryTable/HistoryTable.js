@@ -1,6 +1,6 @@
 import React from 'react';
 import Config from '../../Config';
-import Table from '../styling/Table';
+import Table from '../BaseElements/Table';
 
 export default class HistoryTable extends React.Component {
     constructor(props) {
