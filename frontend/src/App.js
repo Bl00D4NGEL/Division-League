@@ -5,7 +5,7 @@ import PlayerTable from './components/PlayerTable/PlayerTable';
 import HistoryTable from './components/HistoryTable/HistoryTable';
 import Config from "./Config";
 import AddPlayer from "./components/AddPlayer/AddPlayer";
-import CustomRequest from "./components/CustomRequest/CustomRequest";
+import CustomRequest from "./helpers/CustomRequest/CustomRequest";
 import Loader from "./components/BaseElements/Loader";
 
 class App extends React.Component {

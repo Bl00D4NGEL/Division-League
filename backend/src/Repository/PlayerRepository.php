@@ -23,9 +23,28 @@ class PlayerRepository extends ServiceEntityRepository
      * @param int $id
      * @return Player
      */
-    public function findById(int $id): Player {
+    public function findById(int $id): ?Player
+    {
         return $this->findOneBy([
             'id' => $id
+        ]);
+    }
+
+    /**
+     * @param string $name
+     * @return Player
+     */
+    public function findByName(string $name): ?Player
+    {
+        return $this->findOneBy([
+            'name' => $name
+        ]);
+    }
+
+    public function findByPlayerId(int $playerId): ?Player
+    {
+        return $this->findOneBy([
+            'playerId' => $playerId
         ]);
     }
 }

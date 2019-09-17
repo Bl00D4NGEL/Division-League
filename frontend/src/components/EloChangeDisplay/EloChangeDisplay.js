@@ -1,12 +1,7 @@
 import * as React from "react";
-import WinnerLoserValidator from "../Validators/WinnerLoserValidator";
+import WinnerLoserValidator from "../../helpers/Validators/WinnerLoserValidator";
 
 export default class EloChangeDisplay extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {...props};
-    }
-
     render() {
         if (!this.shouldRender()) {
             return null;
@@ -15,16 +10,16 @@ export default class EloChangeDisplay extends React.Component {
             <div>
                 <span>Results:</span>
                 <div>
-                    <div>{this.state.winner.name} wins against {this.state.loser.name}</div>
+                    <div>{this.props.winner.name} wins against {this.props.loser.name}</div>
                     <br/>
-                    <div>{this.state.winner.name} moves
-                        from {this.state.winner.elo - this.state.changes.winner} to {this.state.winner.elo} elo
-                        (+{this.state.changes.winner})
+                    <div>{this.props.winner.name} moves
+                        from {this.props.winner.elo - this.props.changes.winner} to {this.props.winner.elo} elo
+                        (+{this.props.changes.winner})
                     </div>
                     <br/>
-                    <div>{this.state.loser.name} moves
-                        from {this.state.loser.elo - this.state.changes.loser} to {this.state.loser.elo} elo
-                        ({this.state.changes.loser})
+                    <div>{this.props.loser.name} moves
+                        from {this.props.loser.elo - this.props.changes.loser} to {this.props.loser.elo} elo
+                        ({this.props.changes.loser})
                     </div>
                     <br/>
                 </div>
@@ -33,6 +28,6 @@ export default class EloChangeDisplay extends React.Component {
     }
 
     shouldRender() {
-        return !(WinnerLoserValidator.isLoserAndWinnerNotSet(this.state) || WinnerLoserValidator.areOpponentsEqual(this.state) || this.state.changes === undefined);
+        return !(WinnerLoserValidator.isLoserAndWinnerNotSet(this.props) || WinnerLoserValidator.areOpponentsEqual(this.props) || this.props.changes === undefined);
     }
 }

@@ -7,8 +7,8 @@ import TextInput from "../BaseElements/TextInput";
 import CustomForm from "../BaseElements/Form";
 import Label from "../BaseElements/Label";
 import SubmitInput from "../BaseElements/SubmitInput";
-import WinnerLoserValidator from "../Validators/WinnerLoserValidator";
-import CustomRequest from "../CustomRequest/CustomRequest";
+import WinnerLoserValidator from "../../helpers/Validators/WinnerLoserValidator";
+import CustomRequest from "../../helpers/CustomRequest/CustomRequest";
 import Loader from "../BaseElements/Loader";
 
 export default class AddHistory extends React.Component {

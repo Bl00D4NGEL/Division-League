@@ -1,11 +1,14 @@
 import React from 'react';
 import Config from '../../Config';
 import Table from '../BaseElements/Table';
+import CustomRequest from "../../helpers/CustomRequest/CustomRequest";
+import Loader from "../BaseElements/Loader";
 
 export default class HistoryTable extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            isLoaded: false,
             historyEntries: []
         };
         this.load();
@@ -13,41 +16,36 @@ export default class HistoryTable extends React.Component {
 
 
     load() {
-        fetch(Config.recentHistoryEndpoint().url())
-            .then(res => res.json())
-            .then(
-                (result) => {
-                    this.setState(
-                        {
-                            historyEntries: result.data,
-                            isLoaded: true
-                        }
-                    )
-                },
-                (error) => {
-                    this.setState({
-                        isLoaded: true,
-                        error
-                    });
-                }
-            )
+        new CustomRequest(
+            Config.recentHistoryEndpoint(),
+            (result) => {
+                this.setState(
+                    {
+                        historyEntries: result.data,
+                        isLoaded: true
+                    }
+                )
+            },
+            (error) => {
+                this.setState({
+                    isLoaded: true,
+                    error
+                });
+            }
+        )
+            .execute();
     }
 
     render() {
-        const {error, isLoaded} = this.state;
-        if (error) {
-            return <div>Error: {error.message}</div>;
-        } else if (!isLoaded) {
-            return (
-                <div className="App">Loading...</div>
-            );
-        } else {
-            return <div>{this.generateHistoryTable()}</div>
-        }
+        return <Loader
+            isLoaded={this.state.isLoaded}
+            error={this.state.error}
+            content={<Table tableHead={['ID', 'Winner', 'Loser', 'Proof']} tableData={this.generateHistoryTableRows()}/>}
+        />
     }
 
-    generateHistoryTable() {
-        const rows = this.state.historyEntries.map((entry) => {
+    generateHistoryTableRows() {
+        return this.state.historyEntries.map((entry) => {
             return [
                 entry.id,
                 entry.winner.name,
@@ -55,9 +53,5 @@ export default class HistoryTable extends React.Component {
                 <a href={entry.proofUrl} target="_blank" rel="noopener noreferrer">Link</a>
             ];
         });
-
-        return (
-            <Table tableHead={['ID', 'Winner', 'Loser', 'Proof']} tableData={rows}/>
-        );
     }
 }

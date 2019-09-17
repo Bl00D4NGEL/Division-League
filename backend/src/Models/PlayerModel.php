@@ -12,11 +12,15 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 class PlayerModel
 {
+    /** @var PlayerRepository */
+    private $playerRepository;
+
     /** @var EntityManagerInterface */
     private $entityManager;
 
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(EntityManagerInterface $entityManager, PlayerRepository $playerRepository)
     {
+        $this->playerRepository = $playerRepository;
         $this->entityManager = $entityManager;
     }
 
@@ -27,6 +31,9 @@ class PlayerModel
     public function addPlayer(AddPlayerRequest $request): JsonResponse
     {
         if ($request->isValid()) {
+            if ($this->doesPlayerAlreadyExist($request)) {
+                return new ErrorResponse(sprintf(ErrorResponse::PLAYER_DOES_ALREADY_EXIST, $request->name));
+            }
             $player = new Player();
             $player->setDivision($request->division)
                 ->setEloRating($request->eloRating)
@@ -45,14 +52,19 @@ class PlayerModel
     }
 
     public function getPlayerAll(): JsonResponse {
-        /** @var PlayerRepository $playerRepository */
-        $playerRepository = $this->entityManager->getRepository(Player::class);
-
         $players = [];
-        foreach ($playerRepository->findAll() as $player) {
+        foreach ($this->playerRepository->findAll() as $player) {
             $players[] = $player->asArray();
         }
 
         return new SuccessResponse($players);
+    }
+
+    private function doesPlayerAlreadyExist(AddPlayerRequest $request)
+    {
+        return (
+            $this->playerRepository->findByName($request->name) !== null
+            || $this->playerRepository->findByPlayerId($request->playerId) !== null
+        );
     }
 }

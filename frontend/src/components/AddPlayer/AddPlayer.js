@@ -4,7 +4,8 @@ import TextInput from "../BaseElements/TextInput";
 import Label from "../BaseElements/Label";
 import CustomForm from "../BaseElements/Form";
 import SubmitInput from "../BaseElements/SubmitInput";
-import CustomRequest from "../CustomRequest/CustomRequest";
+import CustomRequest from "../../helpers/CustomRequest/CustomRequest";
+import Loader from "../BaseElements/Loader";
 
 export default class AddPlayer extends React.Component {
     constructor(props) {
@@ -12,7 +13,10 @@ export default class AddPlayer extends React.Component {
         this.state = {
             name: undefined,
             division: undefined,
-            playerId: 0
+            playerId: 0,
+            newPlayerData: undefined,
+            isLoaded: true,
+            error: undefined
         };
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleInputChange = this.handleInputChange.bind(this);
@@ -55,30 +59,50 @@ export default class AddPlayer extends React.Component {
     }
 
     addPlayer() {
+        this.setState({isLoaded: false});
         const data = {
             name: this.state.name,
             division: this.state.division,
             playerId: this.state.playerId
         };
-        new CustomRequest(Config.addPlayerEndPoint()).execute(data);
+        new CustomRequest(Config.addPlayerEndPoint(), (result) => {
+            this.setState({
+                isLoaded: true,
+                newPlayerData: JSON.stringify(result)
+            })
+        }).execute(data);
     }
 
     generateFormFields() {
         return <div>
-            <Label
-                text='Name:'
-                formField={this.generateTextInput('name')}
-            />
-            <Label
-                text='Division:'
-                formField={this.generateTextInput('division')}
-            />
-            <Label
-                text='Player ID:'
-                formField={this.generateTextInput('playerId')}
-            />
+            {this.generateLabels()}
             <SubmitInput value="Add Player"/>
+
+            <Loader
+                error={this.state.error}
+                isLoaded={this.state.isLoaded}
+                content={this.state.newPlayerData}
+            />
         </div>
+    }
+
+    generateLabels() {
+        return (
+            <div>
+                <Label
+                    text='Name:'
+                    formField={this.generateTextInput('name')}
+                />
+                <Label
+                    text='Division:'
+                    formField={this.generateTextInput('division')}
+                />
+                <Label
+                    text='Player ID:'
+                    formField={this.generateTextInput('playerId')}
+                />
+            </div>
+        );
     }
 
     generateTextInput(key) {
