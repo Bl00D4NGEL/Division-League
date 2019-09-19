@@ -88,7 +88,7 @@ class HistoryModel
 
     public function getHistoryRecent(): JsonResponse
     {
-        return $this->createHistoryResponse($this->getHistoryRepository()->findLastEntries(5));
+        return $this->createHistoryResponse($this->getHistoryRepository()->findLastEntries(20));
     }
 
     /**
@@ -103,12 +103,9 @@ class HistoryModel
 
     private function getPlayerMap(): array
     {
-        /** @var PlayerRepository $playerRepository */
-        $playerRepository = $this->getPlayerRepository();
-        $players = $playerRepository->findAll();
         $playerMap = [];
 
-        foreach ($players as $player) {
+        foreach ($this->getPlayerRepository()->findAll() as $player) {
             $playerMap[$player->getId()] = $this->serializer->serialize($player, 'json');
         }
         return $playerMap;

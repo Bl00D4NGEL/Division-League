@@ -1,5 +1,7 @@
 .idea
 
 backend/src/Migrations/
+frontend/src/assets/.sass-cache/
+frontend/public/css/styles.css*
 
 .vs/

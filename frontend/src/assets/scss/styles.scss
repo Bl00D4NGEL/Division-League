@@ -75,6 +75,7 @@ label {
 
 a {
   color: $dmg_inc_white !important;
+  text-decoration: none;
 }
 
 button, input[type=submit] {
@@ -104,6 +105,39 @@ button, input[type=submit] {
   margin: $main_height*0.5 0;
 }
 
+nav {
+  padding-bottom: 10vh;
+
+  > ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+
+    > li {
+      height: $main_height;
+      display: inline;
+
+      :hover {
+        background-color: $dmg_inc_white;
+        color: $dmg_inc_red !important;
+      }
+    }
+  }
+}
+
+.nav-link {
+  padding: 3vw;
+  width: 10vw;
+  background-color: $dmg_inc_red;
+
+}
+
+.nav-link.active {
+  background-color: $dmg_inc_white;
+  color: $dmg_inc_red !important;
+}
+
+@import "spinner";
 @import "boxes";
 @import "symbols";
 @import "helper";
