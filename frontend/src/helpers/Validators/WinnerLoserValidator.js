@@ -1,9 +1,16 @@
 export default class WinnerLoserValidator {
     static isLoserAndWinnerNotSet(state) {
-        return !(state.winner.id !== null && state.loser.id !== null);
+        return !(
+            this.doesIdExist(state.winner)
+            && this.doesIdExist(state.loser)
+        );
     }
 
     static areOpponentsEqual(state) {
-        return (state.winner.id === state.loser.id);
+        return (this.isLoserAndWinnerNotSet(state) && state.winner.id === state.loser.id);
+    }
+
+    static doesIdExist(object) {
+        return object !== undefined && object.id !== null;
     }
 }

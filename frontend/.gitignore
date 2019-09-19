@@ -18,6 +18,9 @@
 .env.test.local
 .env.production.local
 
+
+frontend/src/assets/.sass-cache
+
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*

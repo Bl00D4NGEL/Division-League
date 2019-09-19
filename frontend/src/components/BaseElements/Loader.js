@@ -10,7 +10,20 @@ export default function Loader(props) {
     } else if (!isLoaded) {
         return (
             <div className="App">
-                Loading...
+                <div className="lds-spinner">
+                    <div/>
+                    <div/>
+                    <div/>
+                    <div/>
+                    <div/>
+                    <div/>
+                    <div/>
+                    <div/>
+                    <div/>
+                    <div/>
+                    <div/>
+                    <div/>
+                </div>
             </div>
         );
     } else {

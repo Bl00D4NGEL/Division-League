@@ -1,0 +1,33 @@
+/* Small Desktops */
+$main_height: 7vh;
+$main_font_size: 2vw;
+
+@media screen and (max-width: 1200px) {
+    .dw-hide {
+        display: none;
+    }
+
+    body {
+        font-size: $main_font_size;
+    }
+
+    h1 {
+        font-size: $main_font_size + 1vw;
+    }
+
+    label {
+        font-size: $main_font_size - 0.5vw;
+    }
+    
+    td {
+        font-size: $main_font_size - 0.5vw;
+    }
+
+    .main-font-size {
+        font-size: $main_font_size;
+    }
+
+    .box {
+        width: $main_font_size - 0.5vw;
+    }
+}

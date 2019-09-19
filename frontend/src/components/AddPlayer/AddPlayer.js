@@ -16,10 +16,15 @@ export default class AddPlayer extends React.Component {
             playerId: 0,
             newPlayerData: undefined,
             isLoaded: true,
-            error: undefined
+            error: undefined,
+            isFormLoaded: false
         };
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleInputChange = this.handleInputChange.bind(this);
+
+        setTimeout(() => {
+            this.setState({isFormLoaded: true})
+        }, 200);
     }
 
     handleSubmit(e) {
@@ -74,33 +79,44 @@ export default class AddPlayer extends React.Component {
     }
 
     generateFormFields() {
-        return <div>
-            {this.generateLabels()}
-            <SubmitInput value="Add Player"/>
+        return <Loader
+            isLoaded={this.state.isFormLoaded}
+            content={
+                <div>
+                    {this.generateLabels()}
+                    <SubmitInput value="Add Player"/>
 
-            <Loader
-                error={this.state.error}
-                isLoaded={this.state.isLoaded}
-                content={this.state.newPlayerData}
-            />
-        </div>
+                    <Loader
+                        error={this.state.error}
+                        isLoaded={this.state.isLoaded}
+                        content={this.state.newPlayerData}
+                    />
+                </div>
+            }
+        />
     }
 
     generateLabels() {
         return (
-            <div>
-                <Label
-                    text='Name:'
-                    formField={this.generateTextInput('name')}
-                />
-                <Label
-                    text='Division:'
-                    formField={this.generateTextInput('division')}
-                />
-                <Label
-                    text='Player ID:'
-                    formField={this.generateTextInput('playerId')}
-                />
+            <div className="add-player">
+                <div>
+                    <Label
+                        text='Name:'
+                        formField={this.generateTextInput('name')}
+                    />
+                </div>
+                <div>
+                    <Label
+                        text='Division:'
+                        formField={this.generateTextInput('division')}
+                    />
+                </div>
+                <div>
+                    <Label
+                        text='Player ID:'
+                        formField={this.generateTextInput('playerId')}
+                    />
+                </div>
             </div>
         );
     }

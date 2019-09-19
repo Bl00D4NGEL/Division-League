@@ -23,15 +23,21 @@ export default class PlayerSelect extends React.Component {
 
     render() {
         return (
-            <label>
-                {this.labelText}:
-                <CustomSelect
-                    {...this.state}
-                    onChange={this.selectChange}
-                    defaultValue={this.defaultValue}
-                    options={this.generateOptions()}
-                />
-            </label>
+            <div className="custom-select flex">
+                <div>
+                    <label>
+                        {this.labelText}:
+                    </label>
+                </div>
+                <div>
+                    <CustomSelect
+                        {...this.state}
+                        onChange={this.selectChange}
+                        defaultValue={this.defaultValue}
+                        options={this.generateOptions()}
+                    />
+                </div>
+            </div>
         );
     }
 

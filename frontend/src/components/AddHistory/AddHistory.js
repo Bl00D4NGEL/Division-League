@@ -17,12 +17,33 @@ export default class AddHistory extends React.Component {
 
         this.state = {
             players: props.players,
-            winner: props.players[0],
-            loser: props.players[1],
             proofUrl: undefined,
-            isLoaded: true,
-            error: undefined
+            isLoaded: false,
+            error: undefined,
+            winner: undefined,
+            loser: undefined
         };
+
+        new CustomRequest(
+            Config.getAllPlayersEndpoint(),
+            (result) => {
+                this.setState(
+                    {
+                        players: result.data,
+                        isLoaded: true,
+                        winner: result.data[0],
+                        loser: result.data[1]
+                    }
+                );
+            },
+            (error) => {
+                this.setState({
+                    isLoaded: true,
+                    error
+                });
+            }
+        )
+            .execute();
 
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleProofUrlChange = this.handleProofUrlChange.bind(this);
@@ -39,6 +60,7 @@ export default class AddHistory extends React.Component {
             this.addHistory();
         }
     }
+
 
     addHistory() {
         this.setState({isLoaded: false});
@@ -63,8 +85,6 @@ export default class AddHistory extends React.Component {
                         changes: data.changes,
                         isLoaded: true,
                     });
-
-                    this.props.onAdd();
                 } else {
                     this.setState({
                         isLoaded: true,
@@ -94,37 +114,51 @@ export default class AddHistory extends React.Component {
 
     render() {
         return (
-            <CustomForm
-                onSubmit={this.handleSubmit}
-                formFields={this.generateFormFields()}
+            <Loader
+                isLoaded={this.state.isLoaded}
+                error={this.state.error}
+                content={
+                    <CustomForm
+                        onSubmit={this.handleSubmit}
+                        formFields={this.generateFormFields()}
+                    />
+                }
             />
         );
     }
 
     generateFormFields() {
         return <div>
-            <WinnerSelect
-                defaultValue={JSON.stringify(this.state.winner)}
-                players={this.props.players}
-                onChange={this.handleSelectChange}
-            />
-
-            <LoserSelect
-                defaultValue={JSON.stringify(this.state.loser)}
-                players={this.props.players}
-                onChange={this.handleSelectChange}
-            />
-
-            <Label
-                text='Proof:'
-                formField={<TextInput required pattern=".+\..+" onChange={this.handleProofUrlChange}/>}
-            />
-            <SubmitInput value='Add History'/>
-            <Loader
-                error={this.state.error}
-                isLoaded={this.state.isLoaded}
-                content={<EloChangeDisplay {...this.state} />}
-            />
+            <div>
+                <WinnerSelect
+                    defaultValue={JSON.stringify(this.state.winner)}
+                    players={this.state.players}
+                    onChange={this.handleSelectChange}
+                />
+            </div>
+            <div>
+                <LoserSelect
+                    defaultValue={JSON.stringify(this.state.loser)}
+                    players={this.state.players}
+                    onChange={this.handleSelectChange}
+                />
+            </div>
+            <div style={{marginBottom: 2 + 'vw'}}>
+                <Label
+                    text='Proof:'
+                    formField={<TextInput required pattern=".+\..+" onChange={this.handleProofUrlChange}/>}
+                />
+            </div>
+            <div>
+                <SubmitInput value='Add History'/>
+            </div>
+            <div>
+                <Loader
+                    error={this.state.error}
+                    isLoaded={this.state.isLoaded}
+                    content={<EloChangeDisplay {...this.state} />}
+                />
+            </div>
         </div>
     }
 }
