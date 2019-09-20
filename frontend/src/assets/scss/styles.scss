@@ -22,9 +22,7 @@ $line_height: 1.4;
 }
 
 body {
-  padding-top: $main_height + 3vh;
-  padding-bottom: $main_height + 3vh;
-  padding-left: $main_height * 1.5;
+  padding: $main_height + 3vh $main_height * 1.5;
   background-color: $primary_bg;
   font-weight: 600;
   color: $dmg_inc_white;

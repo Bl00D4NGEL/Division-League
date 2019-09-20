@@ -30,4 +30,14 @@ $main_font_size: 3.5vw;
     .box {
         width: $main_font_size - 0.5vw;
     }
+
+    .nav-link {
+        width: 100%;
+        padding: 1vw 3vw;
+    }
+
+    nav > ul > li {
+        display: flex;
+        width: 100%;
+    }
 }
