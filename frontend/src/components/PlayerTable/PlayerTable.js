@@ -12,6 +12,7 @@ export default class PlayerTable extends React.Component {
             error: undefined,
             players: []
         };
+
         this.loadData();
     }
 
@@ -42,7 +43,9 @@ export default class PlayerTable extends React.Component {
             error={this.state.error}
             content={
                 <Table
-                    tableHead={['Player', 'Elo', 'Wins', 'Loses', 'Win rate']}
+                    sortable={true}
+                    sortKey={1}
+                    tableHead={['Player', 'Elo', 'Division', 'Wins', 'Loses', 'Win rate']}
                     tableData={this.generateRows()}
                 />
             }
@@ -54,12 +57,17 @@ export default class PlayerTable extends React.Component {
             const matches = entry.loses + entry.wins || 1;
             const winRate = ((entry.wins || 1) / matches * 100).toPrecision(4);
             return [
-                entry.name,
+                <a key={entry.name} target="_blank" rel="noopener noreferrer" href={"https://di.community/profile/" + entry.playerId + "-" + entry.name}>{entry.name}</a>,
                 entry.elo,
+                entry.division,
                 entry.wins,
                 entry.loses,
                 winRate + ' %'
             ];
         });
+    }
+
+    sort() {
+        return this.sorter();
     }
 }

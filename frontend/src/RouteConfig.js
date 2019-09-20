@@ -1,4 +1,3 @@
-import React from 'react';
 import PlayerTable from "./components/PlayerTable/PlayerTable";
 import HistoryTable from "./components/HistoryTable/HistoryTable";
 import AddHistory from "./components/AddHistory/AddHistory";
