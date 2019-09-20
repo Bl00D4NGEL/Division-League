@@ -9,21 +9,8 @@ export default function Loader(props) {
         return <div>Error: {error.message}</div>;
     } else if (!isLoaded) {
         return (
-            <div className="App">
-                <div className="lds-spinner">
-                    <div/>
-                    <div/>
-                    <div/>
-                    <div/>
-                    <div/>
-                    <div/>
-                    <div/>
-                    <div/>
-                    <div/>
-                    <div/>
-                    <div/>
-                    <div/>
-                </div>
+            <div>
+                <div className="spinner"/>
             </div>
         );
     } else {
