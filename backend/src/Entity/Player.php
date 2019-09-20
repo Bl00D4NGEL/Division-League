@@ -136,7 +136,8 @@ class Player
             "elo" => $this->getEloRating(),
             "name" => $this->getName(),
             "id" => $this->getId(),
-            "playerId" => $this->getPlayerId()
+            "playerId" => $this->getPlayerId(),
+            "division" => $this->getDivision(),
         ];
     }
 }

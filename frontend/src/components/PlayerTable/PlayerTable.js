@@ -12,28 +12,27 @@ export default class PlayerTable extends React.Component {
             error: undefined,
             players: []
         };
+
         this.loadData();
     }
 
     loadData() {
+        const self = this;
         new CustomRequest(
             Config.getAllPlayersEndpoint(),
             (result) => {
-                this.setState(
-                    {
-                        players: result.data,
-                        isLoaded: true
-                    }
-                )
+                setter({players: result.data});
             },
-            (error) => {
-                this.setState({
-                    isLoaded: true,
-                    error
-                });
-            }
+            setter
         )
             .execute();
+
+        function setter(data) {
+            self.setState({
+                isLoaded: true,
+                ...data
+            });
+        }
     }
 
     render() {
@@ -42,7 +41,9 @@ export default class PlayerTable extends React.Component {
             error={this.state.error}
             content={
                 <Table
-                    tableHead={['Player', 'Elo', 'Wins', 'Loses', 'Win rate']}
+                    sortable={true}
+                    sortKey={1}
+                    tableHead={['Player', 'Elo', 'Division', 'Wins', 'Loses', 'Win rate']}
                     tableData={this.generateRows()}
                 />
             }
@@ -54,12 +55,17 @@ export default class PlayerTable extends React.Component {
             const matches = entry.loses + entry.wins || 1;
             const winRate = ((entry.wins || 1) / matches * 100).toPrecision(4);
             return [
-                entry.name,
+                <a key={entry.name} target="_blank" rel="noopener noreferrer" href={"https://di.community/profile/" + entry.playerId + "-" + entry.name}>{entry.name}</a>,
                 entry.elo,
+                entry.division,
                 entry.wins,
                 entry.loses,
                 winRate + ' %'
             ];
         });
+    }
+
+    sort() {
+        return this.sorter();
     }
 }

@@ -22,22 +22,18 @@ export default class CustomRequest {
             return;
         }
 
-        const request = this.getRequest(this._endpoint.method(), data);
-
-        if (request !== undefined) {
-            fetch(request).then(res => res.json())
-                .then(
-                    this._successCallback,
-                    this._errorCallback
-                );
-        }
+        fetch(this._getRequest(this._endpoint.method(), data)).then(res => res.json())
+            .then(
+                this._successCallback,
+                this._errorCallback
+            );
     }
 
-    prepareGetRequest() {
+    _prepareGetRequest() {
         return new Request(this._endpoint.url());
     }
 
-    preparePostRequest(data) {
+    _preparePostRequest(data) {
         return new Request(
             this._endpoint.url(),
             {
@@ -49,11 +45,12 @@ export default class CustomRequest {
         );
     }
 
-    getRequest(method, data) {
+    _getRequest(method, data) {
         if (method === 'GET') {
-            return this.prepareGetRequest();
+            return this._prepareGetRequest();
         } else if (method === 'POST') {
-            return this.preparePostRequest(data);
+            return this._preparePostRequest(data);
         }
+        return new Request(undefined);
     }
 }

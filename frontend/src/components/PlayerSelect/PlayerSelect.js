@@ -9,7 +9,10 @@ export default class PlayerSelect extends React.Component {
         this.onChange = props.onChange;
         this.defaultValue = props.defaultValue;
 
-        this.state = {data: props.data};
+        this.state = {
+            data: props.data,
+            defaultValue: this.defaultValue
+        };
 
         this.selectChange = this.selectChange.bind(this);
     }
@@ -46,7 +49,7 @@ export default class PlayerSelect extends React.Component {
             return {
                 key: x.id,
                 value: JSON.stringify(x),
-                name: x.name,
+                name: '[' + x.division + '] ' + x.name + ' (' + x.elo + ')',
             }
         });
     }
