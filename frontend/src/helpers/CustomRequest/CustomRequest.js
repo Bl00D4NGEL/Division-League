@@ -24,7 +24,14 @@ export default class CustomRequest {
 
         fetch(this._getRequest(this._endpoint.method(), data)).then(res => res.json())
             .then(
-                this._successCallback,
+                (res) => {
+                    if (res.status === 'error') {
+                        this._errorCallback(res);
+                    }
+                    else {
+                        this._successCallback(res);
+                    }
+                },
                 this._errorCallback
             );
     }

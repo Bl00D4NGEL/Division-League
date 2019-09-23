@@ -2,6 +2,7 @@ import PlayerTable from "./components/PlayerTable/PlayerTable";
 import HistoryTable from "./components/HistoryTable/HistoryTable";
 import AddHistory from "./components/AddHistory/AddHistory";
 import AddPlayer from "./components/AddPlayer/AddPlayer";
+import Login from "./components/Login/Login";
 
 export default class RouteConfig {
     static config = [
@@ -25,6 +26,11 @@ export default class RouteConfig {
             'path': '/add/player',
             'component': AddPlayer,
             'name': 'Add Player'
+        },
+        {
+            'path': '/login',
+            'component': Login,
+            'name': 'Login'
         }
     ];
 

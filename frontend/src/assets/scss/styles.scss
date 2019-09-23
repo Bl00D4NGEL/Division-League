@@ -65,7 +65,7 @@ label {
     width: $main_font_size - 0.7vw;
   }
 
-  input[type=text] {
+  input[type=text], input[type=password] {
     margin-left: 0.5vw;
     line-height: $line_height;
   }

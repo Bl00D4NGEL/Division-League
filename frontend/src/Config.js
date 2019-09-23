@@ -14,6 +14,10 @@ export default class Config {
         return this._getApiUrlBase() + "/player" + (suffix !== undefined ? "/" + suffix : '');
     }
 
+    static loginEndpointUrl() {
+        return this._getApiUrlBase() + "/login";
+    }
+
     static recentHistoryEndpoint() {
         return new Endpoint(this.historyEndpointUrl('get/recent'));
     }
@@ -28,6 +32,10 @@ export default class Config {
 
     static addPlayerEndPoint() {
         return new Endpoint(this.playerEndpointUrl('add'), 'POST');
+    }
+
+    static loginEndpoint() {
+        return new Endpoint(this.loginEndpointUrl(), 'POST');
     }
 }
 
