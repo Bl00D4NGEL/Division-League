@@ -72,27 +72,24 @@ export default class AddHistory extends React.Component {
         new CustomRequest(
             Config.addHistoryEndPoint(),
             (responseData) => {
-                const data = responseData.data;
                 if (responseData.status === 'success') {
-                    const winner = this.state.winner;
-                    winner.elo += data.changes.winner;
-
-                    const loser = this.state.loser;
-                    loser.elo += data.changes.loser;
+                    const data = responseData.data;
+                    const changes = {
+                        'winner': data.winner.elo - this.state.winner.elo,
+                        'loser': data.loser.elo - this.state.loser.elo
+                    };
                     this.setState({
-                        winner: winner,
-                        loser: loser,
-                        changes: data.changes,
-                        isLoaded: true,
+                        winner: data.winner,
+                        loser: data.loser,
+                        changes: changes,
+                        isLoaded: true
                     });
-                } else {
+                }
+            }, (error) => {
                     this.setState({
                         isLoaded: true,
-                        error: {
-                            message: 'Status = ' + responseData.status
-                        }
+                        error
                     })
-                }
             }
         )
             .execute(data);

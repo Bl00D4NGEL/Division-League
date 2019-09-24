@@ -13,26 +13,27 @@ export default class PlayerTable extends React.Component {
             players: []
         };
 
+        this.loadData = this.loadData.bind(this);
+
         this.loadData();
     }
 
     loadData() {
-        const self = this;
         new CustomRequest(
             Config.getAllPlayersEndpoint(),
             (result) => {
-                setter({players: result.data});
+                this.setter({players: result.data});
             },
-            setter
+            this.setter
         )
             .execute();
+    }
 
-        function setter(data) {
-            self.setState({
-                isLoaded: true,
-                ...data
-            });
-        }
+    setter(data) {
+        this.setState({
+            isLoaded: true,
+            ...data
+        });
     }
 
     render() {
@@ -55,7 +56,8 @@ export default class PlayerTable extends React.Component {
             const matches = entry.loses + entry.wins || 1;
             const winRate = ((entry.wins || 1) / matches * 100).toPrecision(4);
             return [
-                <a key={entry.name} target="_blank" rel="noopener noreferrer" href={"https://di.community/profile/" + entry.playerId + "-" + entry.name}>{entry.name}</a>,
+                <a key={entry.name} target="_blank" rel="noopener noreferrer"
+                   href={"https://di.community/profile/" + entry.playerId + "-" + entry.name}>{entry.name}</a>,
                 entry.elo,
                 entry.division,
                 entry.wins,

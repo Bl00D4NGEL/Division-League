@@ -123,10 +123,49 @@ class Player
         return $this;
     }
 
-    public function getQpoints()
+    public function winAgainst(Player $enemy): Player
+    {
+        $this->setWins($this->getWins() + 1);
+        $this->setEloRating($this->getEloRating() + $this->calculateEloChangeForWinAgainst($enemy));
+        return $this;
+    }
+
+    public function loseAgainst(Player $enemy): Player
+    {
+        $this->setLoses($this->getLoses() + 1);
+        $this->setEloRating($this->getEloRating() + $this->calculateEloChangeForLoseAgainst($enemy));
+        return $this;
+    }
+
+    public function calculateEloChangeForLoseAgainst(Player $enemy)
+    {
+        return ceil($this->calculateKFactorAgainst($enemy) * (0 - $this->calculateWinChanceAgainst($enemy)));
+    }
+
+    public function calculateEloChangeForWinAgainst(Player $enemy)
+    {
+        return ceil($this->calculateKFactorAgainst($enemy) * (1 - $this->calculateWinChanceAgainst($enemy)));
+    }
+
+    private function calculateKFactorAgainst(Player $enemy)
+    {
+        $kFactor = ($this->getEloRating() + $enemy->getEloRating()) / 100;
+        if ($kFactor < 16) {
+            $kFactor = 16;
+        }
+        return $kFactor;
+    }
+
+    private function calculateWinChanceAgainst(Player $enemy)
+    {
+        return $this->getQpoints() / ($this->getQpoints() + $enemy->getQpoints());
+    }
+
+    private function getQpoints()
     {
         return 10 ** ($this->eloRating / 400);
     }
+
 
     public function asArray()
     {

@@ -14,24 +14,36 @@ use JMS\Serializer\SerializerInterface;
 use App\Entity\Player;
 use App\Entity\History;
 
-use App\Helper\EloChangeCalculator;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class HistoryModel
 {
-    /** @var EntityManagerInterface $entityManager */
+    /** @var EntityManagerInterface */
     private $entityManager;
 
-    /** @var SerializerInterface $serializer */
+    /** @var SerializerInterface */
     private $serializer;
 
-    /** @var Player[] $playerMap */
+    /** @var Player[] */
     private $playerMap;
 
-    public function __construct(EntityManagerInterface $entityManager, SerializerInterface $serializer)
+    /** @var PlayerRepository */
+    private $playerRepository;
+
+    /** @var HistoryRepository */
+    private $historyRepository;
+
+    public function __construct(
+        EntityManagerInterface $entityManager,
+        SerializerInterface $serializer,
+        PlayerRepository $playerRepository,
+        HistoryRepository $historyRepository
+    )
     {
         $this->entityManager = $entityManager;
         $this->serializer = $serializer;
+        $this->playerRepository = $playerRepository;
+        $this->historyRepository = $historyRepository;
     }
 
     /**
@@ -53,42 +65,30 @@ class HistoryModel
      */
     private function insertHistory(AddHistoryRequest $request): JsonResponse
     {
-        $historyEntry = new History();
-        $historyEntry->setWinner($request->winner)
-            ->setLoser($request->loser)
-            ->setProofUrl($request->proofUrl);
-        $this->entityManager->persist($historyEntry);
-
-
-        $changes = $this->updateEloForPlayers($request);
-
-        $this->entityManager->flush();
-        return new SuccessResponse([
-            "historyId" => $historyEntry->getId(),
-            "changes" => $changes,
-        ]);
-    }
-
-    private function updateEloForPlayers(AddHistoryRequest $request): array
-    {
-        $playerRepository = $this->getPlayerRepository();
-
-        $eloCalc = new EloChangeCalculator(
-            $playerRepository->findById($request->winner),
-            $playerRepository->findById($request->loser)
-        );
-
-        return $eloCalc->updatePlayers();
+        $winner = $this->playerRepository->findById($request->winner);
+        $loser = $this->playerRepository->findById($request->loser);
+        if ($winner !== null && $loser !== null) {
+            $historyId = $this->updateWinnerAndLoserInDatabase($request->proofUrl, $winner, $loser);
+            if ($historyId !== null) {
+                return new SuccessResponse([
+                    "historyId" => $historyId,
+                    "winner" => $winner->asArray(),
+                    "loser" => $loser->asArray()
+                ]);
+            }
+            return new ErrorResponse(ErrorResponse::ERROR_PERSISTING_DATA);
+        }
+        return new ErrorResponse(ErrorResponse::INVALID_DATA_SENT);
     }
 
     public function getHistoryAll(): JsonResponse
     {
-        return $this->createHistoryResponse($this->getHistoryRepository()->findAll());
+        return $this->createHistoryResponse($this->historyRepository->findAll());
     }
 
     public function getHistoryRecent(): JsonResponse
     {
-        return $this->createHistoryResponse($this->getHistoryRepository()->findLastEntries(20));
+        return $this->createHistoryResponse($this->historyRepository->findLastEntries(20));
     }
 
     /**
@@ -97,7 +97,7 @@ class HistoryModel
      */
     public function getHistory(GetHistoryRequest $request): JsonResponse
     {
-        $histories = $this->getHistoryRepository()->findWithHistoryEntity($request->history, $request->limit);
+        $histories = $this->historyRepository->findWithHistoryEntity($request->history, $request->limit);
         return $this->createHistoryResponse($histories);
     }
 
@@ -105,7 +105,7 @@ class HistoryModel
     {
         $playerMap = [];
 
-        foreach ($this->getPlayerRepository()->findAll() as $player) {
+        foreach ($this->playerRepository->findAll() as $player) {
             $playerMap[$player->getId()] = $this->serializer->serialize($player, 'json');
         }
         return $playerMap;
@@ -153,18 +153,24 @@ class HistoryModel
     }
 
     /**
-     * @return HistoryRepository|\Doctrine\Common\Persistence\ObjectRepository
+     * @param string $proofUrl
+     * @param Player|null $winner
+     * @param Player|null $loser
+     * @return int|null
      */
-    private function getHistoryRepository()
+    private function updateWinnerAndLoserInDatabase(string $proofUrl, Player $winner, Player $loser): ?int
     {
-        return $this->entityManager->getRepository(History::class);
-    }
+        $historyEntry = new History();
+        $historyEntry->setWinner($winner->getId())
+            ->setEloWinWinner($winner->calculateEloChangeForWinAgainst($loser))
+            ->setLoser($loser->getId())
+            ->setEloLoseLoser($loser->calculateEloChangeForWinAgainst($winner))
+            ->setProofUrl($proofUrl);
+        $this->entityManager->persist($historyEntry);
 
-    /**
-     * @return PlayerRepository|\Doctrine\Common\Persistence\ObjectRepository
-     */
-    private function getPlayerRepository()
-    {
-        return $this->entityManager->getRepository(Player::class);
+        $winner->winAgainst($loser);
+        $loser->loseAgainst($winner);
+        $this->entityManager->flush();
+        return $historyEntry->getId();
     }
 }

@@ -31,6 +31,16 @@ class History
      */
     private $proofUrl;
 
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $eloWinWinner;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $eloLoseLoser;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -79,5 +89,29 @@ class History
             $data[$field] = $value;
         }
         return $data;
+    }
+
+    public function getEloWinWinner(): ?int
+    {
+        return $this->eloWinWinner;
+    }
+
+    public function setEloWinWinner(int $eloWinWinner): self
+    {
+        $this->eloWinWinner = $eloWinWinner;
+
+        return $this;
+    }
+
+    public function getEloLoseLoser(): ?int
+    {
+        return $this->eloLoseLoser;
+    }
+
+    public function setEloLoseLoser(int $eloLoseLoser): self
+    {
+        $this->eloLoseLoser = $eloLoseLoser;
+
+        return $this;
     }
 }
