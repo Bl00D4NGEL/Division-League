@@ -1,15 +1,26 @@
 import RouteConfig from "./RouteConfig";
 import {BrowserRouter as Router, NavLink, Redirect, Route} from "react-router-dom";
 import React from "react";
+import UserRoles from "./UserRoles";
 
 export default class AppRouter extends React.Component{
+    constructor(props) {
+        super(props);
+        this.state = {
+            isLoggedIn: false,
+            user: {
+                role: UserRoles.normal
+            }
+        }
+    }
+
     render() {
         return <Router>
             <Redirect to={RouteConfig.getDefaultPath()}/>
             <div>
                 <nav>
                     <ul>
-                        {AppRouter.generateNavLinks()}
+                        {this.generateNavLinks()}
                     </ul>
                 </nav>
                 {AppRouter.generateRoutes()}
@@ -17,8 +28,9 @@ export default class AppRouter extends React.Component{
         </Router>
     }
 
-    static generateNavLinks() {
-        return RouteConfig.get(['path', 'name']).map((d) => {
+    generateNavLinks() {
+        return RouteConfig.get(['path', 'name', 'requiresLogin', 'requiredRole']).map((d) => {
+            if (d[2] && !this.state.isLoggedIn || d[3] > this.state.user.role) { return; }
             return <li key={d}>
                 <NavLink to={d[0]} className="nav-link">{d[1]}</NavLink>
             </li>

@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Models;
-
 
 use App\Repository\UserRepository;
 use App\Resource\JsonResponse\ErrorResponse;
@@ -37,7 +35,7 @@ class LoginModel
         return new SuccessResponse(
             [
                 'isLoggedIn' => true,
-                'role' => $user->getRole()
+                'user' => $user->asArray()
             ]
         );
     }

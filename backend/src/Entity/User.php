@@ -99,4 +99,13 @@ class User
     public function verifyPassword(string $password): bool {
         return password_verify($password, $this->getPassword());
     }
+
+    public function asArray()
+    {
+        return [
+            'id' => $this->getId(),
+            'role' => $this->getRole(),
+            'lastLoggedIn' => $this->getLastLoggedIn(),
+        ];
+    }
 }
