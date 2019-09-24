@@ -1,7 +1,6 @@
 <?php
 namespace App\Resource;
 
-use App\Entity\Player;
 use JMS\Serializer\Annotation\SerializedName;
 use JMS\Serializer\Annotation\Type;
 
@@ -27,9 +26,9 @@ class AddPlayerRequest
     public $playerId;
 
     /**
-     * @var int $eloRating
+     * @var int $elo
      */
-    public $eloRating = 1000;
+    public $elo = 1000;
 
     /**
      * @var int $wins

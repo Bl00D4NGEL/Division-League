@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Resource\AddPlayerRequest;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -29,7 +30,7 @@ class Player
     /**
      * @ORM\Column(type="integer", options={"default": 1000})
      */
-    private $eloRating;
+    private $elo;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -75,14 +76,14 @@ class Player
         return $this;
     }
 
-    public function getEloRating(): ?int
+    public function getElo(): ?int
     {
-        return $this->eloRating;
+        return $this->elo;
     }
 
-    public function setEloRating(int $eloRating): self
+    public function setElo(int $elo): self
     {
-        $this->eloRating = $eloRating;
+        $this->elo = $elo;
 
         return $this;
     }
@@ -126,14 +127,14 @@ class Player
     public function winAgainst(Player $enemy): Player
     {
         $this->setWins($this->getWins() + 1);
-        $this->setEloRating($this->getEloRating() + $this->calculateEloChangeForWinAgainst($enemy));
+        $this->setElo($this->getElo() + $this->calculateEloChangeForWinAgainst($enemy));
         return $this;
     }
 
     public function loseAgainst(Player $enemy): Player
     {
         $this->setLoses($this->getLoses() + 1);
-        $this->setEloRating($this->getEloRating() + $this->calculateEloChangeForLoseAgainst($enemy));
+        $this->setElo($this->getElo() + $this->calculateEloChangeForLoseAgainst($enemy));
         return $this;
     }
 
@@ -149,7 +150,7 @@ class Player
 
     private function calculateKFactorAgainst(Player $enemy)
     {
-        $kFactor = ($this->getEloRating() + $enemy->getEloRating()) / 100;
+        $kFactor = ($this->getElo() + $enemy->getElo()) / 100;
         if ($kFactor < 16) {
             $kFactor = 16;
         }
@@ -163,20 +164,29 @@ class Player
 
     private function getQpoints()
     {
-        return 10 ** ($this->eloRating / 400);
+        return 10 ** ($this->elo / 400);
     }
 
-
-    public function asArray()
+    /**
+     * @return array
+     */
+    public function asArray(): array
     {
-        return [
-            "wins" => $this->getWins(),
-            "loses" => $this->getLoses(),
-            "elo" => $this->getEloRating(),
-            "name" => $this->getName(),
-            "id" => $this->getId(),
-            "playerId" => $this->getPlayerId(),
-            "division" => $this->getDivision(),
-        ];
+        $data = [];
+        foreach ($this as $field => $value) {
+            $data[$field] = $value;
+        }
+        return $data;
+    }
+
+    public static function fromAddPlayerRequest(AddPlayerRequest $request): self
+    {
+        return (new self())
+            ->setDivision($request->division)
+            ->setElo($request->elo)
+            ->setName($request->name)
+            ->setPlayerId($request->playerId)
+            ->setWins($request->wins)
+            ->setLoses($request->loses);
     }
 }

@@ -80,17 +80,6 @@ class History
         return $this;
     }
 
-    /**
-     * @return array
-     */
-    public function asArray(): array {
-        $data = [];
-        foreach($this as $field => $value) {
-            $data[$field] = $value;
-        }
-        return $data;
-    }
-
     public function getEloWinWinner(): ?int
     {
         return $this->eloWinWinner;
@@ -113,5 +102,16 @@ class History
         $this->eloLoseLoser = $eloLoseLoser;
 
         return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function asArray(): array {
+        $data = [];
+        foreach($this as $field => $value) {
+            $data[$field] = $value;
+        }
+        return $data;
     }
 }

@@ -34,13 +34,8 @@ class PlayerModel
             if ($this->doesPlayerAlreadyExist($request)) {
                 return new ErrorResponse(sprintf(ErrorResponse::PLAYER_DOES_ALREADY_EXIST, $request->name));
             }
-            $player = new Player();
-            $player->setDivision($request->division)
-                ->setEloRating($request->eloRating)
-                ->setName($request->name)
-                ->setPlayerId($request->playerId)
-                ->setWins($request->wins)
-                ->setLoses($request->loses);
+            $player = Player::fromAddPlayerRequest($request);
+
             $this->entityManager->persist($player);
             $this->entityManager->flush();
             return new SuccessResponse([

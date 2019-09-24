@@ -122,6 +122,8 @@ class HistoryModel
             "winner" => json_decode($playerMap[$history->getWinner()]),
             "loser" => json_decode($playerMap[$history->getLoser()]),
             "proofUrl" => $history->getProofUrl(),
+            "winnerEloWin" => $history->getEloWinWinner(),
+            "loserEloLose" => $history->getEloLoseLoser(),
             "id" => $history->getId()
         ];
     }

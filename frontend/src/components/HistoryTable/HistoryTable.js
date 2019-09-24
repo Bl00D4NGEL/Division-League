@@ -40,7 +40,8 @@ export default class HistoryTable extends React.Component {
         return <Loader
             isLoaded={this.state.isLoaded}
             error={this.state.error}
-            content={<Table tableHead={['ID', 'Winner', 'Loser', 'Proof']} tableData={this.generateHistoryTableRows()}/>}
+            content={<Table tableHead={['ID', 'Winner', 'Loser', 'Proof']}
+                            tableData={this.generateHistoryTableRows()}/>}
         />
     }
 
@@ -48,10 +49,22 @@ export default class HistoryTable extends React.Component {
         return this.state.historyEntries.map((entry) => {
             return [
                 entry.id,
-                entry.winner.name,
-                entry.loser.name,
+                formatWinnerEntry(entry),
+                formatLoserEntry(entry),
                 <a href={entry.proofUrl} target="_blank" rel="noopener noreferrer">Link</a>
             ];
         });
     }
+}
+
+function formatWinnerEntry(entry) {
+    return formatEntry(entry.winner.name, entry.winner.elo, entry.winnerEloWin);
+}
+
+function formatLoserEntry(entry) {
+    return formatEntry(entry.loser.name, entry.loser.elo, -entry.loserEloLose);
+}
+
+function formatEntry(name, elo, gain) {
+    return name + ' (' + (elo - gain) + ' => ' + elo + ' [' + (gain > 0 ? '+' : '' ) + gain + '])';
 }
