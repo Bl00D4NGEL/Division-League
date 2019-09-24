@@ -1,5 +1,4 @@
 import React from "react";
-import Loader from "../BaseElements/Loader";
 import TextInput from "../BaseElements/TextInput";
 import Label from "../BaseElements/Label";
 import PasswordInput from "../BaseElements/PasswordInput";
@@ -7,14 +6,11 @@ import CustomForm from "../BaseElements/Form";
 import SubmitInput from "../BaseElements/SubmitInput";
 import CustomRequest from "../../helpers/CustomRequest/CustomRequest";
 import Config from "../../Config";
+import FakeLoader from "../BaseElements/FakeLoader";
 
 export default class Login extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {
-            isLoaded: true
-        };
-
         this.handleInputChange = this.handleInputChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
@@ -55,7 +51,12 @@ export default class Login extends React.Component {
                 isLoaded: true,
                 isLoggedIn: result.data.isLoggedIn
             });
-            console.log(this.state);
+            if (this.props.setter.setIsLoggedIn !== undefined) {
+                this.props.setter.setIsLoggedIn(result.data.isLoggedIn);
+            }
+            if (this.props.setter.setUser !== undefined) {
+                this.props.setter.setUser(result.data.user);
+            }
         }, (error) => {
             this.setState({
                 isLoaded: true,
@@ -65,7 +66,7 @@ export default class Login extends React.Component {
     }
 
     render() {
-        return <Loader isLoaded={this.state.isLoaded} content={
+        return <FakeLoader content={
             <CustomForm
                 onSubmit={this.handleSubmit}
                 formFields={
@@ -83,6 +84,7 @@ export default class Login extends React.Component {
             <div>
                 <Label
                     text='User:'
+                    autofocus
                     formField={<TextInput data={JSON.stringify({field: 'user'})} required onChange={this.handleInputChange}/>}
                 />
 

@@ -6,6 +6,7 @@ import CustomForm from "../BaseElements/Form";
 import SubmitInput from "../BaseElements/SubmitInput";
 import CustomRequest from "../../helpers/CustomRequest/CustomRequest";
 import Loader from "../BaseElements/Loader";
+import FakeLoader from "../BaseElements/FakeLoader";
 
 export default class AddPlayer extends React.Component {
     constructor(props) {
@@ -79,8 +80,7 @@ export default class AddPlayer extends React.Component {
     }
 
     generateFormFields() {
-        return <Loader
-            isLoaded={this.state.isFormLoaded}
+        return <FakeLoader
             content={
                 <div>
                     {this.generateLabels()}

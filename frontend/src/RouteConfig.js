@@ -39,20 +39,13 @@ export default class RouteConfig {
             'component': Login,
             'name': 'Login',
             'requiresLogin': false,
-            'requiredRole': UserRoles.normal
+            'requiredRole': UserRoles.normal,
+            'shouldRender': true
         }
     ];
 
-    static get(keys) {
-        if (keys === undefined || keys.length === 0) {
-            return [];
-        }
-
-        return RouteConfig.config.map((route) => {
-            return keys.map((key) => {
-                return route[key];
-            });
-        });
+    static getAll() {
+        return RouteConfig.config;
     }
 
     static getDefaultPath() {
