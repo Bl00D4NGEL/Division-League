@@ -63,7 +63,6 @@ export default class AddHistory extends React.Component {
 
 
     addHistory() {
-        this.setState({isLoaded: false});
         const data = {
             winner: this.state.winner.id,
             loser: this.state.loser.id,

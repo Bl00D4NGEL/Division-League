@@ -49,22 +49,10 @@ export default class HistoryTable extends React.Component {
         return this.state.historyEntries.map((entry) => {
             return [
                 entry.id,
-                formatWinnerEntry(entry),
-                formatLoserEntry(entry),
+                entry.winner.name + ' [+' + entry.winnerEloWin + ']',
+                entry.loser.name + ' [-' + entry.loserEloLose + ']',
                 <a href={entry.proofUrl} target="_blank" rel="noopener noreferrer">Link</a>
             ];
         });
     }
-}
-
-function formatWinnerEntry(entry) {
-    return formatEntry(entry.winner.name, entry.winner.elo, entry.winnerEloWin);
-}
-
-function formatLoserEntry(entry) {
-    return formatEntry(entry.loser.name, entry.loser.elo, -entry.loserEloLose);
-}
-
-function formatEntry(name, elo, gain) {
-    return name + ' (' + (elo - gain) + ' => ' + elo + ' [' + (gain > 0 ? '+' : '' ) + gain + '])';
 }

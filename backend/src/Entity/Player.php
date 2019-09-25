@@ -140,12 +140,12 @@ class Player
 
     public function calculateEloChangeForLoseAgainst(Player $enemy)
     {
-        return ceil($this->calculateKFactorAgainst($enemy) * (0 - $this->calculateWinChanceAgainst($enemy)));
+        return ceil($this->calculateKFactorAgainst($enemy) * (0 + $this->calculateWinChanceAgainst($enemy)));
     }
 
     public function calculateEloChangeForWinAgainst(Player $enemy)
     {
-        return ceil($this->calculateKFactorAgainst($enemy) * (1 - $this->calculateWinChanceAgainst($enemy)));
+            return ceil($this->calculateKFactorAgainst($enemy) * (1 - $this->calculateWinChanceAgainst($enemy)));
     }
 
     private function calculateKFactorAgainst(Player $enemy)

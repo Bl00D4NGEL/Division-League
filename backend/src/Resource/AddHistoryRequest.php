@@ -2,7 +2,6 @@
 namespace App\Resource;
 
 
-use App\Entity\Player;
 use JMS\Serializer\Annotation\SerializedName;
 use JMS\Serializer\Annotation\Type;
 
@@ -33,6 +32,7 @@ class AddHistoryRequest
             isset($this->winner)
             && isset($this->loser)
             && isset($this->proofUrl)
+            && $this->winner !== $this->loser
         );
     }
 }

@@ -7,7 +7,7 @@ export default class WinnerLoserValidator {
     }
 
     static areOpponentsEqual(state) {
-        return (this.isLoserAndWinnerNotSet(state) && state.winner.id === state.loser.id);
+        return (!this.isLoserAndWinnerNotSet(state) && state.winner.id === state.loser.id);
     }
 
     static doesIdExist(object) {
