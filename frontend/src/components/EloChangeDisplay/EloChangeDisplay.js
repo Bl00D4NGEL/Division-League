@@ -20,8 +20,8 @@ export default function EloChangeDisplay(props) {
                 </div>
                 <br/>
                 <div>{props.loser.name} moves
-                    from {props.loser.elo - props.changes.loser} to {props.loser.elo} elo
-                    ({props.changes.loser})
+                    from {props.loser.elo} to {props.loser.elo - props.changes.loser} elo
+                    (-{props.changes.loser})
                 </div>
                 <br/>
             </div>

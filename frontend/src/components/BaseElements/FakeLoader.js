@@ -1,22 +1,12 @@
-import React, {Component} from "react";
+import React, {useState} from "react";
 import Loader from "./Loader";
 
-/**
- * @return {null}
- */
-export default class FakeLoader extends Component {
-    constructor(props) {
-        super(props);
+export default function FakeLoader({isLoaded, content, timeOut}) {
+    const [loaded, setLoaded] = useState(isLoaded);
+    setTimeout(() => setLoaded(true), timeOut || 200);
 
-        this.state = {isLoaded: false};
-        setTimeout(() => this.setState({isLoaded: true}), props.timeOut || 200);
-
-    }
-
-    render() {
-        return <Loader
-            isLoaded={this.state.isLoaded}
-            content={this.props.content}
-        />
-    }
+    return <Loader
+        isLoaded={loaded}
+        content={content}
+    />
 }

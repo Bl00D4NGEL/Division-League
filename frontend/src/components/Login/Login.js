@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import TextInput from "../BaseElements/TextInput";
 import Label from "../BaseElements/Label";
 import PasswordInput from "../BaseElements/PasswordInput";
@@ -8,94 +8,65 @@ import CustomRequest from "../../helpers/CustomRequest/CustomRequest";
 import Config from "../../Config";
 import FakeLoader from "../BaseElements/FakeLoader";
 
-export default class Login extends React.Component {
-    constructor(props) {
-        super(props);
-        this.handleInputChange = this.handleInputChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
-    }
+export default function Login(props) {
+    const [user, setUser] = useState(undefined);
+    const [password, setPassword] = useState(undefined);
 
-    handleInputChange(e) {
-        const key = JSON.parse(e.target.attributes.getNamedItem('data').value).field;
-        const value = e.target.value;
-        const change = {
-            [key]: value
-        };
-        this.setState(change);
-    }
-
-    handleSubmit(e) {
-        e.preventDefault();
-        if (this.areRequiredFieldsSet()) {
-            this.login();
-        } else {
-            alert("Please enter all required fields");
-        }
-    }
-
-    areRequiredFieldsSet() {
-        return (
-            this.state.user !== undefined &&
-            this.state.password !== undefined
-        );
-    }
-
-    login() {
-        this.setState({isLoaded: false});
-        const data = {
-            user: this.state.user,
-            password: this.state.password,
-        };
-        new CustomRequest(Config.loginEndpoint(), (result) => {
-            this.setState({
-                isLoaded: true,
-                isLoggedIn: result.data.isLoggedIn
-            });
-            if (this.props.setter.setIsLoggedIn !== undefined) {
-                this.props.setter.setIsLoggedIn(result.data.isLoggedIn);
-            }
-            if (this.props.setter.setUser !== undefined) {
-                this.props.setter.setUser(result.data.user);
-            }
-        }, (error) => {
-            this.setState({
-                isLoaded: true,
-                error
-            });
-        }).execute(data);
-    }
-
-    render() {
-        return <FakeLoader content={
-            <CustomForm
-                onSubmit={this.handleSubmit}
-                formFields={
-                    <div>
-                        {this.generateFormFields()}
-                        <SubmitInput value="Login"/>
-                    </div>
-                }
-            />
-        }/>;
-    }
-
-    generateFormFields() {
+    const generateFormFields = () => {
         return <div>
             <div>
                 <Label
                     text='User:'
                     autofocus
-                    formField={<TextInput data={JSON.stringify({field: 'user'})} required onChange={this.handleInputChange}/>}
+                    formField={<TextInput name="user" required onChange={(e) => setUser(e.target.value)}/>}
                 />
 
             </div>
             <div>
                 <Label
                     text='Password:'
-                    formField={<PasswordInput data={JSON.stringify({field: 'password'})} required
-                                              onChange={this.handleInputChange}/>}
+                    formField={<PasswordInput name="password" required onChange={(e) => setPassword(e.target.value)}/>}
                 />
             </div>
         </div>
-    }
+    };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        if (areRequiredFieldsSet()) {
+            login();
+        } else {
+            alert("Please enter all required fields");
+        }
+    };
+
+    const login = () => {
+        new CustomRequest(Config.loginEndpoint(), (result) => {
+            if (props.setter.setIsLoggedIn !== undefined) {
+                props.setter.setIsLoggedIn(result.data.isLoggedIn);
+            }
+            if (props.setter.setUser !== undefined) {
+                props.setter.setUser(result.data.user);
+            }
+        }).execute({user, password});
+    };
+
+    const areRequiredFieldsSet = () => {
+        return (
+            user !== undefined
+            && password !== undefined
+        );
+    };
+
+    return <FakeLoader content={
+        <CustomForm
+            onSubmit={handleSubmit}
+            formFields={
+                <div>
+                    {generateFormFields()}
+                    <SubmitInput value="Login"/>
+                </div>
+            }
+        />
+    }/>;
 }

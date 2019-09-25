@@ -1,72 +1,55 @@
-import React, {Component} from 'react';
+import React, {useState} from 'react';
 import classNames from "classnames"
 import Sorter from "../../helpers/Sorter/Sorter";
 
-export default class CustomTable extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            sortable: props.sortable,
-            tableData: props.tableData,
-            reverseSort: false,
-            ...props
-        };
+export default function CustomTable({sortable, tableData, tableHead}) {
+    const [sortKey, setSortKey] = useState(undefined);
+    const [reverseSort, setReverseSort] = useState(false);
 
-        this.onSort = this.onSort.bind(this);
-    }
-
-    render() {
-        let {tableHead} = this.props;
-
-        return (
-            <table>
-                <thead>
-                <tr>
-                    {tableHead.map((prop, key) => {
-                        const tdClass = classNames({
-                            'sort-order': this.state.sortKey === key,
-                            'reverse': this.state.reverseSort
-                        });
-                        return (
-                            <td className={tdClass} onClick={e => this.onSort(e, key)} key={key}>
-                                {prop}
-                            </td>
-                        );
-                    })}
-                </tr>
-                </thead>
-                <tbody>
-                {this.sortData().map((prop, key) => {
-                    return (
-                        <tr key={key}>
-                            {prop.map((prop, key) => {
-                                return (
-                                    <td key={key}>
-                                        {prop}
-                                    </td>
-                                );
-                            })}
-                        </tr>
-                    );
-                })}
-                </tbody>
-            </table>
-        );
-    }
-
-    onSort(e, key) {
-        if(!this.state.sortable) {
+    const setSort = (e, key) => {
+        if(sortable !== true) {
             return;
         }
+        setSortKey(key);
+        setReverseSort(!reverseSort);
+    };
 
-        this.setState({
-            sortKey: key,
-            reverseSort: !this.state.reverseSort
-        });
-    }
+    const sortData = () => {
+        return Sorter(tableData, sortKey, reverseSort)
+    };
 
-    sortData() {
-        return Sorter(this.state.tableData, this.state.sortKey, this.state.reverseSort)
-    }
+    return (
+        <table>
+            <thead>
+            <tr>
+                {tableHead.map((prop, key) => {
+                    const tdClass = classNames({
+                        'sort-order': sortKey === key,
+                        'reverse': reverseSort
+                    });
+                    return (
+                        <td className={tdClass} onClick={e => setSort(e, key)} key={key}>
+                            {prop}
+                        </td>
+                    );
+                })}
+            </tr>
+            </thead>
+            <tbody>
+            {sortData().map((prop, key) => {
+                return (
+                    <tr key={key}>
+                        {prop.map((prop, key) => {
+                            return (
+                                <td key={key}>
+                                    {prop}
+                                </td>
+                            );
+                        })}
+                    </tr>
+                );
+            })}
+            </tbody>
+        </table>
+    );
 }
-

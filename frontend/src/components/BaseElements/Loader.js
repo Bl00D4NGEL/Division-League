@@ -1,10 +1,6 @@
 import React from "react";
 
-/**
- * @return {null}
- */
-export default function Loader(props) {
-    const {error, isLoaded} = props;
+export default function Loader({error, isLoaded, content}) {
     if (error) {
         return <div>Error: {error.message}</div>;
     } else if (!isLoaded) {
@@ -14,6 +10,6 @@ export default function Loader(props) {
             </div>
         );
     } else {
-        return props.content !== undefined ? props.content : null;
+        return content !== undefined ? content : <div/>;
     }
 }
