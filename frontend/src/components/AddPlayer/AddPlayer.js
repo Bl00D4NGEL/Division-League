@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import Config from "../../Config";
 import TextInput from "../BaseElements/TextInput";
 import Label from "../BaseElements/Label";
@@ -8,120 +8,98 @@ import CustomRequest from "../../helpers/CustomRequest/CustomRequest";
 import Loader from "../BaseElements/Loader";
 import FakeLoader from "../BaseElements/FakeLoader";
 
-export default class AddPlayer extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            name: undefined,
-            division: undefined,
-            playerId: 0,
-            newPlayerData: undefined,
-            isLoaded: true,
-            error: undefined,
-            isFormLoaded: false
-        };
-        this.handleSubmit = this.handleSubmit.bind(this);
-        this.handleInputChange = this.handleInputChange.bind(this);
+export default function AddPlayer() {
+    const [isLoaded, setIsLoaded] = useState(true);
+    const [error, setError] = useState(undefined);
+    const [result, setResult] = useState(undefined);
+    const [newPlayerData, _setNewPlayerData] = useState({
+        name: undefined,
+        division: undefined,
+        playerId: undefined
+    });
 
-        setTimeout(() => {
-            this.setState({isFormLoaded: true})
-        }, 200);
-    }
+    const setNewPlayerData = (key, value) => {
+        let newData = newPlayerData;
+        newData[key] = value;
+        _setNewPlayerData(newData);
+    };
 
-    handleSubmit(e) {
-        e.preventDefault();
-        if (this.areRequiredFieldsSet()) {
-            this.addPlayer();
-        } else {
-            alert("Please enter all required fields");
-        }
-    }
-
-    handleInputChange(e) {
-        const key = JSON.parse(e.target.attributes.getNamedItem('data').value).type;
-        const value = e.target.value;
-        const change = {
-            [key]: value,
-            changes: undefined
-        };
-        this.setState(change);
-    }
-
-    render() {
-        return (
-            <CustomForm
-                onSubmit={this.handleSubmit}
-                formFields={this.generateFormFields()}
-            />
-        );
-    }
-
-    areRequiredFieldsSet() {
-        return (
-            this.state.name !== undefined &&
-            this.state.division !== undefined &&
-            parseInt(this.state.playerId) > 0
-        );
-    }
-
-    addPlayer() {
-        this.setState({isLoaded: false});
-        const data = {
-            name: this.state.name,
-            division: this.state.division,
-            playerId: this.state.playerId
-        };
-        new CustomRequest(Config.addPlayerEndPoint(), (result) => {
-            this.setState({
-                isLoaded: true,
-                newPlayerData: JSON.stringify(result)
-            })
-        }).execute(data);
-    }
-
-    generateFormFields() {
+    const generateFormFields = () => {
         return <FakeLoader
             content={
                 <div>
-                    {this.generateLabels()}
+                    {generateLabels()}
                     <SubmitInput value="Add Player"/>
 
                     <Loader
-                        error={this.state.error}
-                        isLoaded={this.state.isLoaded}
-                        content={this.state.newPlayerData}
+                        error={error}
+                        isLoaded={isLoaded}
+                        content={result}
                     />
                 </div>
             }
         />
-    }
+    };
 
-    generateLabels() {
+    const generateLabels = () => {
         return (
             <div className="add-player">
                 <div>
                     <Label
                         text='Name:'
-                        formField={this.generateTextInput('name')}
+                        formField={generateTextInput('name')}
                     />
                 </div>
                 <div>
                     <Label
                         text='Division:'
-                        formField={this.generateTextInput('division')}
+                        formField={generateTextInput('division')}
                     />
                 </div>
                 <div>
                     <Label
                         text='Player ID:'
-                        formField={this.generateTextInput('playerId')}
+                        formField={generateTextInput('playerId')}
                     />
                 </div>
             </div>
         );
-    }
+    };
 
-    generateTextInput(key) {
-        return <TextInput data={JSON.stringify({type: key})} required onChange={this.handleInputChange}/>;
-    }
+    const generateTextInput = (key) => {
+        return <TextInput name={key} required onChange={(e) => setNewPlayerData(e.target.name, e.target.value)}/>;
+    };
+
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        if (areRequiredFieldsSet()) {
+            addPlayer();
+        } else {
+            alert("Please enter all required fields");
+        }
+    };
+
+    const areRequiredFieldsSet = () => {
+        return (
+            newPlayerData.name !== undefined &&
+            newPlayerData.division !== undefined &&
+            parseInt(newPlayerData.playerId) > 0
+        );
+    };
+
+    const addPlayer = () => {
+        setIsLoaded(false);
+        new CustomRequest(Config.addPlayerEndPoint(), (res) => {
+            setResult(JSON.stringify(res));
+            setIsLoaded(true);
+        }, setError).execute(newPlayerData);
+    };
+
+    return (
+        <CustomForm
+            onSubmit={handleSubmit}
+            formFields={generateFormFields()}
+        />
+    );
 }
