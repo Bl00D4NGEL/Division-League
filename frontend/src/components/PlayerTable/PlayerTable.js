@@ -1,58 +1,33 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import Table from "../BaseElements/Table";
 import CustomRequest from "../../helpers/CustomRequest/CustomRequest";
 import Config from "../../Config";
 import Loader from "../BaseElements/Loader";
 
-export default class PlayerTable extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            isLoaded: false,
-            error: undefined,
-            players: []
-        };
 
-        this.loadData = this.loadData.bind(this);
+export default function PlayerTable() {
+    const [isLoaded, setIsLoaded] = useState(false);
+    const [error, setError] = useState(undefined);
+    const [players, setPlayers] = useState([]);
 
-        this.loadData();
-    }
-
-    loadData() {
+    const loadPlayerData = () => {
         new CustomRequest(
             Config.getAllPlayersEndpoint(),
             (result) => {
-                this.setter({players: result.data});
+                setIsLoaded(true);
+                setPlayers(result.data);
             },
-            this.setter
-        )
-            .execute();
-    }
-
-    setter(data) {
-        this.setState({
-            isLoaded: true,
-            ...data
-        });
-    }
-
-    render() {
-        return <Loader
-            isLoaded={this.state.isLoaded}
-            error={this.state.error}
-            content={
-                <Table
-                    sortable={true}
-                    sortKey={1}
-                    tableHead={['Player', 'Elo', 'Division', 'Wins', 'Loses', 'Win rate']}
-                    tableData={this.generateRows()}
-                />
+            (error) => {
+                setIsLoaded(true);
+                setError(error);
             }
-        />
-    }
+        ).execute();
+    };
+    useEffect(loadPlayerData, []);
 
-    generateRows() {
-        return this.state.players.map((entry) => {
+
+    const generateRows = () => {
+        return players.map((entry) => {
             const matches = entry.loses + entry.wins || 1;
             const winRate = ((entry.wins || 1) / matches * 100).toPrecision(4);
             return [
@@ -65,9 +40,18 @@ export default class PlayerTable extends React.Component {
                 winRate + ' %'
             ];
         });
-    }
+    };
 
-    sort() {
-        return this.sorter();
-    }
+    return <Loader
+        isLoaded={isLoaded}
+        error={error}
+        content={
+            <Table
+                sortable={true}
+                sortKey={1}
+                tableHead={['Player', 'Elo', 'Division', 'Wins', 'Loses', 'Win rate']}
+                tableData={generateRows()}
+            />
+        }
+    />
 }

@@ -20,7 +20,7 @@ export default function HistoryTable(){
                 setError(error);
             }
         ).execute();
-    });
+    }, []);
 
     const generateHistoryTableRows = () => {
         return historyData.map((entry) => {

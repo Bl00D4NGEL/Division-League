@@ -4,8 +4,8 @@ import React from "react";
 import UserRoles from "./UserRoles";
 
 export default function AppRouter() {
-    const [isLoggedIn, setIsLoggedIn] = React.useState(false);
-    const [user, setUser] = React.useState({role: UserRoles.normal});
+    const [isLoggedIn, setIsLoggedIn] = React.useState(true);
+    const [user, setUser] = React.useState({role: UserRoles.admin});
 
     return <Router>
         <Redirect to={RouteConfig.getDefaultPath()}/>

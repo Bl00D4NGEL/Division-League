@@ -41,6 +41,7 @@ export default class CustomRequest {
     }
 
     _preparePostRequest(data) {
+        console.log("data", data);
         return new Request(
             this._endpoint.url(),
             {
