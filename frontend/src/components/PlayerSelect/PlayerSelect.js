@@ -1,5 +1,6 @@
 import React from 'react';
 import CustomSelect from "../BaseElements/Select";
+import Label from "../BaseElements/Label";
 
 export default function PlayerSelect({players, label, ...rest}) {
     const generateOptions = () => {
@@ -13,18 +14,13 @@ export default function PlayerSelect({players, label, ...rest}) {
     };
 
     return (
-        <div className="custom-select flex">
-            <div>
-                <label>
-                    {label}:
-                </label>
-            </div>
-            <div>
+        <div>
+            <Label text={label} formField={
                 <CustomSelect
                     {...rest}
                     options={generateOptions()}
                 />
-            </div>
+            } />
         </div>
     );
 }

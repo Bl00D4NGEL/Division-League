@@ -7,10 +7,13 @@ import SubmitInput from "../BaseElements/SubmitInput";
 import CustomRequest from "../../helpers/CustomRequest/CustomRequest";
 import Config from "../../Config";
 import FakeLoader from "../BaseElements/FakeLoader";
+import Loader from "../BaseElements/Loader";
 
-export default function Login({setIsLoggedIn, setUserData}) {
+export default function Login({isLoggedIn, setIsLoggedIn, setUserData}) {
     const [user, setUser] = useState(undefined);
     const [password, setPassword] = useState(undefined);
+    const [isLoaded, setIsLoaded] = useState(true);
+    const [error, setError] = useState(undefined);
 
     const generateFormFields = () => {
         return <div>
@@ -44,8 +47,12 @@ export default function Login({setIsLoggedIn, setUserData}) {
         Config.loginEndpoint(), (result) => {
             setIsLoggedIn(result.data.isLoggedIn);
             setUserData(result.data.user);
+            setIsLoaded(true);
         },
-        undefined,
+        (error) => {
+            setIsLoaded(true);
+            setError(error);
+        },
         {user, password}
     );
 
@@ -63,6 +70,11 @@ export default function Login({setIsLoggedIn, setUserData}) {
                 <div>
                     {generateFormFields()}
                     <SubmitInput value="Login"/>
+                    <Loader
+                        isLoaded={isLoaded}
+                        error={error}
+                        content={(isLoggedIn ? 'User logged in!' : '')}
+                    />
                 </div>
             }
         />

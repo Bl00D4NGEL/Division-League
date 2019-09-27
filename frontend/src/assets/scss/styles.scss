@@ -30,6 +30,7 @@ body {
 }
 
 table {
+  padding-top: $main_height*1.5;
   width: 100%;
 }
 
@@ -56,6 +57,7 @@ th {
 }
 
 label {
+  margin: $main_height 0;
   font-size: $main_font_size - 0.5vw;
 
   input[type=radio], input[type=checkbox] {
@@ -65,10 +67,11 @@ label {
     width: $main_font_size - 0.7vw;
   }
 
-  input[type=text], input[type=password] {
-    margin-left: 0.5vw;
-    line-height: $line_height;
-  }
+}
+
+input[type=text], input[type=password] {
+  margin-left: 0.5vw;
+  line-height: $line_height;
 }
 
 a {
@@ -87,24 +90,12 @@ button, input[type=submit] {
   font-size: $main_font_size;
 }
 
-.custom-select {
-  margin: $main_height*0.5 0;
-  line-height: $line_height;
-
-  select {
-    margin-left: 1.5vh;
-    max-width: 40vw;
-    max-height: 5vh;
-    color: black;
-  }
-}
-
-.add-player > div {
-  margin: $main_height*0.5 0;
+.label-div {
+  margin: $main_height/2 0;
 }
 
 nav {
-  padding-bottom: 10vh;
+  padding-bottom: $main_height;
 
   > ul {
     list-style-type: none;
@@ -145,3 +136,4 @@ nav {
 @import "tablet";
 @import "small-device";
 @import "phones";
+@import "cropped-phone";

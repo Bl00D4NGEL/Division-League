@@ -17,18 +17,34 @@ $main_font_size: 4vw;
     }
 
     label {
-        font-size: $main_font_size - 0.5vw;
+        font-size: $main_font_size + 0.5vw;
     }
-    
+
+    select {
+        font-size: $main_font_size;
+    }
+
+    table {
+        padding-top: 0;
+    }
+
     td {
         font-size: $main_font_size - 0.5vw;
     }
 
+    button, input[type=submit] {
+        padding: 3vw 5vw;
+        font-size: $main_font_size;
+    }
     .main-font-size {
         font-size: $main_font_size;
     }
     
     .box {
         width: $main_font_size - 0.5vw;
+    }
+
+    .nav-link {
+        padding: 4vw 3vw;
     }
 }
