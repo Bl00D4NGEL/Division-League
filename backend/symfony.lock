@@ -78,6 +78,9 @@
     "doctrine/reflection": {
         "version": "v1.0.0"
     },
+    "easycorp/easy-deploy-bundle": {
+        "version": "v1.0.5"
+    },
     "hoa/compiler": {
         "version": "3.17.08.08"
     },
@@ -221,6 +224,9 @@
     },
     "symfony/event-dispatcher-contracts": {
         "version": "v1.1.5"
+    },
+    "symfony/expression-language": {
+        "version": "v4.3.4"
     },
     "symfony/filesystem": {
         "version": "v4.3.3"
