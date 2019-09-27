@@ -166,7 +166,7 @@ class HistoryModel
         $historyEntry->setWinner($winner->getId())
             ->setEloWinWinner($winner->calculateEloChangeForWinAgainst($loser))
             ->setLoser($loser->getId())
-            ->setEloLoseLoser($loser->calculateEloChangeForWinAgainst($winner))
+            ->setEloLoseLoser($loser->calculateEloChangeForLoseAgainst($winner))
             ->setProofUrl($proofUrl);
         $this->entityManager->persist($historyEntry);
 

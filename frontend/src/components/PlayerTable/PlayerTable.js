@@ -10,19 +10,17 @@ export default function PlayerTable() {
     const [error, setError] = useState(undefined);
     const [players, setPlayers] = useState([]);
 
-    const loadPlayerData = () => {
-        new CustomRequest(
-            Config.getAllPlayersEndpoint(),
-            (result) => {
-                setIsLoaded(true);
-                setPlayers(result.data);
-            },
-            (error) => {
-                setIsLoaded(true);
-                setError(error);
-            }
-        ).execute();
-    };
+    const loadPlayerData = () => CustomRequest(
+        Config.getAllPlayersEndpoint(),
+        (result) => {
+            setIsLoaded(true);
+            setPlayers(result.data);
+        },
+        (error) => {
+            setIsLoaded(true);
+            setError(error);
+        }
+    );
     useEffect(loadPlayerData, []);
 
 

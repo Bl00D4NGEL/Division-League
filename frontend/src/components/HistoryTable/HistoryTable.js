@@ -4,23 +4,24 @@ import Table from '../BaseElements/Table';
 import CustomRequest from "../../helpers/CustomRequest/CustomRequest";
 import Loader from "../BaseElements/Loader";
 
-export default function HistoryTable(){
+export default function HistoryTable() {
     const [isLoaded, setIsLoaded] = useState(false);
     const [error, setError] = useState(undefined);
     const [historyData, setHistoryData] = useState([]);
-    useEffect(() => {
-        new CustomRequest(
-            Config.recentHistoryEndpoint(),
-            (result) => {
-                setHistoryData(result.data);
-                setIsLoaded(true);
-            },
-            (error) => {
-                setIsLoaded(true);
-                setError(error);
-            }
-        ).execute();
-    }, []);
+
+    const loadHistories = () => CustomRequest(
+        Config.recentHistoryEndpoint(),
+        (result) => {
+            setHistoryData(result.data);
+            setIsLoaded(true);
+        },
+        (error) => {
+            setIsLoaded(true);
+            setError(error);
+        }
+    );
+
+    useEffect(loadHistories, []);
 
     const generateHistoryTableRows = () => {
         return historyData.map((entry) => {

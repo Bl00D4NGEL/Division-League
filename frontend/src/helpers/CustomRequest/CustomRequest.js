@@ -1,64 +1,58 @@
-export default class CustomRequest {
-    _endpoint = undefined;
-    _successCallback = (result) => {
+export default function CustomRequest(endpoint, successCallback, errorCallback, data) {
+    const _successCallback = (result) => {
         console.log(result);
     };
-    _errorCallback = (error) => {
+    const _errorCallback = (error) => {
         console.error(error);
     };
 
-    constructor(endpoint, successCallback, errorCallback) {
-        this._endpoint = endpoint;
-        if (successCallback !== undefined) {
-            this._successCallback = successCallback;
-        }
-        if (errorCallback !== undefined) {
-            this._errorCallback = errorCallback;
-        }
+    if (successCallback === undefined) {
+        successCallback = _successCallback;
     }
 
-    execute(data) {
-        if (this._endpoint === undefined) {
-            return;
-        }
-
-        fetch(this._getRequest(this._endpoint.method(), data)).then(res => res.json())
-            .then(
-                (res) => {
-                    if (res.status === 'error') {
-                        this._errorCallback(res);
-                    }
-                    else {
-                        this._successCallback(res);
-                    }
-                },
-                this._errorCallback
-            );
+    if (errorCallback === undefined) {
+        errorCallback = _errorCallback;
     }
 
-    _prepareGetRequest() {
-        return new Request(this._endpoint.url());
+    if (endpoint === undefined) {
+        return;
     }
 
-    _preparePostRequest(data) {
-        console.log("data", data);
+    const prepareGetRequest = () => {
+        return new Request(endpoint.url());
+    };
+
+    const preparePostRequest = (postData) => {
         return new Request(
-            this._endpoint.url(),
+            endpoint.url(),
             {
-                method: this._endpoint.method(),
+                method: endpoint.method(),
                 body: JSON.stringify(
-                    data !== undefined ? data : {}
+                    postData !== undefined ? postData : {}
                 )
             }
         );
-    }
+    };
 
-    _getRequest(method, data) {
+    const fetchRequest = (method, requestData) => {
         if (method === 'GET') {
-            return this._prepareGetRequest();
+            return prepareGetRequest();
         } else if (method === 'POST') {
-            return this._preparePostRequest(data);
+            return preparePostRequest(requestData);
         }
         return new Request(undefined);
-    }
+    };
+
+    fetch(fetchRequest(endpoint.method(), data)).then(res => res.json())
+        .then(
+            (res) => {
+                if (res.status === 'error') {
+                    errorCallback(res);
+                }
+                else {
+                    successCallback(res);
+                }
+            },
+            errorCallback
+        );
 }

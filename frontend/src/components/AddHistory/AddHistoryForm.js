@@ -71,7 +71,7 @@ export default function AddHistoryForm({players, winner, setWinner, loser, setLo
             loser: loser.id,
             proofUrl: proofUrl
         };
-        new CustomRequest(
+        CustomRequest(
             Config.addHistoryEndPoint(),
             (responseData) => {
                 if (responseData.status === 'success') {
@@ -87,8 +87,9 @@ export default function AddHistoryForm({players, winner, setWinner, loser, setLo
             }, (error) => {
                 setIsLoaded(true);
                 setError(error);
-            }
-        ).execute(formData);
+            },
+            formData
+        );
     };
 
     return <CustomForm

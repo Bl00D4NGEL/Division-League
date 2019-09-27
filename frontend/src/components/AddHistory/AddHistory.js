@@ -11,21 +11,19 @@ export default function AddHistory() {
     const [isLoaded, setIsLoaded] = useState(false);
     const [error, setError] = useState(undefined);
 
-    const loadPlayerData = () => {
-        new CustomRequest(
-            Config.getAllPlayersEndpoint(),
-            (result) => {
-                setPlayers(result.data);
-                setWinner(result.data[0]);
-                setLoser(result.data[1]);
-                setIsLoaded(true);
-            },
-            (error) => {
-                setIsLoaded(true);
-                setError(error);
-            }
-        ).execute();
-    };
+    const loadPlayerData = () => CustomRequest(
+        Config.getAllPlayersEndpoint(),
+        (result) => {
+            setPlayers(result.data);
+            setWinner(result.data[0]);
+            setLoser(result.data[1]);
+            setIsLoaded(true);
+        },
+        (error) => {
+            setIsLoaded(true);
+            setError(error);
+        }
+    );
 
     useEffect(loadPlayerData, []);
 

@@ -63,13 +63,16 @@ export default function AddPlayerForm() {
 
     const addPlayer = () => {
         setIsLoaded(false);
-        new CustomRequest(Config.addPlayerEndPoint(), (res) => {
-            setResult(JSON.stringify(res));
-            setIsLoaded(true);
-        }, (error) => {
-            setError(error);
-            setIsLoaded(true);
-        }).execute({name, division, playerId});
+        CustomRequest(
+            Config.addPlayerEndPoint(), (res) => {
+                setResult(JSON.stringify(res));
+                setIsLoaded(true);
+            }, (error) => {
+                setError(error);
+                setIsLoaded(true);
+            },
+            {name, division, playerId}
+        );
     };
 
 

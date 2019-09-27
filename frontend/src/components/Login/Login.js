@@ -8,7 +8,7 @@ import CustomRequest from "../../helpers/CustomRequest/CustomRequest";
 import Config from "../../Config";
 import FakeLoader from "../BaseElements/FakeLoader";
 
-export default function Login(props) {
+export default function Login({setIsLoggedIn, setUserData}) {
     const [user, setUser] = useState(undefined);
     const [password, setPassword] = useState(undefined);
 
@@ -40,16 +40,14 @@ export default function Login(props) {
         }
     };
 
-    const login = () => {
-        new CustomRequest(Config.loginEndpoint(), (result) => {
-            if (props.setter.setIsLoggedIn !== undefined) {
-                props.setter.setIsLoggedIn(result.data.isLoggedIn);
-            }
-            if (props.setter.setUser !== undefined) {
-                props.setter.setUser(result.data.user);
-            }
-        }).execute({user, password});
-    };
+    const login = () => CustomRequest(
+        Config.loginEndpoint(), (result) => {
+            setIsLoggedIn(result.data.isLoggedIn);
+            setUserData(result.data.user);
+        },
+        undefined,
+        {user, password}
+    );
 
     const areRequiredFieldsSet = () => {
         return (

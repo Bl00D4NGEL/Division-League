@@ -1,10 +1,9 @@
 import React from 'react';
 import CustomSelect from "../BaseElements/Select";
 
-export default function PlayerSelect(props) {
-    console.log("render loser", props);
+export default function PlayerSelect({players, label, ...rest}) {
     const generateOptions = () => {
-        return props.players.map((x) => {
+        return players.map((x) => {
             return {
                 key: x.id,
                 value: x,
@@ -17,12 +16,12 @@ export default function PlayerSelect(props) {
         <div className="custom-select flex">
             <div>
                 <label>
-                    {props.label}:
+                    {label}:
                 </label>
             </div>
             <div>
                 <CustomSelect
-                    {...props}
+                    {...rest}
                     options={generateOptions()}
                 />
             </div>
