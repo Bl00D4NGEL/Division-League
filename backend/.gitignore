@@ -12,5 +12,5 @@
 /.web-server-pid
 ###< symfony/web-server-bundle ###
 /src/Migrations/*
-composer.lock
-symfony.lock
+/composer.lock
+/symfony.lock
