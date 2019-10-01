@@ -25,8 +25,8 @@ export default function EloChangeDisplay({winner, loser, changes}) {
                 </div>
                 <br/>
                 <div>{loser.name} moves
-                    from {loser.elo} to {loser.elo - changes.loser} elo
-                    (-{changes.loser})
+                    from {loser.elo - changes.loser} to {loser.elo} elo
+                    ({changes.loser})
                 </div>
                 <br/>
             </div>

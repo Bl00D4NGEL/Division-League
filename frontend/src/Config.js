@@ -3,7 +3,7 @@ const _apiPort = 8000;
 
 export default class Config {
     static _getApiUrlBase() {
-        return _apiUrl + (_apiPort !== '' ? ":" + _apiPort : '');
+        return _apiUrl + (_apiPort !== undefined ? ":" + _apiPort : '');
     }
 
     static historyEndpointUrl(suffix) {

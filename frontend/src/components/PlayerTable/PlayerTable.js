@@ -4,7 +4,6 @@ import CustomRequest from "../../helpers/CustomRequest/CustomRequest";
 import Config from "../../Config";
 import Loader from "../BaseElements/Loader";
 
-
 export default function PlayerTable() {
     const [isLoaded, setIsLoaded] = useState(false);
     const [error, setError] = useState(undefined);
@@ -24,10 +23,15 @@ export default function PlayerTable() {
     useEffect(loadPlayerData, []);
 
 
+    const getWinRate = (entry) => {
+        if (parseInt(entry.wins) === 0) {
+            return 0;
+        }
+        return (parseInt(entry.wins) / (parseInt(entry.wins) + parseInt(entry.loses)) * 100).toPrecision(4);
+    };
+
     const generateRows = () => {
         return players.map((entry) => {
-            const matches = entry.loses + entry.wins || 1;
-            const winRate = ((entry.wins || 1) / matches * 100).toPrecision(4);
             return [
                 <a key={entry.name} target="_blank" rel="noopener noreferrer"
                    href={"https://di.community/profile/" + entry.playerId + "-" + entry.name}>{entry.name}</a>,
@@ -35,7 +39,7 @@ export default function PlayerTable() {
                 entry.division,
                 entry.wins,
                 entry.loses,
-                winRate + ' %'
+                getWinRate(entry) + ' %'
             ];
         });
     };

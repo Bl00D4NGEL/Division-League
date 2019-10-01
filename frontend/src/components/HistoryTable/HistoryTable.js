@@ -28,7 +28,7 @@ export default function HistoryTable() {
             return [
                 entry.id,
                 entry.winner.name + ' [+' + entry.winnerEloWin + ']',
-                entry.loser.name + ' [-' + entry.loserEloLose + ']',
+                entry.loser.name + ' [' + entry.loserEloLose + ']',
                 <a href={entry.proofUrl} target="_blank" rel="noopener noreferrer">Link</a>
             ];
         });
