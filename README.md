@@ -1,1 +1,1 @@
-# XXII-Leaderboard
+# Division League! :D
