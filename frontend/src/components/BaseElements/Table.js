@@ -45,10 +45,7 @@ export default function CustomTable({sortable, tableData, tableHead, extraClassN
                 return (
                     <tr key={key}>
                         {prop.map((prop, key) => {
-                            let extra = null;
-                            if (extraClassNames !== undefined) {
-                                extra = extraClassNames[key]
-                            }
+                            const extra = extraClassNames !== undefined ? extraClassNames[key] : null;
                             return (
                                 <td key={key} className={extra}>
                                     {prop}

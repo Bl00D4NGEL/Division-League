@@ -1,8 +1,8 @@
 /* Colors */
 $white: #fff;
 $primary_bg: #131313;
-$secondary_bg: #171717;
-$tertiary_bg: #1b1b1b;
+$table_field_bg_color: #444;
+$table_head_bg_color: #292929;
 
 /* Damage Inc */
 $dmg_inc_red: #b64240;
@@ -34,14 +34,15 @@ table {
 }
 
 td {
-  padding: 7px 2px;
-  background-color: $secondary_bg;
-  border: 1px solid $secondary_bg;
+  padding: 10px;
+  background-color: $table_field_bg_color;
+  border: 1px solid $table_field_bg_color;
   font-size: $main_font_size - 0.5vw;
 }
 
 th {
-  background-color: $tertiary_bg;
+  @extend %no-select;
+  background-color: $table_head_bg_color;
   padding-top: 5px;
   padding-bottom: 5px;
   line-height: $line_height;
