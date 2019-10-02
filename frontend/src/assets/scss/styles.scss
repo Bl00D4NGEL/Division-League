@@ -11,7 +11,7 @@ $dmg_inc_white: #ddd;
 /* Dimensions */
 $main_height: 7vh;
 $main_font_size: 1.5vw;
-
+$nav_menu_width: 150px;
 $line_height: 1.4;
 
 %no-select {
@@ -22,7 +22,6 @@ $line_height: 1.4;
 }
 
 body {
-  padding: $main_height + 3vh $main_height * 1.5;
   background-color: $primary_bg;
   font-weight: 600;
   color: $dmg_inc_white;
@@ -30,15 +29,7 @@ body {
 }
 
 table {
-  padding-top: $main_height*1.5;
   width: 100%;
-}
-
-h1 {
-  font-size: $main_font_size + 1vw;
-}
-
-table {
   border-spacing: 0;
 }
 
@@ -56,6 +47,10 @@ th {
   line-height: $line_height;
 }
 
+h1 {
+  font-size: $main_font_size + 1vw;
+}
+
 label {
   margin: $main_height 0;
   font-size: $main_font_size - 0.5vw;
@@ -70,7 +65,7 @@ label {
 }
 
 input[type=text], input[type=password] {
-  margin-left: 0.5vw;
+  margin-top: 1.5vw;
   line-height: $line_height;
 }
 
@@ -94,36 +89,39 @@ button, input[type=submit] {
   margin: $main_height/2 0;
 }
 
-nav {
-  padding-bottom: $main_height;
+.sidenav {
+  height: 100%;
+  width: $nav_menu_width;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background-color: #111;
+  overflow-x: hidden;
+  padding-top: 20px;
 
-  > ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
+  a {
+    padding: 10px 20px;
+    text-decoration: none;
+    display: block;
+  }
 
-    > li {
-      height: $main_height;
-      display: inline;
+  a.active {
+    color: $dmg_inc_red !important;
+  }
 
-      :hover {
-        background-color: $dmg_inc_white;
-        color: $dmg_inc_red !important;
-      }
-    }
+  a:hover {
+    color: mix($dmg_inc_red, $dmg_inc_white, 70%) !important;
+  }
+
+  div > img {
+    max-width: $nav_menu_width - 30px;
+    padding: 15px;
   }
 }
 
-.nav-link {
-  padding: 3vw;
-  width: 10vw;
-  background-color: $dmg_inc_red;
-
-}
-
-.nav-link.active {
-  background-color: $dmg_inc_white;
-  color: $dmg_inc_red !important;
+.main > div:nth-child(2) {
+  margin: 40px 40px 40px $nav_menu_width + 40px;
 }
 
 @import "spinner";

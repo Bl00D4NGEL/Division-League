@@ -33,9 +33,9 @@ export default function CustomTable({sortable, tableData, tableHead, extraClassN
                         [extra]: extra !== undefined
                     });
                     return (
-                        <td className={tdClass} onClick={e => setSort(e, key)} key={key}>
+                        <th className={tdClass} onClick={e => setSort(e, key)} key={key}>
                             {prop}
-                        </td>
+                        </th>
                     );
                 })}
             </tr>

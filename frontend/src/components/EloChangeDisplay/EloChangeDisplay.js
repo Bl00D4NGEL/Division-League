@@ -14,7 +14,7 @@ export default function EloChangeDisplay({winner, loser, changes}) {
         return <div/>;
     }
     return (
-        <div>
+        <div style={{marginTop: 25 + 'px'}}>
             <span>Results:</span>
             <div>
                 <div>{winner.name} wins against {loser.name}</div>

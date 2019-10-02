@@ -19,9 +19,7 @@ export default function AppRouter() {
             if (route.path === '/login' && isLoggedIn) {
                 return null;
             }
-            return <li key={route.path}>
-                <NavLink to={route.path} className="nav-link">{route.name}</NavLink>
-            </li>
+            return <NavLink to={route.path}>{route.name}</NavLink>
         });
     };
 
@@ -29,7 +27,8 @@ export default function AppRouter() {
         return RouteConfig.getAll().map((route) => {
             if (route.shouldRender === true) {
                 return <Route key={route.path} path={route.path} exact
-                              render={() => <route.component isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} setUserData={setUser}/>}/>;
+                              render={() => <route.component isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn}
+                                                             setUserData={setUser}/>}/>;
             }
             return <Route key={route.path} path={route.path} exact component={route.component}/>;
         });
@@ -37,13 +36,16 @@ export default function AppRouter() {
 
     return <Router>
         <Redirect to={RouteConfig.getDefaultPath()}/>
-        <div>
-            <nav>
-                <ul>
-                    {generateNavLinks()}
-                </ul>
-            </nav>
-            {generateRoutes()}
+        <div className="main">
+            <div className="sidenav">
+                <div>
+                    <img src="/img/dmg-inc-icon-light.png"/>
+                </div>
+                {generateNavLinks()}
+            </div>
+            <div>
+                {generateRoutes()}
+            </div>
         </div>
     </Router>
 }
