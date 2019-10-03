@@ -1,10 +1,8 @@
 import RouteConfig from "../../RouteConfig";
-import React, {useState} from "react";
+import React from "react";
 import {NavLink} from "react-router-dom";
-import classNames from "classnames";
 
 export default function Navigation({isLoggedIn, user}) {
-    const [hideNavigation, setHideNavigation] = useState(true);
     const generateNavigationLinks = () => {
         return RouteConfig.getAll().map((route) => {
             if (
@@ -20,20 +18,19 @@ export default function Navigation({isLoggedIn, user}) {
         });
     };
 
-    const toggleNavigation = () => {
-        setHideNavigation(!hideNavigation);
+    const toggleContent = (e) => {
+        const isChecked = e.target.checked;
+        const sideBarLength = document.getElementsByClassName('sidebar')[0].clientWidth;
+        const defaultMarginLeft = 40;
+        const el = document.getElementsByClassName('content')[0];
+        el.style.marginLeft = defaultMarginLeft + (isChecked ? sideBarLength : 0) + 'px';
+        console.log(sideBarLength, el, el.style, el.style.marginLeft);
     };
 
-    const navClasses = classNames({
-        'sidenav': true,
-        'hidden': hideNavigation
-    });
-
     return <div>
-        <div style={{right: 0, position: 'fixed'}}>
-            <button onClick={toggleNavigation}>Toggle</button>
-        </div>
-        <div className={navClasses}>
+        <input onChange={toggleContent} type="checkbox" id="sidebar-toggle-input"/>
+        <label className="sidebar-toggle" htmlFor="sidebar-toggle-input"/>
+        <div className="sidebar">
             <div>
                 <img alt="Damage Incorporated" src="/img/dmg-inc-icon-light.png"/>
             </div>

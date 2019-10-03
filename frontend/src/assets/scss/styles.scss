@@ -11,8 +11,9 @@ $dmg_inc_white: #ddd;
 /* Dimensions */
 $main_height: 7vh;
 $main_font_size: 1.5vw;
-$nav_menu_width: 150px;
 $line_height: 1.4;
+$nav_menu_width: 210px;
+
 
 %no-select {
   -webkit-user-select: none; /* Chrome all / Safari all */
@@ -43,8 +44,8 @@ td {
 th {
   @extend %no-select;
   background-color: $table_head_bg_color;
-  padding-top: 5px;
-  padding-bottom: 5px;
+  text-align: left;
+  padding: 10px;
   line-height: $line_height;
 }
 
@@ -90,46 +91,12 @@ button, input[type=submit] {
   margin: $main_height/2 0;
 }
 
-.sidenav {
-  height: 100%;
-  width: $nav_menu_width;
-  position: fixed;
-  z-index: 1;
-  top: 0;
-  left: 0;
-  background-color: #111;
-  overflow-x: hidden;
-  padding-top: 20px;
-
-  a {
-    padding: 10px 20px;
-    text-decoration: none;
-    display: block;
-  }
-
-  a.active {
-    color: $dmg_inc_red !important;
-  }
-
-  a:hover {
-    color: mix($dmg_inc_red, $dmg_inc_white, 70%) !important;
-  }
-
-  div > img {
-    max-width: $nav_menu_width - 30px;
-    padding: 15px;
-  }
-}
-
-.main > div:nth-child(2) {
-  margin: 40px 40px 40px $nav_menu_width + 40px;
-}
-
 @import "spinner";
 @import "boxes";
 @import "symbols";
 @import "helper";
 @import "checkboxes";
+@import "sidebar";
 
 @import "small-desktop";
 @import "tablet";

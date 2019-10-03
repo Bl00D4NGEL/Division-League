@@ -2,8 +2,8 @@ import React, {useState} from 'react';
 import classNames from "classnames"
 import Sorter from "../../helpers/Sorter/Sorter";
 
-export default function CustomTable({sortable, tableData, tableHead, extraClassNames}) {
-    const [sortKey, setSortKey] = useState(undefined);
+export default function CustomTable({sortable, tableData, tableHead, extraClassNames, defaultSortKey}) {
+    const [sortKey, setSortKey] = useState(defaultSortKey);
     const [reverseSort, setReverseSort] = useState(false);
 
     const setSort = (e, key) => {

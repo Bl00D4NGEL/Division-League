@@ -50,7 +50,7 @@ export default function PlayerTable() {
         content={
             <Table
                 sortable={true}
-                sortKey={1}
+                defaultSortKey={1}
                 tableHead={['Player', 'Elo', 'Division', 'Wins', 'Loses', 'Win rate']}
                 extraClassNames={{2: 'pw-hide'}}
                 tableData={generateRows()}

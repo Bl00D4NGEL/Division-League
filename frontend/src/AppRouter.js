@@ -1,5 +1,5 @@
 import RouteConfig from "./RouteConfig";
-import {BrowserRouter as Router, NavLink, Redirect, Route} from "react-router-dom";
+import {BrowserRouter as Router, Redirect, Route} from "react-router-dom";
 import React from "react";
 import UserRoles from "./UserRoles";
 import Navigation from "./components/Navigation/Navigation";
@@ -23,7 +23,7 @@ export default function AppRouter() {
         <Redirect to={RouteConfig.getDefaultPath()}/>
         <div className="main">
             <Navigation isLoggedIn={isLoggedIn} user={user}/>
-            <div>
+            <div className="content">
                 {generateRoutes()}
             </div>
         </div>
