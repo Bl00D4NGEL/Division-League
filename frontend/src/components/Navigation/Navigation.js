@@ -32,7 +32,7 @@ export default function Navigation({isLoggedIn, user}) {
         <label className="sidebar-toggle" htmlFor="sidebar-toggle-input"/>
         <div className="sidebar">
             <div>
-                <img alt="Damage Incorporated" src="/img/dmg-inc-icon-light.png"/>
+                <img alt="Damage Incorporated" src="../../assets/img/dmg-inc-icon-light.png"/>
             </div>
             {generateNavigationLinks()}
         </div>
