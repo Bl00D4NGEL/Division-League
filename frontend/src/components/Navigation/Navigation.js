@@ -5,6 +5,7 @@ import {NavLink} from "react-router-dom";
 import icon from '../../assets/img/dmg-inc-icon-light.png';
 
 export default function Navigation({isLoggedIn, user}) {
+    const defaultMarginLeft = 40;
     const generateNavigationLinks = () => {
         return RouteConfig.getAll().map((route) => {
             if (
@@ -21,12 +22,8 @@ export default function Navigation({isLoggedIn, user}) {
     };
 
     const toggleContent = (e) => {
-        const isChecked = e.target.checked;
         const sideBarLength = document.getElementsByClassName('sidebar')[0].clientWidth;
-        const defaultMarginLeft = 40;
-        const el = document.getElementsByClassName('content')[0];
-        el.style.marginLeft = defaultMarginLeft + (isChecked ? sideBarLength : 0) + 'px';
-        console.log(sideBarLength, el, el.style, el.style.marginLeft);
+        document.getElementsByClassName('content')[0].style.marginLeft = defaultMarginLeft + (e.target.checked ? sideBarLength : 0) + 'px';
     };
 
     return <div>
