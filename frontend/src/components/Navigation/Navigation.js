@@ -2,6 +2,8 @@ import RouteConfig from "../../RouteConfig";
 import React from "react";
 import {NavLink} from "react-router-dom";
 
+import icon from '../../assets/img/dmg-inc-icon-light.png';
+
 export default function Navigation({isLoggedIn, user}) {
     const generateNavigationLinks = () => {
         return RouteConfig.getAll().map((route) => {
@@ -32,7 +34,7 @@ export default function Navigation({isLoggedIn, user}) {
         <label className="sidebar-toggle" htmlFor="sidebar-toggle-input"/>
         <div className="sidebar">
             <div>
-                <img alt="Damage Incorporated" src="%PUBLIC_URL%/img/dmg-inc-icon-light.png"/>
+                <img alt="Damage Incorporated" src={icon}/>
             </div>
             {generateNavigationLinks()}
         </div>
