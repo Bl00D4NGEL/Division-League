@@ -16,33 +16,38 @@ export default function AddPlayerForm() {
     const [playerId, setPlayerId] = useState(undefined);
     const [league, setLeague] = useState(undefined);
 
+    const labelConfig = [
+        {
+            text: 'Name',
+            key: 'name',
+            setter: setName
+        },
+        {
+            text: 'Division',
+            key: 'division',
+            setter: setDivision
+        }, {
+            text: 'Player ID',
+            key: 'playerId',
+            setter: setPlayerId
+        }, {
+            text: 'League',
+            key: 'league',
+            setter: setLeague
+        }
+    ];
+
     const generateLabels = () => {
         return (
             <div>
-                <div>
-                    <Label
-                        text='Name:'
-                        formField={generateTextInput('name', setName)}
-                    />
-                </div>
-                <div>
-                    <Label
-                        text='Division:'
-                        formField={generateTextInput('division', setDivision)}
-                    />
-                </div>
-                <div>
-                    <Label
-                        text='Player ID:'
-                        formField={generateTextInput('playerId', setPlayerId)}
-                    />
-                </div>
-                <div>
-                    <Label
-                        text='League:'
-                        formField={generateTextInput('league', setLeague)}
-                    />
-                </div>
+                {labelConfig.map((c) => {
+                    return <div>
+                        <Label
+                            text={c.text}
+                            formField={generateTextInput(c.key, c.setter)}
+                        />
+                    </div>
+                })}
             </div>
         );
     };

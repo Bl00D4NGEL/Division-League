@@ -1,27 +1,15 @@
 import React, {useState, useEffect} from 'react';
-import CustomRequest from "../../helpers/CustomRequest/CustomRequest";
-import Config from "../../Config";
 import Loader from "../BaseElements/Loader";
 import LeagueDisplay from "../LeagueDisplay/LeagueDisplay";
 import Sorter from "../../helpers/Sorter/Sorter";
+import LoadPlayers from "../../services/LoadPlayers";
 
 export default function PlayerTable() {
     const [isLoaded, setIsLoaded] = useState(false);
     const [error, setError] = useState(undefined);
     const [players, setPlayers] = useState([]);
 
-    const loadPlayerData = () => CustomRequest(
-        Config.getAllPlayersEndpoint(),
-        (result) => {
-            setIsLoaded(true);
-            setPlayers(result.data);
-        },
-        (error) => {
-            setIsLoaded(true);
-            setError(error);
-        }
-    );
-    useEffect(loadPlayerData, []);
+    useEffect(() => LoadPlayers({setIsLoaded, setError, setPlayers}), []);
 
     const generateLeagueDisplays = () => {
         return Sorter(getLeagueData(), 'league').map((league) => {

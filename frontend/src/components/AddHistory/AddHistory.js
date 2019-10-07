@@ -1,31 +1,21 @@
 import React, {useEffect, useState} from 'react';
 import Loader from "../BaseElements/Loader";
 import AddHistoryForm from "./AddHistoryForm";
-import CustomRequest from "../../helpers/CustomRequest/CustomRequest";
-import Config from "../../Config";
+import LoadPlayers from "../../services/LoadPlayers";
 
 export default function AddHistory() {
-    const [players, setPlayers] = useState([]);
+    const [players, _setPlayers] = useState([]);
     const [winner, setWinner] = useState(undefined);
     const [loser, setLoser] = useState(undefined);
     const [isLoaded, setIsLoaded] = useState(false);
     const [error, setError] = useState(undefined);
 
-    const loadPlayerData = () => CustomRequest(
-        Config.getAllPlayersEndpoint(),
-        (result) => {
-            setPlayers(result.data);
-            setWinner(result.data[0]);
-            setLoser(result.data[1]);
-            setIsLoaded(true);
-        },
-        (error) => {
-            setIsLoaded(true);
-            setError(error);
-        }
-    );
-
-    useEffect(loadPlayerData, []);
+    const setPlayers = (players) => {
+        setWinner(players[0]);
+        setLoser(players[1]);
+        _setPlayers(players);
+    };
+    useEffect(() => LoadPlayers({setPlayers, setError, setIsLoaded}), []);
 
     return (
         <Loader
