@@ -15,6 +15,6 @@ export default class WinnerLoserValidator {
     }
 
     static isLeagueEqualFor({winner, loser}) {
-        return winner.league === loser.league;
+        return winner !== undefined && loser !== undefined && winner.league === loser.league;
     };
 }

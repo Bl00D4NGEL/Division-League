@@ -1,8 +1,13 @@
 import React from "react";
+import Error from "../Error/Error";
 
 export default function Loader({error, isLoaded, content}) {
     if (error) {
-        return <div>Error: {error.message}</div>;
+        if (error.message.match(/^Unexpected token/)) {
+            console.error(error);
+            error.message = 'Invalid server response';
+        }
+        return <Error message={error.message}/>
     } else if (!isLoaded) {
         return (
             <div>
