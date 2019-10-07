@@ -1,4 +1,4 @@
-export default function CustomRequest(endpoint, successCallback, errorCallback, data) {
+export default function CustomRequest(endpoint, onSuccess, onError, data) {
     const _successCallback = (result) => {
         console.log(result);
     };
@@ -6,12 +6,12 @@ export default function CustomRequest(endpoint, successCallback, errorCallback, 
         console.error(error);
     };
 
-    if (successCallback === undefined) {
-        successCallback = _successCallback;
+    if (onSuccess === undefined) {
+        onSuccess = _successCallback;
     }
 
-    if (errorCallback === undefined) {
-        errorCallback = _errorCallback;
+    if (onError === undefined) {
+        onError = _errorCallback;
     }
 
     if (endpoint === undefined) {
@@ -47,12 +47,12 @@ export default function CustomRequest(endpoint, successCallback, errorCallback, 
         .then(
             (res) => {
                 if (res.status === 'error') {
-                    errorCallback(res);
+                    onError(res);
                 }
                 else {
-                    successCallback(res);
+                    onSuccess(res);
                 }
             },
-            errorCallback
+            onError
         );
 }

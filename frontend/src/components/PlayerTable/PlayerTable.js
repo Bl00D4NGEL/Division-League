@@ -1,8 +1,9 @@
 import React, {useState, useEffect} from 'react';
-import Table from "../BaseElements/Table";
 import CustomRequest from "../../helpers/CustomRequest/CustomRequest";
 import Config from "../../Config";
 import Loader from "../BaseElements/Loader";
+import LeagueDisplay from "../LeagueDisplay/LeagueDisplay";
+import Sorter from "../../helpers/Sorter/Sorter";
 
 export default function PlayerTable() {
     const [isLoaded, setIsLoaded] = useState(false);
@@ -22,25 +23,21 @@ export default function PlayerTable() {
     );
     useEffect(loadPlayerData, []);
 
-
-    const getWinRate = (entry) => {
-        if (parseInt(entry.wins) === 0) {
-            return 0;
-        }
-        return (parseInt(entry.wins) / (parseInt(entry.wins) + parseInt(entry.loses)) * 100).toPrecision(4);
+    const generateLeagueDisplays = () => {
+        return Sorter(getLeagueData(), 'league').map((league) => {
+            return <LeagueDisplay key={league.league} players={league.players} leagueName={league.league}/>
+        });
     };
 
-    const generateRows = () => {
-        return players.map((entry) => {
-            return [
-                <a key={entry.name} target="_blank" rel="noopener noreferrer"
-                   href={"https://di.community/profile/" + entry.playerId + "-" + entry.name}>{entry.name}</a>,
-                entry.elo,
-                entry.division,
-                entry.wins,
-                entry.loses,
-                getWinRate(entry) + ' %'
-            ];
+    const getLeagueData = () => {
+        const leagues = players
+            .map((p) => {return p.league})
+            .filter((item, i, ar) => ar.indexOf(item) === i);
+        return leagues.map((league) => {
+            return {
+                league: league,
+                players: players.filter(item => item.league === league)
+        }
         });
     };
 
@@ -48,13 +45,7 @@ export default function PlayerTable() {
         isLoaded={isLoaded}
         error={error}
         content={
-            <Table
-                sortable={true}
-                defaultSortKey={1}
-                tableHead={['Player', 'Elo', 'Division', 'Wins', 'Loses', 'Win rate']}
-                extraClassNames={{2: 'pw-hide'}}
-                tableData={generateRows()}
-            />
+            generateLeagueDisplays()
         }
     />
 }

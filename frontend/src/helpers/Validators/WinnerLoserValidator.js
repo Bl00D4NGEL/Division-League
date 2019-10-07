@@ -13,4 +13,8 @@ export default class WinnerLoserValidator {
     static doesIdExist(object) {
         return object !== undefined && object.id !== null;
     }
+
+    static isLeagueEqualFor({winner, loser}) {
+        return winner.league === loser.league;
+    };
 }

@@ -14,6 +14,7 @@ export default function AddPlayerForm() {
     const [name, setName] = useState(undefined);
     const [division, setDivision] = useState(undefined);
     const [playerId, setPlayerId] = useState(undefined);
+    const [league, setLeague] = useState(undefined);
 
     const generateLabels = () => {
         return (
@@ -34,6 +35,12 @@ export default function AddPlayerForm() {
                     <Label
                         text='Player ID:'
                         formField={generateTextInput('playerId', setPlayerId)}
+                    />
+                </div>
+                <div>
+                    <Label
+                        text='League:'
+                        formField={generateTextInput('league', setLeague)}
                     />
                 </div>
             </div>
@@ -57,7 +64,8 @@ export default function AddPlayerForm() {
         return (
             name !== undefined &&
             division !== undefined &&
-            parseInt(playerId) > 0
+            parseInt(playerId) > 0 &&
+            league !== undefined
         );
     };
 
@@ -71,7 +79,7 @@ export default function AddPlayerForm() {
                 setError(error);
                 setIsLoaded(true);
             },
-            {name, division, playerId}
+            {name, division, playerId, league}
         );
     };
 

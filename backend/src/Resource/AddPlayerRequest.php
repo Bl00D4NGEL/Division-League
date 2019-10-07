@@ -26,6 +26,12 @@ class AddPlayerRequest
     public $playerId;
 
     /**
+     * @type("string"))
+     * @var string $league
+     */
+    public $league;
+
+    /**
      * @var int $elo
      */
     public $elo = 1000;
@@ -46,6 +52,7 @@ class AddPlayerRequest
             isset($this->division)
             && isset($this->playerId)
             && isset($this->name)
+            && isset($this->league)
         );
     }
 }

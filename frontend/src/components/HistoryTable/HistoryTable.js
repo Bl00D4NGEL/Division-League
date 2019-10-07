@@ -3,6 +3,7 @@ import Config from '../../Config';
 import Table from '../BaseElements/Table';
 import CustomRequest from "../../helpers/CustomRequest/CustomRequest";
 import Loader from "../BaseElements/Loader";
+import WinnerLoserValidator from "../../helpers/Validators/WinnerLoserValidator";
 
 export default function HistoryTable() {
     const [isLoaded, setIsLoaded] = useState(false);
@@ -25,8 +26,13 @@ export default function HistoryTable() {
 
     const generateHistoryTableRows = () => {
         return historyData.map((entry) => {
+            const league =
+                (WinnerLoserValidator.isLeagueEqualFor({winner: entry.winner, loser: entry.loser}) ?
+                    entry.winner.league :
+                    'W: ' + entry.winner.league + ' / L: ' + entry.loser.league);
             return [
                 entry.id,
+                league,
                 entry.winner.name + ' [+' + entry.winnerEloWin + ']',
                 entry.loser.name + ' [' + entry.loserEloLose + ']',
                 <a href={entry.proofUrl} target="_blank" rel="noopener noreferrer">Link</a>
@@ -37,7 +43,7 @@ export default function HistoryTable() {
     return <Loader
         isLoaded={isLoaded}
         error={error}
-        content={<Table tableHead={['ID', 'Winner', 'Loser', 'Proof']}
+        content={<Table tableHead={['ID', 'League', 'Winner', 'Loser', 'Proof']}
                         tableData={generateHistoryTableRows()}/>}
     />
 

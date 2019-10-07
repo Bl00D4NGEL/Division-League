@@ -47,6 +47,11 @@ class Player
      */
     private $loses;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $league;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -186,7 +191,20 @@ class Player
             ->setElo($request->elo)
             ->setName($request->name)
             ->setPlayerId($request->playerId)
+            ->setLeague($request->league)
             ->setWins($request->wins)
             ->setLoses($request->loses);
+    }
+
+    public function getLeague(): ?string
+    {
+        return $this->league;
+    }
+
+    public function setLeague(string $league): self
+    {
+        $this->league = $league;
+
+        return $this;
     }
 }
