@@ -10,6 +10,9 @@ import CustomForm from "../BaseElements/Form";
 import Label from "../BaseElements/Label";
 import SubmitInput from "../BaseElements/SubmitInput";
 import Loader from "../BaseElements/Loader";
+import DifferentLeagueWarning from "../Warning/DifferentLeagueWarning";
+import SelectWinnerAndLoserWarning from "../Warning/SelectWinnerAndLoserWarning";
+import EqualPlayerWarning from "../Warning/EqualPlayerWarning";
 
 export default function AddHistoryForm({players, winner, setWinner, loser, setLoser}) {
     const [proofUrl, setProofUrl] = useState(undefined);
@@ -40,6 +43,9 @@ export default function AddHistoryForm({players, winner, setWinner, loser, setLo
                                           onChange={(e) => setProofUrl(e.target.value)}/>}
                 />
             </div>
+            {!WinnerLoserValidator.isLeagueEqualFor({winner, loser}) ? <DifferentLeagueWarning/> : null}
+            {!WinnerLoserValidator.isLoserAndWinnerSet({winner, loser}) ? <SelectWinnerAndLoserWarning/>: null}
+            {WinnerLoserValidator.areOpponentsEqual({winner, loser}) ? <EqualPlayerWarning/> : null}
             <div>
                 <SubmitInput value='Add History'/>
             </div>
@@ -55,13 +61,15 @@ export default function AddHistoryForm({players, winner, setWinner, loser, setLo
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        if (WinnerLoserValidator.isLoserAndWinnerNotSet({winner, loser})) {
-            alert("Please select a winner and a loser!");
-        } else if (WinnerLoserValidator.areOpponentsEqual({winner, loser})) {
-            alert("Invalid matchup! Player cannot compete against themself: " + winner.name);
-        } else {
+        if (shouldSubmit()) {
             addHistory();
         }
+    };
+
+    const shouldSubmit = () => {
+        return WinnerLoserValidator.isLeagueEqualFor({winner, loser})
+        && WinnerLoserValidator.isLoserAndWinnerSet({winner, loser})
+        && !WinnerLoserValidator.areOpponentsEqual({winner, loser})
     };
 
     const addHistory = () => {

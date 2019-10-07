@@ -4,7 +4,7 @@ import WinnerLoserValidator from "../../helpers/Validators/WinnerLoserValidator"
 export default function EloChangeDisplay({winner, loser, changes}) {
     const shouldRender = () => {
         return !(
-            WinnerLoserValidator.isLoserAndWinnerNotSet({winner, loser})
+            !WinnerLoserValidator.isLoserAndWinnerSet({winner, loser})
             || WinnerLoserValidator.areOpponentsEqual({winner, loser})
             || changes === undefined
         );
