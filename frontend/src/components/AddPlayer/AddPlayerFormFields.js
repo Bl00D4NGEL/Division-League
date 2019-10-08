@@ -1,4 +1,4 @@
-import Label from "./AddPlayerForm";
+import Label from "../BaseElements/Label";
 import React from "react";
 import SubmitInput from "../BaseElements/SubmitInput";
 import TextInput from "../BaseElements/TextInput";

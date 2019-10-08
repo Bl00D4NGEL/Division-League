@@ -18,8 +18,6 @@ export default function AddPlayerForm() {
         e.preventDefault();
         if (AddPlayerValidator.isValid({name, division, playerId, league})) {
             AddPlayerService({setIsLoaded, setResult, setError, name, division, playerId, league});
-        } else {
-            alert("Please enter all required fields");
         }
     };
     return <div>

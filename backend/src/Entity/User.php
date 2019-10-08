@@ -97,7 +97,7 @@ class User
     }
 
     public function verifyPassword(string $password): bool {
-        return password_verify($password, $this->getPassword());
+        return password_verify($password, trim($this->getPassword()));
     }
 
     public function asArray()

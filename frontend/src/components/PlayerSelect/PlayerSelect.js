@@ -8,7 +8,7 @@ export default function PlayerSelect({players, label, ...rest}) {
             return {
                 key: x.id,
                 value: x,
-                name: '[' + x.division + '] ' + x.name + ' (' + x.elo + ')',
+                name: '[' + x.league + '] ' + x.name + ' (' + x.elo + ')',
             }
         });
     };
