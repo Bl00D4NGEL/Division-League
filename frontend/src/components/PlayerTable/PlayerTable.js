@@ -2,14 +2,14 @@ import React, {useState, useEffect} from 'react';
 import Loader from "../BaseElements/Loader";
 import LeagueDisplay from "../LeagueDisplay/LeagueDisplay";
 import Sorter from "../../helpers/Sorter/Sorter";
-import LoadPlayers from "../../services/LoadPlayers";
+import LoadPlayersService from "../../services/LoadPlayersService";
 
 export default function PlayerTable() {
     const [isLoaded, setIsLoaded] = useState(false);
     const [error, setError] = useState(undefined);
     const [players, setPlayers] = useState([]);
 
-    useEffect(() => LoadPlayers({setIsLoaded, setError, setPlayers}), []);
+    useEffect(() => LoadPlayersService({setIsLoaded, setError, setPlayers}), []);
 
     const generateLeagueDisplays = () => {
         return Sorter(getLeagueData(), 'league').map((league) => {

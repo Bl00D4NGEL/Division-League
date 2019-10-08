@@ -2,14 +2,14 @@ import React, {useState, useEffect} from 'react';
 import Table from '../BaseElements/Table';
 import Loader from "../BaseElements/Loader";
 import WinnerLoserValidator from "../../helpers/Validators/WinnerLoserValidator";
-import LoadHistories from "../../services/LoadHistories";
+import LoadHistoriesService from "../../services/LoadHistoriesService";
 
 export default function HistoryTable() {
     const [isLoaded, setIsLoaded] = useState(false);
     const [error, setError] = useState(undefined);
     const [historyData, setHistoryData] = useState([]);
 
-    useEffect(() => LoadHistories({setIsLoaded, setError, setHistoryData}), []);
+    useEffect(() => LoadHistoriesService({setIsLoaded, setError, setHistoryData}), []);
 
     const generateHistoryTableRows = () => {
         return historyData.map((entry) => {

@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import Loader from "../BaseElements/Loader";
 import AddHistoryForm from "./AddHistoryForm";
-import LoadPlayers from "../../services/LoadPlayers";
+import LoadPlayersService from "../../services/LoadPlayersService";
 
 export default function AddHistory() {
     const [players, _setPlayers] = useState([]);
@@ -15,7 +15,7 @@ export default function AddHistory() {
         setLoser(players[1]);
         _setPlayers(players);
     };
-    useEffect(() => LoadPlayers({setPlayers, setError, setIsLoaded}), []);
+    useEffect(() => LoadPlayersService({setPlayers, setError, setIsLoaded}), []);
 
     return (
         <Loader
