@@ -5,8 +5,8 @@ import UserRoles from "./UserRoles";
 import Navigation from "./components/Navigation/Navigation";
 
 export default function AppRouter() {
-    const [isLoggedIn, setIsLoggedIn] = React.useState(true);
-    const [user, setUser] = React.useState({role: UserRoles.admin});
+    const [isLoggedIn, setIsLoggedIn] = React.useState(false);
+    const [user, setUser] = React.useState({role: UserRoles.normal});
 
     const generateRoutes = () => {
         return RouteConfig.getAll().map((route) => {
