@@ -1,9 +1,10 @@
-const _apiUrl = 'http://localhost';
-const _apiPort = 8000;
+const _apiUrl = 'http://localhost:8000';
+
+const _mdrUrL = 'http://localhost:2048';
 
 export default class Config {
     static _getApiUrlBase() {
-        return _apiUrl + (_apiPort !== undefined ? ":" + _apiPort : '');
+        return _apiUrl;
     }
 
     static historyEndpointUrl(suffix) {
@@ -36,6 +37,10 @@ export default class Config {
 
     static loginEndpoint() {
         return new Endpoint(this.loginEndpointUrl(), 'POST');
+    }
+
+    static mdrDivisionEndpoint(division) {
+        return new Endpoint(_mdrUrL + '/division/' + division);
     }
 }
 

@@ -4,6 +4,7 @@ import AddHistory from "./components/AddHistory/AddHistory";
 import AddPlayer from "./components/AddPlayer/AddPlayer";
 import Login from "./components/Login/Login";
 import UserRoles from "./UserRoles";
+import Admin from "./components/Admin/Admin";
 
 export default class RouteConfig {
     static config = [
@@ -41,6 +42,13 @@ export default class RouteConfig {
             'requiresLogin': false,
             'requiredRole': UserRoles.normal,
             'shouldRender': true
+        },
+        {
+            'path': '/admin',
+            'component': Admin,
+            'name': 'Admin',
+            'requiresLogin': true,
+            'requiredRole': UserRoles.admin
         }
     ];
 
