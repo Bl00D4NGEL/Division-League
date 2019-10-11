@@ -13,68 +13,44 @@ export default function LoadPlayersFromMdrService({division, setIsLoaded, setErr
             setError(error);
         }
     );
-
 }
 
 function getMembersFromDivision(division) {
     const players = [];
-    ['commanders', 'vices'].map(function (role) {
-        if (division[role] !== undefined) {
-            division[role].map(player => players.push(player));
-        }
-    });
+    getPlayersForRolesFromObject(['commanders', 'vices'], division).forEach(player => players.push(player));
 
-    division.teams
-        .map(
-            team => getMembersFromTeam(team)
-        )
-        .map(
-            teamPlayers => teamPlayers.map(
-                player => players.push(player)
-            )
-        );
+    if (division.teams !== undefined) {
+        division.teams
+            .map(team => getMembersFromTeam(team))
+            .forEach(teamPlayers => teamPlayers.forEach(player => players.push(player)));
+    }
     return players;
 }
 
 function getMembersFromTeam(team) {
     const players = [];
-    ['tls', 'twoics'].map(function (role) {
-        if (team[role] !== undefined) {
-            team[role].map(player => players.push(player));
-        }
-    });
-    if (team.Members !== undefined) {
-        team.Members.map(val => players.push(val));
+    getPlayersForRolesFromObject(['tls', 'twoics', 'Members', 'Probation'], team).forEach(player => players.push(player));
+
+    if (team.rosters !== undefined && team.rosters.length > 0) {
+        team.rosters
+            .map(roster => getMembersFromRoster(roster))
+            .forEach(rosterPlayers => rosterPlayers.forEach(player => players.push(player)));
     }
-    if (team.Probation !== undefined) {
-        team.Probation.map(val => players.push(val));
-    }
-    team.rosters
-        .map(
-            roster => getMembersFromRoster(roster)
-        )
-        .map(
-            rosterPlayers => rosterPlayers.map(
-                player => players.push(player)
-            )
-        );
     return players;
 }
 
 function getMembersFromRoster(roster) {
     const players = [];
-    ['rls'].map(function (role) {
-        if (roster[role] !== undefined) {
-            for (let i = 0; i < roster[role].length; i++) {
-                players.push(roster[role][i]);
-            }
-        } else {
-            console.log("Role " + role + " is undefined in roster");
-        }
+    getPlayersForRolesFromObject(['rls', 'members'], roster).forEach(player => players.push(player));
+    return players;
+}
 
+function getPlayersForRolesFromObject(roles, object) {
+    const players = [];
+    roles.forEach((role) => {
+        if (object[role] !== undefined) {
+            object[role].forEach(player => players.push(player));
+        }
     });
-    if (roster.members !== undefined) {
-        roster.members.map(player => players.push(player));
-    }
     return players;
 }
