@@ -8,8 +8,11 @@ export default function PlayerTable() {
     const [isLoaded, setIsLoaded] = useState(false);
     const [error, setError] = useState(undefined);
     const [players, setPlayers] = useState([]);
+    useEffect(() => {
+                LoadPlayersService({setIsLoaded, setError, setPlayers})
+        }, []
+    );
 
-    useEffect(() => LoadPlayersService({setIsLoaded, setError, setPlayers}), []);
 
     const generateLeagueDisplays = () => {
         return Sorter(getLeagueData(), 'league').map((league) => {
@@ -19,13 +22,15 @@ export default function PlayerTable() {
 
     const getLeagueData = () => {
         const leagues = players
-            .map((p) => {return p.league})
+            .map((p) => {
+                return p.league
+            })
             .filter((item, i, ar) => ar.indexOf(item) === i);
         return leagues.map((league) => {
             return {
                 league: league,
                 players: players.filter(item => item.league === league)
-        }
+            }
         });
     };
 

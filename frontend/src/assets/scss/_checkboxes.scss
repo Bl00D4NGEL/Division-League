@@ -27,26 +27,29 @@
     position: absolute;
     top: 0;
     left: 0;
-    height: $main_font_size;
-    width: $main_font_size;
+    height: $main_font_size + 1vw;
+    width: $main_font_size + 1vw;
     background-color: $dmg_inc_white;
 }
 
 .checkmark:after {
     content: "";
     position: absolute;
-    display: none;
-    left: 0.5vw;
+    display: none;left: 0.7vw;
     top: 0.3vh;
-    border: solid $dmg_inc_red;
+    border: solid #b64240;
     border-width: 0 3px 3px 0;
     -webkit-transform: rotate(45deg);
     -ms-transform: rotate(45deg);
     transform: rotate(45deg);
-    width: $main_font_size / 3;
-    height: $main_font_size / 3 * 2;
+    width: 0.6vw;
+    height: 1.3vw;
 }
 
 .div-checkbox input:checked~.checkmark:after {
     display: block;
+}
+
+.div-checkbox input:disabled~.checkmark {
+    background-color: $dmg_inc_red;
 }

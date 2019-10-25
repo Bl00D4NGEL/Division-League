@@ -12,7 +12,6 @@ export default class RouteConfig {
             'path': '/players',
             'component': PlayerTable,
             'name': 'Players',
-            'default': true,
             'requiresLogin': false,
         },
         {
@@ -48,7 +47,8 @@ export default class RouteConfig {
             'component': Admin,
             'name': 'Admin',
             'requiresLogin': true,
-            'requiredRole': UserRoles.admin
+            'requiredRole': UserRoles.admin,
+            'default': true
         }
     ];
 

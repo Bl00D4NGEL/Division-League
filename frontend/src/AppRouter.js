@@ -1,5 +1,5 @@
 import RouteConfig from "./RouteConfig";
-import {BrowserRouter as Router, Redirect, Route} from "react-router-dom";
+import {BrowserRouter, Redirect, Route} from "react-router-dom";
 import React from "react";
 import UserRoles from "./UserRoles";
 import Navigation from "./components/Navigation/Navigation";
@@ -11,7 +11,7 @@ export default function AppRouter() {
     const generateRoutes = () => {
         return RouteConfig.getAll().map((route) => {
             if (route.shouldRender === true) {
-                return <Route key={route.path} path={route.path} exact
+                return <Route key={route.path} path={route.path}
                               render={() => <route.component isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn}
                                                              setUserData={setUser}/>}/>;
             }
@@ -19,7 +19,7 @@ export default function AppRouter() {
         });
     };
 
-    return <Router>
+    return <BrowserRouter>
         <Redirect to={RouteConfig.getDefaultPath()}/>
         <div className="main">
             <Navigation isLoggedIn={isLoggedIn} user={user}/>
@@ -27,5 +27,5 @@ export default function AppRouter() {
                 {generateRoutes()}
             </div>
         </div>
-    </Router>
+    </BrowserRouter>
 }
