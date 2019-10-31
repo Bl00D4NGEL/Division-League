@@ -1,26 +1,27 @@
 import CustomRequest from "../helpers/CustomRequest/CustomRequest";
 import Config from "../Config";
 
-export default function AddPlayerService({setIsLoaded, setResult, setError, name, division, playerId, league}) {
+export default function RegisterUserService({setIsLoaded, setError, setResponse, user, password, role}) {
     if (isNotAFunctionOrUndefined(setIsLoaded)) {
         setIsLoaded = defaultEmptyFunc;
-    }
-    if (isNotAFunctionOrUndefined(setResult)) {
-        setResult = defaultEmptyFunc;
     }
     if (isNotAFunctionOrUndefined(setError)) {
         setError = defaultEmptyFunc;
     }
+    if(isNotAFunctionOrUndefined(setResponse)) {
+        setResponse = defaultEmptyFunc;
+    }
+
     setIsLoaded(false);
     CustomRequest(
-        Config.addPlayerEndPoint(), (res) => {
-            setResult(JSON.stringify(res));
+        Config.registerUserEndPoint(), (res) => {
             setIsLoaded(true);
+            setResponse(res.data);
         }, (error) => {
             setError(error);
             setIsLoaded(true);
         },
-        {name, division, playerId, league}
+        {user, password, role}
     );
 }
 

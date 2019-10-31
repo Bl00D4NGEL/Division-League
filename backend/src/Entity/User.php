@@ -31,11 +31,6 @@ class User
     private $password;
 
     /**
-     * @ORM\Column(type="date")
-     */
-    private $lastLoggedIn;
-
-    /**
      * @ORM\Column(type="string", length=255)
      */
     private $role;
@@ -64,19 +59,7 @@ class User
 
     public function setPassword(string $password): self
     {
-        $this->password = $password;
-
-        return $this;
-    }
-
-    public function getLastLoggedIn(): ?\DateTimeInterface
-    {
-        return $this->lastLoggedIn;
-    }
-
-    public function setLastLoggedIn(\DateTimeInterface $lastLoggedIn): self
-    {
-        $this->lastLoggedIn = $lastLoggedIn;
+        $this->password = password_hash($password, PASSWORD_DEFAULT);
 
         return $this;
     }
@@ -105,7 +88,6 @@ class User
         return [
             'id' => $this->getId(),
             'role' => $this->getRole(),
-            'lastLoggedIn' => $this->getLastLoggedIn(),
         ];
     }
 }

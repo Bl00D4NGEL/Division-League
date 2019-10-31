@@ -52,4 +52,5 @@
 
 .div-checkbox input:disabled~.checkmark {
     background-color: $dmg_inc_red;
+    cursor: not-allowed;
 }

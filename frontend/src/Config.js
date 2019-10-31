@@ -8,15 +8,19 @@ export default class Config {
     }
 
     static historyEndpointUrl(suffix) {
-        return this._getApiUrlBase() + "/history" + (suffix !== undefined ? "/" + suffix : '');
+        return this._getApiUrlBase() + '/history' + (suffix !== undefined ? '/' + suffix : '');
     }
 
     static playerEndpointUrl(suffix) {
-        return this._getApiUrlBase() + "/player" + (suffix !== undefined ? "/" + suffix : '');
+        return this._getApiUrlBase() + '/player' + (suffix !== undefined ? '/' + suffix : '');
     }
 
     static loginEndpointUrl() {
-        return this._getApiUrlBase() + "/login";
+        return this._getApiUrlBase() + '/login';
+    }
+    
+    static registerEndpointUrl() {
+        return this._getApiUrlBase() + '/register';
     }
 
     static recentHistoryEndpoint() {
@@ -24,7 +28,7 @@ export default class Config {
     }
 
     static getAllPlayersEndpoint() {
-        return new Endpoint(this.playerEndpointUrl("get/all"));
+        return new Endpoint(this.playerEndpointUrl('get/all'));
     }
 
     static addHistoryEndPoint() {
@@ -37,6 +41,10 @@ export default class Config {
 
     static loginEndpoint() {
         return new Endpoint(this.loginEndpointUrl(), 'POST');
+    }
+
+    static registerUserEndPoint() {
+        return new Endpoint(this.registerEndpointUrl(), 'POST');
     }
 
     static mdrDivisionMembersEndpoint(division) {

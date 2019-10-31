@@ -1,7 +1,7 @@
 const userRoles = {
-    'normal': 0,
-    'moderator': 1,
-    'admin': 2
+    'NORMAL': 0,
+    'MODERATOR': 1,
+    'ADMIN': 2
 };
 
 export default userRoles;

@@ -3,6 +3,7 @@ import React from "react";
 import {NavLink} from "react-router-dom";
 
 import icon from '../../assets/img/dmg-inc-icon-light.png';
+import UserRoles from "../../UserRoles";
 
 export default function Navigation({isLoggedIn, user}) {
     const defaultMarginLeft = 40;
@@ -10,7 +11,7 @@ export default function Navigation({isLoggedIn, user}) {
         return RouteConfig.getAll().map((route) => {
             if (
                 (route.requiresLogin && !isLoggedIn)
-                || route.requiredRole > user.role
+                || route.requiredRole > UserRoles[user.role]
             ) {
                 return null;
             }

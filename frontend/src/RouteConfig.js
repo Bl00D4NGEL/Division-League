@@ -13,6 +13,7 @@ export default class RouteConfig {
             'component': PlayerTable,
             'name': 'Players',
             'requiresLogin': false,
+            'default': true
         },
         {
             'path': '/history',
@@ -25,21 +26,21 @@ export default class RouteConfig {
             'component': AddHistory,
             'name': 'Add History',
             'requiresLogin': true,
-            'requiredRole': UserRoles.moderator
+            'requiredRole': UserRoles.MODERATOR
         },
         {
             'path': '/add/player',
             'component': AddPlayer,
             'name': 'Add Player',
             'requiresLogin': true,
-            'requiredRole': UserRoles.admin
+            'requiredRole': UserRoles.MODERATOR
         },
         {
             'path': '/login',
             'component': Login,
             'name': 'Login',
             'requiresLogin': false,
-            'requiredRole': UserRoles.normal,
+            'requiredRole': UserRoles.NORMAL,
             'shouldRender': true
         },
         {
@@ -47,8 +48,7 @@ export default class RouteConfig {
             'component': Admin,
             'name': 'Admin',
             'requiresLogin': true,
-            'requiredRole': UserRoles.admin,
-            'default': true
+            'requiredRole': UserRoles.ADMIN,
         }
     ];
 

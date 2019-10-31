@@ -38,7 +38,7 @@ export default function AddHistoryFormFields({winner, loser, players, setWinner,
             <Label
                 text='Proof:'
                 formField={<TextInput name='proofUrl' required pattern=".+\..+"
-                                      onChange={(e) => setProofUrl(e.target.value)}/>}
+                                      onChangeSetter={setProofUrl}/>}
             />
         </div>
         {generateWarnings()}

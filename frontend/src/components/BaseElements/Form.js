@@ -1,7 +1,7 @@
 import React from "react";
 
-export default function CustomForm(props) {
-    return <form onSubmit={props.onSubmit}>
-        {props.formFields}
+export default function CustomForm({onSubmit, formFields}) {
+    return <form onSubmit={onSubmit}>
+        {formFields}
     </form>
 }

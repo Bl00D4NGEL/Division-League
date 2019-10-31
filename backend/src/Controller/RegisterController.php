@@ -2,36 +2,36 @@
 
 namespace App\Controller;
 
-use App\Models\LoginModel;
-use App\Resource\LoginRequest;
+use App\Models\RegisterModel;
+use App\Resource\RegisterRequest;
 use JMS\Serializer\SerializerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-class LoginController extends AbstractController
+class RegisterController extends AbstractController
 {
-    /** @var LoginModel */
-    private $loginModel;
-
     /** @var SerializerInterface */
     private $serializer;
 
-    public function __construct(SerializerInterface $serializer, LoginModel $loginModel)
+    /** @var RegisterModel */
+    private $registerModel;
+
+    public function __construct(SerializerInterface $serializer, RegisterModel $registerModel)
     {
         $this->serializer = $serializer;
-        $this->loginModel = $loginModel;
+        $this->registerModel = $registerModel;
     }
 
     /**
-     * @Route("/login", name="login")
+     * @Route("/register", name="register")
      * @param Request $request
      * @return JsonResponse
      */
     public function login(Request $request): JsonResponse
     {
-        $req = $this->serializer->deserialize($request->getContent(), LoginRequest::class, 'json');
-        return $this->loginModel->login($req);
+        $req = $this->serializer->deserialize($request->getContent(), RegisterRequest::class, 'json');
+        return $this->registerModel->register($req);
     }
 }
