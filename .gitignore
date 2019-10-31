@@ -1,6 +1,5 @@
 .idea
 
-backend/src/Migrations/
 backend/*lock*
 frontend/*lock*
 frontend/src/assets/.sass-cache/
