@@ -1,6 +1,6 @@
 import React from 'react';
-import CustomSelect from "../BaseElements/Select";
-import Label from "../BaseElements/Label";
+import Label from "../BaseReactComponents/Label/Label";
+import CustomSelect from "../BaseReactComponents/Select/Select";
 
 export default function PlayerSelect({players, label, ...rest}) {
     const generateOptions = () => {

@@ -1,9 +1,9 @@
 import React, {useState} from 'react';
-import CustomForm from "../BaseElements/Form";
-import Loader from "../BaseElements/Loader";
 import AddPlayerService from "../../services/AddPlayerService";
 import AddPlayerValidator from "../../helpers/Validators/AddPlayerValidator";
 import AddPlayerFormFields from "./AddPlayerFormFields";
+import CustomForm from "../BaseReactComponents/Form/Form";
+import Loader from "../BaseReactComponents/Loader/Loader";
 
 export default function AddPlayerForm() {
     const [isLoaded, setIsLoaded] = useState(true);

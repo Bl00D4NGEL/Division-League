@@ -1,8 +1,8 @@
 import React, {useState} from 'react';
-import CustomForm from "../BaseElements/Form";
 import AddHistoryService from "../../services/AddHistoryService";
 import AddHistoryFormFields from "./AddHistoryFormFields";
 import AddHistoryValidator from "../../helpers/Validators/AddHistoryValidator";
+import CustomForm from "../BaseReactComponents/Form/Form";
 
 export default function AddHistoryForm({players, winner, setWinner, loser, setLoser}) {
     const [proofUrl, setProofUrl] = useState(undefined);

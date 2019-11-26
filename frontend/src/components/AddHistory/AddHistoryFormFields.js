@@ -5,11 +5,11 @@ import DifferentLeagueWarning from "../Warning/DifferentLeagueWarning";
 import SelectWinnerAndLoserWarning from "../Warning/SelectWinnerAndLoserWarning";
 import EqualPlayerWarning from "../Warning/EqualPlayerWarning";
 import LoserSelect from "../PlayerSelect/LoserSelect";
-import Label from "../BaseElements/Label";
-import TextInput from "../BaseElements/TextInput";
-import SubmitInput from "../BaseElements/SubmitInput";
-import Loader from "../BaseElements/Loader";
 import EloChangeDisplay from "../EloChangeDisplay/EloChangeDisplay";
+import Label from "../BaseReactComponents/Label/Label";
+import TextInput from "../BaseReactComponents/TextInput/TextInput";
+import SubmitButton from "../BaseReactComponents/SubmitButton/SubmitButton";
+import Loader from "../BaseReactComponents/Loader/Loader";
 
 export default function AddHistoryFormFields({winner, loser, players, setWinner, setLoser, setProofUrl, error, isLoaded, changes}) {
     const generateWarnings = () => {
@@ -43,7 +43,7 @@ export default function AddHistoryFormFields({winner, loser, players, setWinner,
         </div>
         {generateWarnings()}
         <div>
-            <SubmitInput value='Add History'/>
+            <SubmitButton value='Add History'/>
         </div>
         <div>
             <Loader

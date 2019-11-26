@@ -1,4 +1,5 @@
 import React from 'react';
+import './warning.scss';
 
 export default function Warning ({message}) {
     return <div className="flex full-width" style={{margin: 20 + 'px 0'}}>

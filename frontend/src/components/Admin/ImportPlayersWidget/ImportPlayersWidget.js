@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import LoadPlayerWidget from "./LoadPlayerWidget";
-import TextInput from "../../BaseElements/TextInput";
-import Label from "../../BaseElements/Label";
+import Label from "../../BaseReactComponents/Label/Label";
+import TextInput from "../../BaseReactComponents/TextInput/TextInput";
 
 export default function () {
     const [division, setDivision] = useState('');

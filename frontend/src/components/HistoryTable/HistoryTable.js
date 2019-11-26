@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
-import Table from '../BaseElements/Table';
-import Loader from "../BaseElements/Loader";
 import LoadHistoriesService from "../../services/LoadHistoriesService";
+import Loader from "../BaseReactComponents/Loader/Loader";
+import Table from "../BaseReactComponents/Table/Table";
 
 export default function HistoryTable() {
     const [isLoaded, setIsLoaded] = useState(false);

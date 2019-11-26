@@ -1,6 +1,6 @@
 import React from 'react';
-import FakeLoader from "../BaseElements/FakeLoader";
 import AddPlayerForm from "./AddPlayerForm";
+import FakeLoader from "../BaseReactComponents/Loader/FakeLoader";
 
 export default function AddPlayer() {
     return <FakeLoader

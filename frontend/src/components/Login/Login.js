@@ -1,13 +1,13 @@
 import React, {useState} from "react";
-import TextInput from "../BaseElements/TextInput";
-import Label from "../BaseElements/Label";
-import PasswordInput from "../BaseElements/PasswordInput";
-import CustomForm from "../BaseElements/Form";
-import SubmitInput from "../BaseElements/SubmitInput";
 import CustomRequest from "../../helpers/CustomRequest/CustomRequest";
 import Config from "../../Config";
-import FakeLoader from "../BaseElements/FakeLoader";
-import Loader from "../BaseElements/Loader";
+import Label from "../BaseReactComponents/Label/Label";
+import TextInput from "../BaseReactComponents/TextInput/TextInput";
+import PasswordInput from "../BaseReactComponents/PasswordInput/PasswordInput";
+import FakeLoader from "../BaseReactComponents/Loader/FakeLoader";
+import CustomForm from "../BaseReactComponents/Form/Form";
+import Loader from "../BaseReactComponents/Loader/Loader";
+import SubmitButton from "../BaseReactComponents/SubmitButton/SubmitButton";
 
 export default function Login({isLoggedIn, setIsLoggedIn, setUserData}) {
     const [user, setUser] = useState(undefined);
@@ -69,7 +69,7 @@ export default function Login({isLoggedIn, setIsLoggedIn, setUserData}) {
             formFields={
                 <div>
                     {generateFormFields()}
-                    <SubmitInput value="Login"/>
+                    <SubmitButton value="Login"/>
                     <Loader
                         isLoaded={isLoaded}
                         error={error}

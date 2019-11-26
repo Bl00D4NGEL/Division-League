@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
-import Loader from "../BaseElements/Loader";
 import AddHistoryForm from "./AddHistoryForm";
 import LoadPlayersService from "../../services/LoadPlayersService";
+import Loader from "../BaseReactComponents/Loader/Loader";
 
 export default function AddHistory() {
     const [players, _setPlayers] = useState([]);

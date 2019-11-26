@@ -2,39 +2,39 @@ import RouteConfig from "../../RouteConfig";
 import React from "react";
 import {NavLink} from "react-router-dom";
 
+import './nav.scss';
 import icon from '../../assets/img/dmg-inc-icon-light.png';
 import UserRoles from "../../UserRoles";
 
 export default function Navigation({isLoggedIn, user}) {
-    const defaultMarginLeft = 40;
     const generateNavigationLinks = () => {
-        return RouteConfig.getAll().map((route) => {
-            if (
-                (route.requiresLogin && !isLoggedIn)
-                || route.requiredRole > UserRoles[user.role]
-            ) {
-                return null;
+        return <ul>
+            {
+                RouteConfig.getAll().map((route) => {
+                    if (
+                        (route.requiresLogin && !isLoggedIn)
+                        || route.requiredRole > UserRoles[user.role]
+                    ) {
+                        return null;
+                    }
+                    if (route.path === '/login' && isLoggedIn) {
+                        return null;
+                    }
+                    return <li key={route.path}><NavLink onClick={() => document.getElementsByClassName('toggle-nav')[0].click()} to={route.path}>{route.name}</NavLink></li>
+                })
             }
-            if (route.path === '/login' && isLoggedIn) {
-                return null;
-            }
-            return <NavLink key={route.path} to={route.path}>{route.name}</NavLink>
-        });
+        </ul>
     };
 
-    const toggleContent = (e) => {
-        const sideBarLength = document.getElementsByClassName('sidebar')[0].clientWidth;
-        document.getElementsByClassName('content')[0].style.marginLeft = defaultMarginLeft + (e.target.checked ? sideBarLength : 0) + 'px';
+    const toggleNavigation = (e) => {
+        e.currentTarget.classList.toggle('menu-active');
+        document.querySelector('.menu ul').classList.toggle('menu-active');
+        e.preventDefault();
     };
 
-    return <div>
-        <input onChange={toggleContent} type="checkbox" id="sidebar-toggle-input"/>
-        <label className="sidebar-toggle" htmlFor="sidebar-toggle-input"/>
-        <div className="sidebar">
-            <div>
-                <img alt="Damage Incorporated" src={icon}/>
-            </div>
-            {generateNavigationLinks()}
-        </div>
-    </div>
+    return <nav className="menu">
+        {generateNavigationLinks()}
+        <div id="di-logo"><img src={icon} alt="Damage Incorporated"/></div>
+        <a onClick={toggleNavigation} className="toggle-nav" href="/">&#9776;</a>
+    </nav>
 }

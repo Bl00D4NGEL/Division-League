@@ -1,5 +1,5 @@
 import React from 'react';
-import Table from "../BaseElements/Table";
+import Table from "../BaseReactComponents/Table/Table";
 
 export default function LeagueDisplay({leagueName, players}) {
 

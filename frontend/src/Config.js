@@ -47,8 +47,8 @@ export default class Config {
         return new Endpoint(this.registerEndpointUrl(), 'POST');
     }
 
-    static mdrDivisionMembersEndpoint(division) {
-        return new Endpoint(_mdrUrL + '/divisionMembers/' + division);
+    static mdrDivisionMembersEndPoint(division) {
+        return new Endpoint(_mdrUrL + '/get/divisionMembers/' + division);
     }
 }
 

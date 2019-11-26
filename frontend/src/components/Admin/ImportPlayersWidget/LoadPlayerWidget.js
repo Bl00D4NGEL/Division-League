@@ -1,13 +1,13 @@
 import React, {useState} from 'react';
-import Button from "../../BaseElements/Button";
 import LoadPlayersFromMdrService from "../../../services/LoadPlayersFromMdrService";
-import Loader from "../../BaseElements/Loader";
-import Table from "../../BaseElements/Table";
 import LoadPlayersService from "../../../services/LoadPlayersService";
-import CheckboxInput from "../../BaseElements/CheckboxInput";
-import CustomForm from "../../BaseElements/Form";
-import SubmitInput from "../../BaseElements/SubmitInput";
 import AddPlayerService from "../../../services/AddPlayerService";
+import Table from "../../BaseReactComponents/Table/Table";
+import Checkbox from "../../BaseReactComponents/Checkbox/Checkbox";
+import Loader from "../../BaseReactComponents/Loader/Loader";
+import SubmitButton from "../../BaseReactComponents/SubmitButton/SubmitButton";
+import Button from "../../BaseReactComponents/Button/Button";
+import CustomForm from "../../BaseReactComponents/Form/Form";
 
 export default function LoadPlayerWidget({divisionToLoad, defaultLeague}) {
     const [isLoaded, setIsLoaded] = useState(true);
@@ -66,7 +66,7 @@ export default function LoadPlayerWidget({divisionToLoad, defaultLeague}) {
     };
 
     const generateCheckbox = (member) => {
-        return <CheckboxInput
+        return <Checkbox
             isDisabled={member.isAlreadyLoaded}
             name='members'
             onClick={e => membersToTransfer[member.id] = {transfer: e.currentTarget.checked, data: member}}
@@ -79,7 +79,7 @@ export default function LoadPlayerWidget({divisionToLoad, defaultLeague}) {
             return [
                 member.name,
                 member.id,
-                member.memberRank,
+                member.rank,
                 generateCheckbox(member)
             ];
         });
@@ -105,7 +105,7 @@ export default function LoadPlayerWidget({divisionToLoad, defaultLeague}) {
             <div>
                 <div>
                     <Button text="Load Players" onClick={loadPlayers}/>
-                    <SubmitInput value="Save Players"/>
+                    <SubmitButton value="Save Players"/>
                 </div>
                 <div>
                     <Loader isLoaded={isLoaded} error={error} content={generatePlayerTable()}/>

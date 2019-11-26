@@ -1,5 +1,4 @@
-/* Small Device / Landscape Mode */
-$main_height: 7vh;
+@import "variables";
 $main_font_size: 3.5vw;
 
 @media screen and (max-width: 768px) {

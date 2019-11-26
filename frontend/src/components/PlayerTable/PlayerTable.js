@@ -1,8 +1,8 @@
 import React, {useState, useEffect} from 'react';
-import Loader from "../BaseElements/Loader";
 import LeagueDisplay from "../LeagueDisplay/LeagueDisplay";
 import Sorter from "../../helpers/Sorter/Sorter";
 import LoadPlayersService from "../../services/LoadPlayersService";
+import Loader from "../BaseReactComponents/Loader/Loader";
 
 export default function PlayerTable() {
     const [isLoaded, setIsLoaded] = useState(false);

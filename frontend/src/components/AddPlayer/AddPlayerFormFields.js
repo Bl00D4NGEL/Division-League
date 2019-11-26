@@ -1,7 +1,7 @@
-import Label from "../BaseElements/Label";
 import React from "react";
-import SubmitInput from "../BaseElements/SubmitInput";
-import TextInput from "../BaseElements/TextInput";
+import Label from "../BaseReactComponents/Label/Label";
+import TextInput from "../BaseReactComponents/TextInput/TextInput";
+import SubmitButton from "../BaseReactComponents/SubmitButton/SubmitButton";
 
 export default function AddPlayerFormFields({setName, setDivision, setPlayerId, setLeague}) {
     const labelConfig = [
@@ -46,7 +46,7 @@ export default function AddPlayerFormFields({setName, setDivision, setPlayerId, 
 
     return <div>
         {generateLabels()}
-        <SubmitInput value="Add Player"/>
+        <SubmitButton value="Add Player"/>
     </div>
 
 }

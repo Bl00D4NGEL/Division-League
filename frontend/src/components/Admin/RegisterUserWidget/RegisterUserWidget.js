@@ -1,12 +1,12 @@
 import React, {useState} from 'react';
-import CustomForm from "../../BaseElements/Form";
-import Label from "../../BaseElements/Label";
-import TextInput from "../../BaseElements/TextInput";
-import PasswordInput from "../../BaseElements/PasswordInput";
-import CustomSelect from "../../BaseElements/Select";
-import SubmitInput from "../../BaseElements/SubmitInput";
 import RegisterUserService from "../../../services/RegisterUserService";
-import Loader from "../../BaseElements/Loader";
+import CustomForm from "../../BaseReactComponents/Form/Form";
+import TextInput from "../../BaseReactComponents/TextInput/TextInput";
+import Label from "../../BaseReactComponents/Label/Label";
+import PasswordInput from "../../BaseReactComponents/PasswordInput/PasswordInput";
+import CustomSelect from "../../BaseReactComponents/Select/Select";
+import SubmitButton from "../../BaseReactComponents/SubmitButton/SubmitButton";
+import Loader from "../../BaseReactComponents/Loader/Loader";
 
 export default function RegisterUserWidget() {
     const [user, setUser] = useState(undefined);
@@ -41,7 +41,7 @@ export default function RegisterUserWidget() {
                         })
                     } onChange={e => setRole(e.target.value)} defaultValue={'MODERATOR'}/>
                 }/>
-                <SubmitInput value='Create user'/>
+                <SubmitButton value='Create user'/>
             </div>
         }/>
         <Loader content={response} error={error} isLoaded={isLoaded}/>

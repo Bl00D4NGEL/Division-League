@@ -1,6 +1,4 @@
-/* Small Desktops */
-$main_height: 7vh;
-$main_font_size: 2vw;
+@import "variables";
 
 @media screen and (max-width: 1200px) {
     .dw-hide {

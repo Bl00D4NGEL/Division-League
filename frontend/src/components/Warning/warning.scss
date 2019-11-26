@@ -1,0 +1,17 @@
+@import '../../assets/scss/variables';
+@import '../../assets/scss/helper';
+
+$warning_color: #a06f15;
+
+.box {
+  width: $main_font_size - 0.5vw;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  @extend %no-select;
+}
+
+.warning-box {
+  background-color: $warning_color;
+  color: $white;
+}
