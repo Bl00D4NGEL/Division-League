@@ -2,13 +2,13 @@ import RouteConfig from "../../RouteConfig";
 import React from "react";
 import {NavLink} from "react-router-dom";
 
-import './nav.scss';
+import './navigation.scss';
 import icon from '../../assets/img/dmg-inc-icon-light.png';
 import UserRoles from "../../UserRoles";
 
 export default function Navigation({isLoggedIn, user}) {
     const generateNavigationLinks = () => {
-        return <ul>
+        return <ul className="menu-active">
             {
                 RouteConfig.getAll().map((route) => {
                     if (

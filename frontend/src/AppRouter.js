@@ -3,6 +3,7 @@ import {BrowserRouter, Redirect, Route} from "react-router-dom";
 import React from "react";
 import UserRoles from "./UserRoles";
 import Navigation from "./components/Navigation/Navigation";
+import Footer from "./components/Footer/Footer";
 
 export default function AppRouter() {
     const [isLoggedIn, setIsLoggedIn] = React.useState(false);
@@ -26,6 +27,7 @@ export default function AppRouter() {
             <div className="content">
                 {generateRoutes()}
             </div>
+            <Footer/>
         </div>
     </BrowserRouter>
 }
