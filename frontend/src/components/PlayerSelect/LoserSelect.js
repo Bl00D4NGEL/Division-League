@@ -1,7 +1,7 @@
 import PlayerSelect from "./PlayerSelect";
 import React from "react";
 
-export default function LoserSelect(props) {
+export default function LoserSelect({...props}) {
     return <PlayerSelect
         {...props}
         name='loser'

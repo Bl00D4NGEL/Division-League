@@ -1,36 +1,73 @@
-import React, {useState} from 'react';
-import AddHistoryService from "../../services/AddHistoryService";
-import AddHistoryFormFields from "./AddHistoryFormFields";
-import AddHistoryValidator from "../../helpers/Validators/AddHistoryValidator";
+import React, {useState, useEffect} from 'react';
 import CustomForm from "../BaseReactComponents/Form/Form";
+import {useOnChangeSetter} from "../../customHooks/useOnChangeSetter";
+import SubmitButton from "../BaseReactComponents/SubmitButton/SubmitButton";
+import Label from "../BaseReactComponents/Label/Label";
+import TextInput from "../BaseReactComponents/TextInput/TextInput";
+import LoserSelect from "../PlayerSelect/LoserSelect";
+import WinnerSelect from "../PlayerSelect/WinnerSelect";
+import EqualPlayerWarning from "../Warning/EqualPlayerWarning";
+import AddHistoryService from "../../services/AddHistoryService";
+import EloChangeDisplay from "../EloChangeDisplay/EloChangeDisplay";
 
-export default function AddHistoryForm({players, winner, setWinner, loser, setLoser}) {
-    const [proofUrl, setProofUrl] = useState(undefined);
-    const [isLoaded, setIsLoaded] = useState(true);
-    const [error, setError] = useState(undefined);
+export default function AddHistoryForm({players}) {
+    const [winner, setWinner] = useOnChangeSetter(undefined, parseInt);
+    const [loser, setLoser] = useOnChangeSetter(undefined, parseInt);
+    const [proofUrl, setProofUrl] = useOnChangeSetter(undefined);
     const [changes, setChanges] = useState(undefined);
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        if (AddHistoryValidator.isValid({winner, loser})) {
-            AddHistoryService({setIsLoaded, winner, loser, proofUrl, setError, setLoser, setWinner, setChanges});
+    useEffect(() => {
+        if (players.length > 1) {
+            setWinner(players[0].id);
+            setLoser(players[1].id);
         }
+        setChanges(undefined);
+    }, [players]);
+
+    const handleSubmit = e => {
+        e.preventDefault();
+        AddHistoryService({
+            setIsLoaded: isLoaded => console.log("Is loaded", isLoaded),
+            setError: error => console.log("Error", error),
+            setChanges,
+            winner,
+            loser,
+            proofUrl
+        })
     };
 
-    return <CustomForm
-        onSubmit={handleSubmit}
-        formFields={
-            <AddHistoryFormFields
-                setProofUrl={setProofUrl}
-                setLoser={setLoser}
-                setWinner={setWinner}
-                winner={winner}
-                changes={changes}
-                error={error}
-                isLoaded={isLoaded}
-                players={players}
-                loser={loser}
-            />
-        }
-    />
+    return <CustomForm onSubmit={handleSubmit} formFields={
+        <div>
+            <WinnerSelect players={players} value={winner} onChange={setWinner}/>
+            <LoserSelect players={players} value={loser} onChange={setLoser}/>
+            <Label text="Enter proof url" formField={
+                <TextInput onChange={setProofUrl}/>
+            }/>
+            {generateWarnings({winner, loser})}
+            <SubmitButton value="Add history"/>
+            {
+                changes !== undefined ?
+                    <EloChangeDisplay
+                        loser={generateChangeDisplayObjectFor(getPlayerById(players, changes.loser.id), changes.loser.elo)}
+                        winner={generateChangeDisplayObjectFor(getPlayerById(players, changes.winner.id), changes.winner.elo)}
+                    />
+                    : <div/>
+            }
+        </div>
+    }/>
 }
+
+const generateChangeDisplayObjectFor = (player = {name: 'Unknown', elo: 0}, toElo = 0) => ({
+    name: player.name,
+    fromElo: player.elo,
+    toElo
+});
+
+const generateWarnings = ({winner, loser}) => {
+    return winner === loser ? <EqualPlayerWarning/> : <div/>;
+};
+
+const getPlayerById = (players, playerId) => {
+    const filtered = players.filter(p => p.id === playerId);
+    return filtered.length > 0 ? filtered[0] : undefined;
+};

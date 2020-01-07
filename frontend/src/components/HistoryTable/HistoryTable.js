@@ -25,7 +25,7 @@ export default function HistoryTable() {
     return <Loader
         isLoaded={isLoaded}
         error={error}
-        content={<Table tableHead={['ID', 'League', 'Winner', 'Loser', 'Proof']}
+        content={<Table defaultReverseSort={true} sortable={true} defaultSortKey={0} tableHead={['ID', 'League', 'Winner', 'Loser', 'Proof']}
                         tableData={generateHistoryTableRows()}/>}
     />
 

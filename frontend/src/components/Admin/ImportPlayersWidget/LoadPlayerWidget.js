@@ -1,6 +1,5 @@
 import React, {useState} from 'react';
 import LoadPlayersFromMdrService from "../../../services/LoadPlayersFromMdrService";
-import LoadPlayersService from "../../../services/LoadPlayersService";
 import AddPlayerService from "../../../services/AddPlayerService";
 import Table from "../../BaseReactComponents/Table/Table";
 import Checkbox from "../../BaseReactComponents/Checkbox/Checkbox";
@@ -8,25 +7,19 @@ import Loader from "../../BaseReactComponents/Loader/Loader";
 import SubmitButton from "../../BaseReactComponents/SubmitButton/SubmitButton";
 import Button from "../../BaseReactComponents/Button/Button";
 import CustomForm from "../../BaseReactComponents/Form/Form";
+import {usePlayers} from "../../../customHooks/usePlayers";
 
 export default function LoadPlayerWidget({divisionToLoad, defaultLeague}) {
-    const [isLoaded, setIsLoaded] = useState(true);
-    const [error, setError] = useState(undefined);
     const [members, setMembers] = useState([]);
-    const [players, setPlayers] = useState([]);
+    const {players, error} = usePlayers();
     const membersToTransfer = {};
 
     const loadPlayers = async () => {
         LoadPlayersFromMdrService({
             division: divisionToLoad,
-            setError,
-            setIsLoaded,
+            setError: () => {},
+            setIsLoaded: () => {},
             setPlayers: setMembers
-        });
-        LoadPlayersService({
-            setIsLoaded,
-            setError,
-            setPlayers
         });
     };
 
@@ -108,7 +101,7 @@ export default function LoadPlayerWidget({divisionToLoad, defaultLeague}) {
                     <SubmitButton value="Save Players"/>
                 </div>
                 <div>
-                    <Loader isLoaded={isLoaded} error={error} content={generatePlayerTable()}/>
+                    <Loader isLoaded={players.length !== 0 && members.length !== 0} error={error} content={generatePlayerTable()}/>
                 </div>
             </div>
         }/>

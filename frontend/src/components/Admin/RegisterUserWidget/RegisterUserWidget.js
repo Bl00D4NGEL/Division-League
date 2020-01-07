@@ -7,11 +7,12 @@ import PasswordInput from "../../BaseReactComponents/PasswordInput/PasswordInput
 import CustomSelect from "../../BaseReactComponents/Select/Select";
 import SubmitButton from "../../BaseReactComponents/SubmitButton/SubmitButton";
 import Loader from "../../BaseReactComponents/Loader/Loader";
+import {useOnChangeSetter} from "../../../customHooks/useOnChangeSetter";
 
 export default function RegisterUserWidget() {
-    const [user, setUser] = useState(undefined);
-    const [password, setPassword] = useState(undefined);
-    const [role, setRole] = useState('MODERATOR');
+    const [user, setUser] = useOnChangeSetter(undefined);
+    const [password, setPassword] = useOnChangeSetter(undefined);
+    const [role, setRole] = useOnChangeSetter('MODERATOR');
     const [response, setResponse] = useState(undefined);
     const [isLoaded, setIsLoaded] = useState(true);
     const [error, setError] = useState(undefined);
@@ -25,10 +26,10 @@ export default function RegisterUserWidget() {
         <CustomForm onSubmit={createUser} formFields={
             <div>
                 <Label text='Username' formField={
-                    <TextInput onChangeSetter={setUser}/>
+                    <TextInput onChange={setUser}/>
                 }/>
                 <Label text='Password' formField={
-                    <PasswordInput onChangeSetter={setPassword}/>
+                    <PasswordInput onChange={setPassword}/>
                 }/>
                 <Label text='Role' formField={
                     <CustomSelect options={
@@ -39,7 +40,7 @@ export default function RegisterUserWidget() {
                                 name: role[0].toUpperCase() + role.slice(1)
                             }
                         })
-                    } onChange={e => setRole(e.target.value)} defaultValue={'MODERATOR'}/>
+                    } onChange={setRole} defaultValue={'MODERATOR'}/>
                 }/>
                 <SubmitButton value='Create user'/>
             </div>

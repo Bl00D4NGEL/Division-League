@@ -1,28 +1,20 @@
 import CustomRequest from "../helpers/CustomRequest/CustomRequest";
 import Config from "../Config";
 
-export default function AddHistoryService({setIsLoaded, winner, loser, proofUrl, setWinner, setLoser, setChanges, setError}) {
+export default function AddHistoryService({setIsLoaded, winner, loser, proofUrl, setChanges, setError}) {
     setIsLoaded(false);
-    const formData = {
-        winner: winner.id,
-        loser: loser.id,
-        proofUrl: proofUrl
-    };
     CustomRequest(
         Config.addHistoryEndPoint(),
-        (responseData) => {
-            const changes = {
-                'winner': responseData.data.winner.elo - winner.elo,
-                'loser': responseData.data.loser.elo - loser.elo
-            };
-            setWinner(responseData.data.winner);
-            setLoser(responseData.data.loser);
-            setChanges(changes);
+        responseData => {
+            setChanges({ ...responseData.data });
             setIsLoaded(true);
-        }, (error) => {
+        }, error => {
             setIsLoaded(true);
             setError(error);
-        },
-        formData
+        },{
+            winner,
+            loser,
+            proofUrl
+        }
     );
 }

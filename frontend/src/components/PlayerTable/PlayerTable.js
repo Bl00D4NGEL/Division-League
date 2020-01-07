@@ -1,18 +1,11 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import LeagueDisplay from "../LeagueDisplay/LeagueDisplay";
 import Sorter from "../../helpers/Sorter/Sorter";
-import LoadPlayersService from "../../services/LoadPlayersService";
 import Loader from "../BaseReactComponents/Loader/Loader";
+import {usePlayers} from "../../customHooks/usePlayers";
 
 export default function PlayerTable() {
-    const [isLoaded, setIsLoaded] = useState(false);
-    const [error, setError] = useState(undefined);
-    const [players, setPlayers] = useState([]);
-    useEffect(() => {
-                LoadPlayersService({setIsLoaded, setError, setPlayers})
-        }, []
-    );
-
+    const {players, error} = usePlayers();
 
     const generateLeagueDisplays = () => {
         return Sorter(getLeagueData(), 'league').map((league) => {
@@ -21,21 +14,17 @@ export default function PlayerTable() {
     };
 
     const getLeagueData = () => {
-        const leagues = players
-            .map((p) => {
-                return p.league
-            })
-            .filter((item, i, ar) => ar.indexOf(item) === i);
-        return leagues.map((league) => {
-            return {
-                league: league,
-                players: players.filter(item => item.league === league)
-            }
-        });
+        return players
+            .map(p => p.league)
+            .filter((item, i, ar) => ar.indexOf(item) === i)
+            .map(league => ({
+                league,
+                players: players.filter(p => p.league === league)
+            }));
     };
 
     return <Loader
-        isLoaded={isLoaded}
+        isLoaded={players.length !== 0}
         error={error}
         content={
             generateLeagueDisplays()

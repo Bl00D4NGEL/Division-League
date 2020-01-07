@@ -1,5 +1,5 @@
 import React from 'react';
 
-export default function TextInput(props) {
-    return <input {...props} type="text" onChange={props.onChange}/>
+export default function TextInput({onChange, ...props}) {
+    return <input type="text" onChange={onChange} {...props}/>
 }

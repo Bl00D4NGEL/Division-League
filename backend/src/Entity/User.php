@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use InvalidArgumentException;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
@@ -72,7 +73,7 @@ class User
     public function setRole(string $role): self
     {
         if (!in_array($role, self::ROLES)) {
-            throw new \InvalidArgumentException("Invalid role");
+            throw new InvalidArgumentException("Invalid role");
         }
         $this->role = $role;
 

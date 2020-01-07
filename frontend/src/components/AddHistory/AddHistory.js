@@ -1,35 +1,19 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
+import {usePlayers} from "../../customHooks/usePlayers";
+import {useLeagueFilter} from "../../customHooks/useLeagueFilter";
+import LeagueSelect from "../LeagueSelect/LeagueSelect";
 import AddHistoryForm from "./AddHistoryForm";
-import LoadPlayersService from "../../services/LoadPlayersService";
-import Loader from "../BaseReactComponents/Loader/Loader";
 
 export default function AddHistory() {
-    const [players, _setPlayers] = useState([]);
-    const [winner, setWinner] = useState(undefined);
-    const [loser, setLoser] = useState(undefined);
-    const [isLoaded, setIsLoaded] = useState(false);
-    const [error, setError] = useState(undefined);
+    const {players} = usePlayers();
+    const {league, setLeague, leagues, filteredPlayers} = useLeagueFilter({players});
 
-    const setPlayers = (players) => {
-        setWinner(players[0]);
-        setLoser(players[1]);
-        _setPlayers(players);
-    };
-    useEffect(() => LoadPlayersService({setPlayers, setError, setIsLoaded}), []);
+    if (league === undefined && leagues.length > 0) {
+        setLeague(leagues[0]);
+    }
 
-    return (
-        <Loader
-            isLoaded={isLoaded}
-            error={error}
-            content={
-                <AddHistoryForm
-                    winner={winner}
-                    setWinner={setWinner}
-                    loser={loser}
-                    setLoser={setLoser}
-                    players={players}
-                />
-            }
-        />
-    );
+    return <div>
+        <LeagueSelect leagues={leagues} setLeague={setLeague}/>
+        <AddHistoryForm players={filteredPlayers}/>
+    </div>
 }

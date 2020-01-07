@@ -21,14 +21,14 @@ export default function Login({isLoggedIn, setIsLoggedIn, setUserData}) {
                 <Label
                     text='User:'
                     autofocus
-                    formField={<TextInput name="user" required onChangeSetter={setUser}/>}
+                    formField={<TextInput name="user" required onChange={e => setUser(e.target.value)}/>}
                 />
 
             </div>
             <div>
                 <Label
                     text='Password:'
-                    formField={<PasswordInput name="password" required onChangeSetter={setPassword}/>}
+                    formField={<PasswordInput name="password" required onChange={e => setPassword(e.target.value)}/>}
                 />
             </div>
         </div>
