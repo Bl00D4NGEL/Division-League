@@ -9,20 +9,22 @@ import WinnerSelect from "../PlayerSelect/WinnerSelect";
 import EqualPlayerWarning from "../Warning/EqualPlayerWarning";
 import AddHistoryService from "../../services/AddHistoryService";
 import EloChangeDisplay from "../EloChangeDisplay/EloChangeDisplay";
+import MultiPlayerSelect from "./MultiPlayerSelect";
 
-export default function AddHistoryForm({players}) {
+export default function AddHistoryMultiForm({players}) {
     const [winner, setWinner] = useOnChangeSetter(undefined, parseInt);
     const [loser, setLoser] = useOnChangeSetter(undefined, parseInt);
     const [proofUrl, setProofUrl] = useOnChangeSetter(undefined);
     const [changes, setChanges] = useState(undefined);
 
-    useEffect(() => {
+    const setDefaults = () => {
         if (players.length > 1) {
             setWinner(players[0].id);
             setLoser(players[1].id);
         }
         setChanges(undefined);
-    }, [players, setWinner, setLoser, setChanges]);
+    };
+    useEffect(setDefaults, [players]);
 
     const handleSubmit = e => {
         e.preventDefault();
@@ -36,23 +38,25 @@ export default function AddHistoryForm({players}) {
         })
     };
 
+    const renderChanges = () => {
+        return changes !== undefined ?
+            <EloChangeDisplay
+                loser={generateChangeDisplayObjectFor(getPlayerById(players, changes.loser.id), changes.loser.elo)}
+                winner={generateChangeDisplayObjectFor(getPlayerById(players, changes.winner.id), changes.winner.elo)}
+            />
+            : <div/>
+    };
+
     return <CustomForm onSubmit={handleSubmit} formFields={
         <div>
-            <WinnerSelect players={players} value={winner} onChange={setWinner}/>
-            <LoserSelect players={players} value={loser} onChange={setLoser}/>
+            <MultiPlayerSelect RenderComponent={WinnerSelect} players={players}/>
+            <MultiPlayerSelect RenderComponent={LoserSelect} players={players}/>
             <Label text="Enter proof url" formField={
                 <TextInput onChange={setProofUrl}/>
             }/>
             {generateWarnings({winner, loser})}
             <SubmitButton value="Add history"/>
-            {
-                changes !== undefined ?
-                    <EloChangeDisplay
-                        loser={generateChangeDisplayObjectFor(getPlayerById(players, changes.loser.id), changes.loser.elo)}
-                        winner={generateChangeDisplayObjectFor(getPlayerById(players, changes.winner.id), changes.winner.elo)}
-                    />
-                    : <div/>
-            }
+            {renderChanges()}
         </div>
     }/>
 }

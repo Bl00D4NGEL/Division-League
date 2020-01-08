@@ -4,7 +4,6 @@ import React from "react";
 export default function LoserSelect({...props}) {
     return <PlayerSelect
         {...props}
-        name='loser'
         label="Loser"
     />
 }

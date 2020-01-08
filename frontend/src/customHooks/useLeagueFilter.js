@@ -8,7 +8,7 @@ export const useLeagueFilter = ({players}) => {
 
     useEffect(() => {
         setFilteredPlayers(players.filter(p => p.league === league));
-    }, [league]);
+    }, [league, players]);
 
     return {league, setLeague, leagues, filteredPlayers};
 };

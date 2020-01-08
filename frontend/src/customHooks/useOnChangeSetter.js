@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import {useState} from 'react';
 
 export const useOnChangeSetter = (defaultValue, preSetterFunc) => {
     const [val, _setVal] = useState(defaultValue);
