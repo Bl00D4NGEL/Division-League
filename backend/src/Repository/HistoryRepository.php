@@ -4,7 +4,7 @@ namespace App\Repository;
 
 use App\Entity\History;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Symfony\Bridge\Doctrine\RegistryInterface;
+use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @method History|null find($id, $lockMode = null, $lockVersion = null)
@@ -14,9 +14,13 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
  */
 class HistoryRepository extends ServiceEntityRepository
 {
-    public function __construct(RegistryInterface $registry)
+    /** @var RosterRepository */
+    private $rosterRepository;
+
+    public function __construct(ManagerRegistry $registry, RosterRepository $rosterRepository)
     {
         parent::__construct($registry, History::class);
+        $this->rosterRepository = $rosterRepository;
     }
 
     /**
@@ -50,33 +54,4 @@ class HistoryRepository extends ServiceEntityRepository
     {
         return $this->findBy([], ['id' => 'DESC'], $limit);
     }
-
-    // /**
-    //  * @return History[] Returns an array of History objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('h')
-            ->andWhere('h.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('h.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?History
-    {
-        return $this->createQueryBuilder('h')
-            ->andWhere('h.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

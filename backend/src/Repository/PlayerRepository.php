@@ -4,7 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Player;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Symfony\Bridge\Doctrine\RegistryInterface;
+use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @method Player|null find($id, $lockMode = null, $lockVersion = null)
@@ -14,7 +14,7 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
  */
 class PlayerRepository extends ServiceEntityRepository
 {
-    public function __construct(RegistryInterface $registry)
+    public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Player::class);
     }
@@ -45,6 +45,17 @@ class PlayerRepository extends ServiceEntityRepository
     {
         return $this->findOneBy([
             'playerId' => $playerId
+        ]);
+    }
+
+    /**
+     * @param array $ids
+     * @return Player[]|null
+     */
+    public function findMultipleByIds(array $ids): ?array
+    {
+        return $this->findBy([
+            'id' => $ids
         ]);
     }
 }

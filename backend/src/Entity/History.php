@@ -27,23 +27,31 @@ class History
     private $loser;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="integer")
+     */
+    private $winnerGain;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $loserGain;
+
+    /**
+     * @ORM\Column(type="string", length=255)
      */
     private $proofUrl;
-
-    /**
-     * @ORM\Column(type="integer")
-     */
-    private $eloWinWinner;
-
-    /**
-     * @ORM\Column(type="integer")
-     */
-    private $eloLoseLoser;
 
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function asArray(): array {
+        $data = [];
+        foreach($this as $field => $value) {
+            $data[$field] = $value;
+        }
+        return $data;
     }
 
     public function getWinner(): ?int
@@ -66,52 +74,43 @@ class History
     public function setLoser(int $loser): self
     {
         $this->loser = $loser;
-        
+
         return $this;
     }
 
-    public function getProofUrl(): ?string {
+    public function getWinnerGain(): ?int
+    {
+        return $this->winnerGain;
+    }
+
+    public function setWinnerGain(int $winnerGain): self
+    {
+        $this->winnerGain = $winnerGain;
+
+        return $this;
+    }
+
+    public function getLoserGain(): ?int
+    {
+        return $this->loserGain;
+    }
+
+    public function setLoserGain(int $loserGain): self
+    {
+        $this->loserGain = $loserGain;
+
+        return $this;
+    }
+
+    public function getProofUrl(): ?string
+    {
         return $this->proofUrl;
     }
 
-    public function setProofUrl(string $proofUrl): self {
-        $this->proofUrl = $proofUrl;
+    public function setProofUrl(string $proof_url): self
+    {
+        $this->proofUrl = $proof_url;
 
         return $this;
-    }
-
-    public function getEloWinWinner(): ?int
-    {
-        return $this->eloWinWinner;
-    }
-
-    public function setEloWinWinner(int $eloWinWinner): self
-    {
-        $this->eloWinWinner = $eloWinWinner;
-
-        return $this;
-    }
-
-    public function getEloLoseLoser(): ?int
-    {
-        return $this->eloLoseLoser;
-    }
-
-    public function setEloLoseLoser(int $eloLoseLoser): self
-    {
-        $this->eloLoseLoser = $eloLoseLoser;
-
-        return $this;
-    }
-
-    /**
-     * @return array
-     */
-    public function asArray(): array {
-        $data = [];
-        foreach($this as $field => $value) {
-            $data[$field] = $value;
-        }
-        return $data;
     }
 }

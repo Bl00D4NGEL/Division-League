@@ -129,49 +129,6 @@ class Player
         return $this;
     }
 
-    public function winAgainst(Player $enemy): Player
-    {
-        $this->setWins($this->getWins() + 1);
-        $this->setElo($this->getElo() + $this->calculateEloChangeForWinAgainst($enemy));
-        return $this;
-    }
-
-    public function loseAgainst(Player $enemy): Player
-    {
-        $this->setLoses($this->getLoses() + 1);
-        $this->setElo($this->getElo() + $this->calculateEloChangeForLoseAgainst($enemy));
-        return $this;
-    }
-
-    public function calculateEloChangeForLoseAgainst(Player $enemy)
-    {
-        return -ceil($this->calculateKFactorAgainst($enemy) * (0 + $this->calculateWinChanceAgainst($enemy)));
-    }
-
-    public function calculateEloChangeForWinAgainst(Player $enemy)
-    {
-            return ceil($this->calculateKFactorAgainst($enemy) * (1 - $this->calculateWinChanceAgainst($enemy)));
-    }
-
-    private function calculateKFactorAgainst(Player $enemy)
-    {
-        $kFactor = ($this->getElo() + $enemy->getElo()) / 100;
-        if ($kFactor < 16) {
-            $kFactor = 16;
-        }
-        return $kFactor;
-    }
-
-    private function calculateWinChanceAgainst(Player $enemy)
-    {
-        return $this->getQpoints() / ($this->getQpoints() + $enemy->getQpoints());
-    }
-
-    private function getQpoints()
-    {
-        return 10 ** ($this->elo / 400);
-    }
-
     /**
      * @return array
      */
@@ -205,6 +162,20 @@ class Player
     {
         $this->league = $league;
 
+        return $this;
+    }
+
+    public function win(int $eloGain): self
+    {
+        $this->elo += $eloGain;
+        $this->wins++;
+        return $this;
+    }
+
+    public function loser(int $eloLose): self
+    {
+        $this->elo += $eloLose;
+        $this->loses++;
         return $this;
     }
 }

@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20191031092510 extends AbstractMigration
+final class Version20200110194507 extends AbstractMigration
 {
     public function getDescription() : string
     {
@@ -22,7 +22,7 @@ final class Version20191031092510 extends AbstractMigration
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
 
-        $this->addSql('ALTER TABLE user DROP last_logged_in');
+        $this->addSql('ALTER TABLE history ADD winner INT NOT NULL, ADD loser INT NOT NULL, ADD winner_gain INT NOT NULL, ADD loser_gain INT NOT NULL');
     }
 
     public function down(Schema $schema) : void
@@ -30,6 +30,6 @@ final class Version20191031092510 extends AbstractMigration
         // this down() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
 
-        $this->addSql('ALTER TABLE user ADD last_logged_in DATE NOT NULL');
+        $this->addSql('ALTER TABLE history DROP winner, DROP loser, DROP winner_gain, DROP loser_gain');
     }
 }
