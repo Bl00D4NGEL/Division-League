@@ -103,7 +103,7 @@ class RosterRepository extends ServiceEntityRepository
      * @param int[] $playerIds
      * @return Team|null
      */
-    public function getTeamForPlayers(array $playerIds)
+    public function getTeamForPlayers(array $playerIds): ?Team
     {
         if (count($playerIds) === 1) {
             return $this->getSoloTeamForPlayer($this->playerRepository->find($playerIds[0]));
@@ -161,6 +161,7 @@ class RosterRepository extends ServiceEntityRepository
 
         /** @var Player $player */
         foreach ($players as $player) {
+            $team->addPlayer($player);
             $roster = new Roster();
             $roster->setTeam($team->getId())
                 ->setPlayer($player->getId());

@@ -76,4 +76,20 @@ class Team
         }
         return $data;
     }
+
+    public function win(int $eloGain): self
+    {
+        foreach ($this->getPlayers() as $player) {
+            $player->win($eloGain);
+        }
+        return $this;
+    }
+
+    public function lose(int $eloLose): self
+    {
+        foreach ($this->getPlayers() as $player) {
+            $player->lose($eloLose);
+        }
+        return $this;
+    }
 }

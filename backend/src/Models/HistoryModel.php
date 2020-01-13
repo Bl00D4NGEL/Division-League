@@ -37,6 +37,7 @@ class HistoryModel
 
     /** @var RosterRepository */
     private $rosterRepository;
+
     /** @var TeamRepository */
     private $teamRepository;
 
@@ -121,9 +122,6 @@ class HistoryModel
     {
         if ($request->isValid()) {
             try {
-                $winnerAverageElo = $this->getAverageEloForPlayers($request->winner);
-                $loserAverageElo = $this->getAverageEloForPlayers($request->loser);
-
                 $winnerTeam = $this->rosterRepository->getTeamForPlayers($request->winner);
                 if ($winnerTeam === null) {
                     $winnerTeam = $this->rosterRepository->createTeamForPlayers($request->winner, $request->winnerTeamName);
@@ -134,7 +132,10 @@ class HistoryModel
                     $loserTeam = $this->rosterRepository->createTeamForPlayers($request->loser, $request->loserTeamName);
                 }
 
-                $eloCalculator = new EloCalculator($winnerAverageElo, $loserAverageElo);
+                $eloCalculator = new EloCalculator(
+                    $this->getAverageEloForPlayers($request->winner),
+                    $this->getAverageEloForPlayers($request->loser)
+                );
 
                 $history = new History();
                 $history
@@ -144,15 +145,12 @@ class HistoryModel
                     ->setWinnerGain($eloCalculator->getEloChangeForWinner())
                     ->setProofUrl($request->proofUrl);
                 $this->entityManager->persist($history);
+                $this->entityManager->flush();
 
-                foreach ($this->rosterRepository->getPlayersForTeam($winnerTeam->getId()) as $player) {
-                    $player->win($eloCalculator->getEloChangeForWinner());
-                    $this->entityManager->persist($player);
-                }
-                foreach ($this->rosterRepository->getPlayersForTeam($loserTeam->getId()) as $player) {
-                    $player->lose($eloCalculator->getEloChangeForLoser());
-                    $this->entityManager->persist($player);
-                }
+                $winnerTeam->win($eloCalculator->getEloChangeForWinner());
+                $this->entityManager->persist($winnerTeam);
+                $loserTeam->lose($eloCalculator->getEloChangeForLoser());
+                $this->entityManager->persist($loserTeam);
                 $this->entityManager->flush();
                 return new SuccessResponse($this->formatHistoriesForResponse([$history]));
             } catch (RuntimeException $e) {
