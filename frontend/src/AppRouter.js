@@ -6,8 +6,8 @@ import Navigation from "./components/Navigation/Navigation";
 import Footer from "./components/Footer/Footer";
 
 export default function AppRouter() {
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [user, setUser] = useState({role: UserRoles.normal});
+    const [isLoggedIn, setIsLoggedIn] = useState(true);
+    const [user, setUser] = useState({role: UserRoles.MODERATOR});
 
     const generateRoutes = () => {
         return RouteConfig.getAll().map((route) => {

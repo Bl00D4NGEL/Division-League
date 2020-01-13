@@ -1,43 +1,30 @@
 import React, {useEffect, useState} from 'react';
 import Button from "../BaseReactComponents/Button/Button";
+import Warning from "../Warning/Warning";
 
 const MAX_ELO_DIFFERENCE = 300;
-export default function MultiPlayerSelect({RenderComponent, players}) {
-    const [selectedPlayers, setSelectedPlayers] = useState([]);
-    const [minElo, setMinElo] = useState(undefined);
-    const [maxElo, setMaxElo] = useState(undefined);
-    const [filteredPlayers, setFilteredPlayers] = useState([]);
-
-    const setDefaultPlayer = () => {
-        if (players.length > 0) {
-            setSelectedPlayers([players[0].id]);
+export default function MultiPlayerSelect({RenderComponent, players, setSelectedPlayers}) {
+    const [selectedPlayers, _setSelectedPlayers] = useState([]);
+    const setSelectedPlayersBoth = val => {
+        _setSelectedPlayers(val);
+        if (setSelectedPlayers !== undefined) {
+            setSelectedPlayers(val);
         }
     };
 
-    const setMinMaxElo = () => {
-        const min = getMinElo(selectedPlayers, players);
-        const max = getMaxElo(selectedPlayers, players);
-        setMinElo(min - (MAX_ELO_DIFFERENCE - (max - min)));
-        setMaxElo(max + (MAX_ELO_DIFFERENCE - (max - min)));
-    };
-
-
-    const filterPlayers = () => {
-        setFilteredPlayers(
-            players.filter(p => p.elo >= minElo && p.elo <= maxElo)
-        );
+    const setDefaultPlayer = () => {
+        if (players.length > 0 && selectedPlayers.length === 0) {
+            setSelectedPlayersBoth([players[0].id]);
+        }
     };
 
     useEffect(setDefaultPlayer, [players]);
-    useEffect(setMinMaxElo, [selectedPlayers]);
-    useEffect(filterPlayers, [minElo, maxElo]);
-
 
     const addPlayerSelect = () => {
-        setSelectedPlayers(
+        setSelectedPlayersBoth(
             [
                 ...selectedPlayers,
-                filteredPlayers[0].id
+                players[0].id
             ]
         );
     };
@@ -45,17 +32,16 @@ export default function MultiPlayerSelect({RenderComponent, players}) {
     const renderSelects = () => {
         return <div style={{display: 'flex'}}>
             {
-                selectedPlayers.map((p, i) => <div style={{margin: '0 20px'}}>
+                selectedPlayers.map((p, i) => <div key={i} style={{margin: '0 20px'}}>
                         <RenderComponent
-                            key={i}
                             value={p}
-                            players={filteredPlayers}
+                            players={players}
                             onChange={
                                 e => {
-                                    setSelectedPlayers(
+                                    setSelectedPlayersBoth(
                                         selectedPlayers.map((x, j) => {
                                             if (j === i) {
-                                                return e.target.value;
+                                                return parseInt(e.target.value);
                                             }
                                             return x;
                                         })
@@ -69,8 +55,34 @@ export default function MultiPlayerSelect({RenderComponent, players}) {
         </div>
     };
 
+    const generateWarnings = () => {
+        const min = getMinElo(selectedPlayers, players);
+        const max = getMaxElo(selectedPlayers, players);
+
+        if (max - min > MAX_ELO_DIFFERENCE) {
+            return <Warning
+                message={"Elo difference too big. Max elo difference: " + MAX_ELO_DIFFERENCE + " Current difference: " + (max - min)}/>
+        } else {
+            return <div/>;
+        }
+    };
+
+    const getAverageElo = () => {
+        if (selectedPlayers.length === 0) {
+            return 0;
+        }
+        return Math.round(selectedPlayers.reduce((prev, curr) => {
+            const player = getPlayerById(players, parseInt(curr));
+            if (prev === undefined) {
+                return player.elo;
+            }
+            return parseInt(prev) + parseInt(player.elo);
+        }, undefined) / selectedPlayers.length);
+    };
+
     return <div>
-        Player = {selectedPlayers.join(", ")}
+        Player average Elo = {getAverageElo()}
+        {generateWarnings()}
         {renderSelects()}
         <Button onClick={addPlayerSelect} text='+'/>
     </div>
