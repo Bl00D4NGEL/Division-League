@@ -15,7 +15,7 @@ export default function CustomTable({sortable, tableData, tableHead, extraClassN
     };
 
     const sortData = () => {
-        return Sorter(tableData, sortKey, reverseSort)
+        return Sorter(tableData, sortKey, reverseSort) || [];
     };
 
     return (
