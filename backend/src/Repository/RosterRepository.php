@@ -112,6 +112,7 @@ class RosterRepository extends ServiceEntityRepository
         $qb->select('r')
             ->where($qb->expr()->in('r.player', $playerIds))
             ->groupBy('r.team')
+            ->addGroupBy('r.id')
             ->having(
                 $qb->expr()->andX(
                     $qb->expr()->eq(
