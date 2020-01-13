@@ -119,7 +119,7 @@ class RosterRepository extends ServiceEntityRepository
                         count($playerIds)
                     ),
                     $qb->expr()->eq(
-                        $qb->expr()->sum('r.player', array_sum($playerIds)),
+                        'SUM(r.player)',
                         array_sum($playerIds)
                     )
                 )
