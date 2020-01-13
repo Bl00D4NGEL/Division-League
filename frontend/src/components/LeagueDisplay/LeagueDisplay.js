@@ -28,6 +28,7 @@ export default function LeagueDisplay({leagueName, players}) {
         <Table
             sortable={true}
             defaultSortKey={1}
+            defaultReverseSort={true}
             tableHead={['Player', 'Elo', 'Division', 'Wins', 'Loses', 'Win rate']}
             extraClassNames={{2: 'pw-hide'}}
             tableData={generateRows()}
