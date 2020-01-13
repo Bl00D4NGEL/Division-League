@@ -12,21 +12,21 @@ export default class RouteConfig {
             'path': '/players',
             'component': PlayerTable,
             'name': 'Players',
-            'requiresLogin': false
+            'requiresLogin': false,
+            'default': true
         },
         {
             'path': '/history',
             'component': HistoryTable,
             'name': 'Histories',
-            'requiresLogin': false,
-            'default': true
+            'requiresLogin': false
         },
         {
             'path': '/add/history',
             'component': AddHistoryMulti,
             'name': 'Add History',
             'requiresLogin': true,
-            'requiredRole': UserRoles.MODERATOR,
+            'requiredRole': UserRoles.MODERATOR
         },
         {
             'path': '/add/player',
