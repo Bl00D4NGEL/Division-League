@@ -41,7 +41,7 @@ export default function AddPlayerFormFields({setName, setDivision, setPlayerId, 
     };
 
     const generateTextInput = (key, setter) => {
-        return <TextInput name={key} required onChangeSetter={setter}/>;
+        return <TextInput name={key} required onChange={setter}/>;
     };
 
     return <div>

@@ -1,6 +1,5 @@
 import PlayerTable from "./components/PlayerTable/PlayerTable";
 import HistoryTable from "./components/HistoryTable/HistoryTable";
-import AddHistory from "./components/AddHistory/AddHistory";
 import AddPlayer from "./components/AddPlayer/AddPlayer";
 import Login from "./components/Login/Login";
 import UserRoles from "./UserRoles";
@@ -20,21 +19,14 @@ export default class RouteConfig {
             'component': HistoryTable,
             'name': 'Histories',
             'requiresLogin': false,
+            'default': true
         },
         {
             'path': '/add/history',
-            'component': AddHistory,
+            'component': AddHistoryMulti,
             'name': 'Add History',
             'requiresLogin': true,
-            'requiredRole': UserRoles.MODERATOR
-        },
-        {
-            'path': '/add/history/multi',
-            'component': AddHistoryMulti,
-            'name': 'Add History (M)',
-            'requiresLogin': true,
             'requiredRole': UserRoles.MODERATOR,
-            'default': true
         },
         {
             'path': '/add/player',

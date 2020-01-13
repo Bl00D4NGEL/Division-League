@@ -8,7 +8,7 @@ import LoserSelect from "../PlayerSelect/LoserSelect";
 import WinnerSelect from "../PlayerSelect/WinnerSelect";
 import MultiPlayerSelect from "./MultiPlayerSelect";
 import AddHistoryMultiService from "../../services/AddHistoryMultiService";
-import EloChangeDisplayMulti from "../EloChangeDisplay/EloChangeDisplayMulti";
+import EloChangeDisplayMulti from "../EloChangeDisplayMulti/EloChangeDisplayMulti";
 
 export default function AddHistoryMultiForm({players}) {
     const [proofUrl, setProofUrl] = useOnChangeSetter(undefined);

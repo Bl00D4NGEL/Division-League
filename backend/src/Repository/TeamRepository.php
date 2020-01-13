@@ -18,4 +18,13 @@ class TeamRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Team::class);
     }
+
+    public function getTeamName(int $teamId): ?string {
+        $team = $this->find($teamId);
+        if ($team === null) {
+            return null;
+        }
+
+        return $team->getName();
+    }
 }

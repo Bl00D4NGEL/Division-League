@@ -4,15 +4,16 @@ import AddPlayerValidator from "../../helpers/Validators/AddPlayerValidator";
 import AddPlayerFormFields from "./AddPlayerFormFields";
 import CustomForm from "../BaseReactComponents/Form/Form";
 import Loader from "../BaseReactComponents/Loader/Loader";
+import {useOnChangeSetter} from "../../customHooks/useOnChangeSetter";
 
 export default function AddPlayerForm() {
     const [isLoaded, setIsLoaded] = useState(true);
     const [error, setError] = useState(undefined);
     const [result, setResult] = useState(undefined);
-    const [name, setName] = useState(undefined);
-    const [division, setDivision] = useState(undefined);
-    const [playerId, setPlayerId] = useState(undefined);
-    const [league, setLeague] = useState(undefined);
+    const [name, setName] = useOnChangeSetter(undefined);
+    const [division, setDivision] = useOnChangeSetter(undefined);
+    const [playerId, setPlayerId] = useOnChangeSetter(undefined);
+    const [league, setLeague] = useOnChangeSetter(undefined);
 
     const handleSubmit = (e) => {
         e.preventDefault();

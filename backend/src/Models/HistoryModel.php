@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Repository\HistoryRepository;
 use App\Repository\PlayerRepository;
 use App\Repository\RosterRepository;
+use App\Repository\TeamRepository;
 use App\Resource\AddHistoryMultiRequest;
 use App\Resource\AddHistoryRequest;
 use App\Resource\GetHistoryRequest;
@@ -36,12 +37,15 @@ class HistoryModel
 
     /** @var RosterRepository */
     private $rosterRepository;
+    /** @var TeamRepository */
+    private $teamRepository;
 
     public function __construct(
         EntityManagerInterface $entityManager,
         SerializerInterface $serializer,
         PlayerRepository $playerRepository,
         RosterRepository $rosterRepository,
+        TeamRepository $teamRepository,
         HistoryRepository $historyRepository
     )
     {
@@ -50,6 +54,7 @@ class HistoryModel
         $this->playerRepository = $playerRepository;
         $this->historyRepository = $historyRepository;
         $this->rosterRepository = $rosterRepository;
+        $this->teamRepository = $teamRepository;
     }
 
     /**
@@ -189,6 +194,8 @@ class HistoryModel
                 "winner" => $this->mapPlayerArray($this->rosterRepository->getPlayersForTeam($history->getWinner())),
                 "loser" => $this->mapPlayerArray($this->rosterRepository->getPlayersForTeam($history->getLoser())),
                 "proofUrl" => $history->getProofUrl(),
+                "winnerTeamName" => $this->teamRepository->getTeamName($history->getWinner()),
+                "loserTeamName" => $this->teamRepository->getTeamName($history->getLoser()),
                 "winnerEloWin" => $history->getWinnerGain(),
                 "loserEloLose" => $history->getLoserGain(),
                 "id" => $history->getId()

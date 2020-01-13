@@ -11,12 +11,21 @@ export default function HistoryTable() {
     useEffect(() => LoadHistoriesService({setIsLoaded, setError, setHistoryData}), []);
 
     const generateHistoryTableRows = () => {
-        return historyData.map((entry) => {
+        if (historyData.length === 0) {
+            return null;
+        }
+        return historyData.map(entry => {
             return [
                 entry.id,
-                entry.winner.league,
-                entry.winner.name + ' [+' + entry.winnerEloWin + ']',
-                entry.loser.name + ' [' + entry.loserEloLose + ']',
+                entry.winner[0].league,
+                <div>
+                    <span title={entry.winner.map(w => w.name).join(", ")}>{entry.winnerTeamName}</span>
+                    <span> [+{entry.winnerEloWin}]</span>
+                </div>,
+                <div>
+                    <span title={entry.loser.map(w => w.name).join(", ")}>{entry.loserTeamName}</span>
+                    <span> [{entry.loserEloLose}]</span>
+                </div>,
                 <a href={entry.proofUrl} target="_blank" rel="noopener noreferrer">Link</a>
             ];
         });
