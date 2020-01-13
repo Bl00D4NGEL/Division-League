@@ -48,6 +48,9 @@ class Team
         return count($this->players) === 1;
     }
 
+    /**
+     * @return Player[]
+     */
     public function getPlayers(): array {
         return $this->players;
     }

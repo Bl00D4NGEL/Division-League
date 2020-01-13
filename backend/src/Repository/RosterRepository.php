@@ -49,6 +49,10 @@ class RosterRepository extends ServiceEntityRepository
         return $teams;
     }
 
+    /**
+     * @param int $teamId
+     * @return Player[]
+     */
     public function getPlayersForTeam(int $teamId): array
     {
         $players = [];

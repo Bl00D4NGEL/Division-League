@@ -12,7 +12,7 @@ export default function EloChangeDisplay({winner, loser}) {
 const renderChange = (players, change) => {
     return <div>
         {players.map((p, i) => <div key={i}>
-            {p.name} moves from {p.elo} to {parseInt(p.elo) + parseInt(change)} elo
+            {p.name} moves from {parseInt(p.elo) - parseInt(change)} to {p.elo} elo
         </div>)}
     </div>
 };

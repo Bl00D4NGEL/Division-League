@@ -172,7 +172,7 @@ class Player
         return $this;
     }
 
-    public function loser(int $eloLose): self
+    public function lose(int $eloLose): self
     {
         $this->elo += $eloLose;
         $this->loses++;

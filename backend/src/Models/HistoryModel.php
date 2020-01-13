@@ -139,6 +139,15 @@ class HistoryModel
                     ->setWinnerGain($eloCalculator->getEloChangeForWinner())
                     ->setProofUrl($request->proofUrl);
                 $this->entityManager->persist($history);
+
+                foreach ($this->rosterRepository->getPlayersForTeam($winnerTeam->getId()) as $player) {
+                    $player->win($eloCalculator->getEloChangeForWinner());
+                    $this->entityManager->persist($player);
+                }
+                foreach ($this->rosterRepository->getPlayersForTeam($loserTeam->getId()) as $player) {
+                    $player->lose($eloCalculator->getEloChangeForLoser());
+                    $this->entityManager->persist($player);
+                }
                 $this->entityManager->flush();
                 return new SuccessResponse($this->formatHistoriesForResponse([$history]));
             } catch (RuntimeException $e) {
@@ -175,7 +184,7 @@ class HistoryModel
     private function formatHistoriesForResponse(array $histories): array
     {
         $historyData = [];
-        foreach($histories as $history) {
+        foreach ($histories as $history) {
             $historyData[] = [
                 "winner" => $this->mapPlayerArray($this->rosterRepository->getPlayersForTeam($history->getWinner())),
                 "loser" => $this->mapPlayerArray($this->rosterRepository->getPlayersForTeam($history->getLoser())),
@@ -188,8 +197,9 @@ class HistoryModel
         return $historyData;
     }
 
-    private function mapPlayerArray(array $players) {
-        return array_map(static function(Player $player) {
+    private function mapPlayerArray(array $players)
+    {
+        return array_map(static function (Player $player) {
             return $player->asArray();
         }, $players);
     }
