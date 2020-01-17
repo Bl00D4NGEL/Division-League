@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-class LoginController extends AbstractController
+final class LoginController extends AbstractController
 {
     /** @var LoginModel */
     private $loginModel;

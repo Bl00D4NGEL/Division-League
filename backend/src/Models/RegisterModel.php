@@ -10,9 +10,9 @@ use App\Resource\RegisterRequest;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-class RegisterModel
+final class RegisterModel
 {
-    const USER_ALREADY_EXISTS = 'User already exists';
+    private const USER_ALREADY_EXISTS = 'User already exists';
     /** @var EntityManagerInterface */
     private $entityManager;
 

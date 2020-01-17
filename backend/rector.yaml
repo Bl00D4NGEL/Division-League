@@ -1,0 +1,16 @@
+parameters:
+  exclude_paths:
+    - 'Version*'
+  sets:
+    - 'code-quality'
+    - 'php71'
+    - 'php72'
+    - 'php73'
+    - 'symfony50'
+    - 'symfony40'
+    - 'symfony41'
+    - 'symfony42'
+    - 'symfony43'
+    - 'symfony44'
+    - 'symfony'
+    - 'solid'

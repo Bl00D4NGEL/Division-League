@@ -2,9 +2,9 @@
 
 namespace App\Service;
 
-class EloCalculator
+final class EloCalculator
 {
-    public const MAX_K_FACTOR = 16;
+    private const MAX_K_FACTOR = 16;
 
     /** @var int */
     private $winnerElo;

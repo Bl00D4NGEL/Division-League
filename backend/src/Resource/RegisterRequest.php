@@ -5,7 +5,7 @@ namespace App\Resource;
 use App\Entity\User;
 use JMS\Serializer\Annotation\Type;
 
-class RegisterRequest
+final class RegisterRequest
 {
     /**
      * @Type("string")

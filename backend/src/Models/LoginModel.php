@@ -9,7 +9,7 @@ use App\Resource\LoginRequest;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-class LoginModel
+final class LoginModel
 {
     /** @var EntityManagerInterface */
     private $entityManager;

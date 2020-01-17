@@ -5,7 +5,7 @@ namespace App\Resource;
 use JMS\Serializer\Annotation\SerializedName;
 use JMS\Serializer\Annotation\Type;
 
-class AddHistoryRequest
+final class AddHistoryRequest
 {
     /**
      * @Type("int")

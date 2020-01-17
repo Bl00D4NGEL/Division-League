@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 use App\Models\HistoryModel;
 
-class HistoryController extends AbstractController
+final class HistoryController extends AbstractController
 {
     /** @var SerializerInterface */
     private $serializer;

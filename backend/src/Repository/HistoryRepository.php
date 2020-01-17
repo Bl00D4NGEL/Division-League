@@ -12,7 +12,7 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method History[]    findAll()
  * @method History[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class HistoryRepository extends ServiceEntityRepository
+final class HistoryRepository extends ServiceEntityRepository
 {
     /** @var RosterRepository */
     private $rosterRepository;

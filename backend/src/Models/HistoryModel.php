@@ -21,7 +21,7 @@ use App\Entity\History;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-class HistoryModel
+final class HistoryModel
 {
     /** @var EntityManagerInterface */
     private $entityManager;
@@ -217,7 +217,7 @@ class HistoryModel
     private function getAverageEloForPlayers(array $playerIds): int
     {
         $players = $this->playerRepository->findMultipleByIds($playerIds);
-        if (count($players) !== count($playerIds)) {
+        if (($players === null ? 0 : count($players)) !== count($playerIds)) {
             throw new RuntimeException('Not all players were found in the database');
         }
         return ceil(

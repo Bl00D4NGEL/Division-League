@@ -6,7 +6,7 @@ namespace App\Resource;
 
 use JMS\Serializer\Annotation\Type;
 
-class LoginRequest
+final class LoginRequest
 {
     /**
      * @Type("string")

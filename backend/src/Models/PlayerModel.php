@@ -10,7 +10,7 @@ use App\Resource\JsonResponse\SuccessResponse;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-class PlayerModel
+final class PlayerModel
 {
     /** @var PlayerRepository */
     private $playerRepository;
