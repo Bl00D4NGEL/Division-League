@@ -19,8 +19,28 @@ export default function PlayerTable() {
             .filter((item, i, ar) => ar.indexOf(item) === i)
             .map(league => ({
                 league,
-                players: players.filter(p => p.league === league)
+                players: addRankForPlayers(players.filter(p => p.league === league))
+
             }));
+    };
+
+    const addRankForPlayers = players => {
+        let currentRank = 1;
+        let lastElo = undefined;
+        return players
+            .sort((a,b) => a.elo > b.elo ? -1 : 1)
+            .map(p => {
+            if (lastElo === undefined) {
+                lastElo = p.elo;
+            } else if (lastElo !== p.elo) {
+                currentRank++;
+                lastElo = p.elo;
+            }
+            return {
+                ...p,
+                rank: currentRank
+            }
+        });
     };
 
     return <Loader

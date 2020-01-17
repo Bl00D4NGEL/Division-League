@@ -2,10 +2,13 @@ import React from 'react';
 import CustomSelect from "../BaseReactComponents/Select/Select";
 
 export default function LeagueSelect({leagues, setLeague}) {
-    return <CustomSelect
-        onChange={setLeague}
-        options={generateOptions(leagues)}
-    />
+    return <div>
+        <div>Select a League</div>
+        <CustomSelect
+            onChange={setLeague}
+            options={generateOptions(leagues)}
+        />
+    </div>
 }
 
 const generateOptions = leagues => {

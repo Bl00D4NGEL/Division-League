@@ -3,7 +3,7 @@ import React from "react";
 export default function EloChangeDisplay({winner, loser}) {
     return <div style={{marginTop: 25 + 'px'}}>
         <div>Results:</div>
-        <div>{winner.name} wins against {loser.name}</div>
+        <div>{winner.name !== '' ? winner.name : winner.players.map(p => p.name).join(", ")} wins against {loser.name !== '' ? loser.name : loser.players.map(p => p.name).join(", ")}</div>
         {renderChange(winner.players, winner.change)}
         {renderChange(loser.players, loser.change)}
     </div>

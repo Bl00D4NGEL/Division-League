@@ -9,6 +9,7 @@ import WinnerSelect from "../PlayerSelect/WinnerSelect";
 import MultiPlayerSelect from "./MultiPlayerSelect";
 import AddHistoryMultiService from "../../services/AddHistoryMultiService";
 import EloChangeDisplayMulti from "../EloChangeDisplayMulti/EloChangeDisplayMulti";
+import Error from "../Error/Error";
 
 export default function AddHistoryMultiForm({players}) {
     const [proofUrl, setProofUrl] = useOnChangeSetter(undefined);
@@ -16,7 +17,15 @@ export default function AddHistoryMultiForm({players}) {
     const [winnerTeamName, setWinnerTeamName] = useOnChangeSetter('');
     const [selectedLoser, setSelectedLoser] = useState([]);
     const [loserTeamName, setLoserTeamName] = useOnChangeSetter('');
-    const [changes, setChanges] = useState(undefined);
+    const [changes, _setChanges] = useState(undefined);
+    const [error, setError] = useState(undefined);
+
+    const setChanges = val => {
+        if (val !== undefined) {
+            setError(undefined);
+            _setChanges(val);
+        }
+    };
 
     const handleSubmit = e => {
         e.preventDefault();
@@ -26,11 +35,12 @@ export default function AddHistoryMultiForm({players}) {
             winnerTeamName,
             loserTeamName,
             proofUrl,
-            setChanges
+            setChanges,
+            setError
         });
     };
 
-    return <div>
+    return <div style={{paddingBottom: 20 + 'px'}}>
         <div>
             <Label text="Winner Team name (optional)" formField={
                 <TextInput onChange={setWinnerTeamName}/>
@@ -49,6 +59,9 @@ export default function AddHistoryMultiForm({players}) {
         <CustomForm onSubmit={handleSubmit} formFields={
             <SubmitButton value="Add history"/>
         }/>
+        {
+            error !== undefined ? <Error message={error}/> : <div/>
+        }
         {
             changes !== undefined ?
                 <EloChangeDisplayMulti

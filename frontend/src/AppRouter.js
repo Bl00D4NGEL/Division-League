@@ -21,7 +21,7 @@ export default function AppRouter() {
     };
 
     return <BrowserRouter>
-        <Redirect to={RouteConfig.getDefaultPath()}/>
+        {window.location.pathname === '/' ? <Redirect to={RouteConfig.getDefaultPath()}/> : null}
         <div className="main">
             <Navigation isLoggedIn={isLoggedIn} user={user}/>
             <div className="content">

@@ -1,9 +1,9 @@
 @import '../../assets/scss/variables';
 @import '../../assets/scss/helper';
 
-$warning_color: #a06f15;
+$error_color: #b64240;
 
-.warning-box {
-  background-color: $warning_color;
+.error-box {
+  background-color: $error_color;
   color: $white;
 }

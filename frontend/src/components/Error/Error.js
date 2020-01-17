@@ -1,4 +1,5 @@
 import React from 'react';
+import './error.scss';
 
 export default function Error ({message}) {
     return <div className="flex full-width" style={{margin: 20 + 'px 0'}}>

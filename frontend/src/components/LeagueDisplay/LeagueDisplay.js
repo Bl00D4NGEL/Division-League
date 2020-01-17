@@ -3,19 +3,18 @@ import Table from "../BaseReactComponents/Table/Table";
 
 export default function LeagueDisplay({leagueName, players}) {
 
-    const generateRows = () => {
-        return players.map((entry) => {
-            return [
-                <a key={entry.name} target="_blank" rel="noopener noreferrer"
-                   href={"https://di.community/profile/" + entry.playerId + "-" + entry.name}>{entry.name}</a>,
-                entry.elo,
-                entry.division,
-                entry.wins,
-                entry.loses,
-                getWinRate(entry) + ' %',
-            ];
-        });
-    };
+    const generateRows = () => players.map(p => (
+        [
+            p.rank,
+            <a key={p.name} target="_blank" rel="noopener noreferrer"
+               href={"https://di.community/profile/" + p.playerId + "-" + p.name}>{p.name}</a>,
+            p.elo,
+            p.division,
+            p.wins,
+            p.loses,
+            getWinRate(p) + ' %',
+        ]
+    ));
 
     const getWinRate = (entry) => {
         if (parseInt(entry.wins) === 0) {
@@ -24,12 +23,11 @@ export default function LeagueDisplay({leagueName, players}) {
         return (parseInt(entry.wins) / (parseInt(entry.wins) + parseInt(entry.loses)) * 100).toPrecision(4);
     };
     return <div style={{paddingBottom: 20 + 'px'}}>
-        <h1>League {leagueName}</h1>
+        <h1>League {leagueName} ({players.length} players)</h1>
         <Table
             sortable={true}
-            defaultSortKey={1}
-            defaultReverseSort={true}
-            tableHead={['Player', 'Elo', 'Division', 'Wins', 'Loses', 'Win rate']}
+            defaultSortKey={0}
+            tableHead={['Rank', 'Player', 'Elo', 'Division', 'Wins', 'Loses', 'Win rate']}
             extraClassNames={{2: 'pw-hide'}}
             tableData={generateRows()}
         />
