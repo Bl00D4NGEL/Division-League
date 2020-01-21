@@ -23,12 +23,17 @@ export default function AddHistoryMultiForm({players}) {
     const setChanges = val => {
         if (val !== undefined) {
             setError(undefined);
+            setProofUrl('');
             _setChanges(val);
         }
     };
 
     const handleSubmit = e => {
         e.preventDefault();
+        if (proofUrl === '' || proofUrl === undefined) {
+            setError('Proof URL must be set');
+            return;
+        }
         AddHistoryMultiService({
             winner: selectedWinner,
             loser: selectedLoser,
@@ -54,7 +59,7 @@ export default function AddHistoryMultiForm({players}) {
             <MultiPlayerSelect RenderComponent={LoserSelect} setSelectedPlayers={setSelectedLoser} players={players}/>
         </div>
         <Label text="Enter proof url" formField={
-            <TextInput onChange={setProofUrl}/>
+            <TextInput required="required" value={proofUrl} onChange={setProofUrl}/>
         }/>
         <CustomForm onSubmit={handleSubmit} formFields={
             <SubmitButton value="Add history"/>
