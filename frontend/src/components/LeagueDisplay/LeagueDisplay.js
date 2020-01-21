@@ -7,7 +7,7 @@ export default function LeagueDisplay({leagueName, players}) {
         [
             p.rank,
             <a key={p.name} target="_blank" rel="noopener noreferrer"
-               href={"https://di.community/profile/" + p.playerId + "-" + p.name}>{p.name}</a>,
+               href={"https://dmginc.gg/profile/" + p.playerId + "-" + p.name}>{p.name}</a>,
             p.elo,
             p.division,
             p.wins,
