@@ -6,7 +6,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 
-final class LeaderboardController extends AbstractController
+class LeaderboardController extends AbstractController
 {
     /**
      * @Route("/", name="homepage")

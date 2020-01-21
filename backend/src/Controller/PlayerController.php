@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-final class PlayerController extends AbstractController
+class PlayerController extends AbstractController
 {
     /** @var SerializerInterface */
     private $serializer;

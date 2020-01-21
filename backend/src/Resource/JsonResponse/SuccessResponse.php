@@ -5,7 +5,7 @@ namespace App\Resource\JsonResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
-final class SuccessResponse extends JsonResponse
+class SuccessResponse extends JsonResponse
 {
     public function __construct($data = null, int $status = Response::HTTP_OK, array $headers = [])
     {

@@ -2,7 +2,6 @@
 
 namespace App\Entity;
 
-use App\Resource\AddPlayerRequest;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -139,18 +138,6 @@ class Player
             $data[$field] = $value;
         }
         return $data;
-    }
-
-    public static function fromAddPlayerRequest(AddPlayerRequest $request): self
-    {
-        return (new self())
-            ->setDivision($request->division)
-            ->setElo($request->elo)
-            ->setName($request->name)
-            ->setPlayerId($request->playerId)
-            ->setLeague($request->league)
-            ->setWins($request->wins)
-            ->setLoses($request->loses);
     }
 
     public function getLeague(): ?string

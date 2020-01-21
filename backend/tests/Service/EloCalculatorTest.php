@@ -6,9 +6,25 @@ use PHPUnit\Framework\TestCase;
 
 class EloCalculatorTest extends TestCase
 {
-    public function testBasicScenario(): void {
-        $eloCalc = new EloCalculator(1000, 1000);
-        $this->assertSame(10, $eloCalc->getEloChangeForWinner());
-        $this->assertSame(-10, $eloCalc->getEloChangeForLoser());
+    /**
+     * @dataProvider eloProvider
+     * @param int $winnerElo
+     * @param int $loserElo
+     * @param int $expectedWinnerGain
+     * @param int $expectedLoserGain
+     */
+    public function testBasicScenario(int $winnerElo, int $loserElo, int $expectedWinnerGain, int $expectedLoserGain): void {
+        $eloCalc = new EloCalculator($winnerElo, $loserElo);
+        $this->assertSame($expectedWinnerGain, $eloCalc->getEloChangeForWinner());
+        $this->assertSame($expectedLoserGain, $eloCalc->getEloChangeForLoser());
+    }
+
+    public function eloProvider(): array {
+        return [
+            [1000, 1000, 10, -10],
+            [0, 0, 8, -8],
+            [500, 1000, 16, -16],
+            [1000, 500, 1, -1],
+        ];
     }
 }

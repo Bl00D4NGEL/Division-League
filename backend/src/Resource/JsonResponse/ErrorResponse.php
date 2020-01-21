@@ -5,7 +5,7 @@ namespace App\Resource\JsonResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
-final class ErrorResponse extends JsonResponse
+class ErrorResponse extends JsonResponse
 {
     public const INVALID_DATA_SENT = 'Sent data is invalid';
     public const PLAYER_DOES_ALREADY_EXIST = 'Player %s does already exist!';

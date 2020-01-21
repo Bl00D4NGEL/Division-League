@@ -1,0 +1,128 @@
+<?php
+
+namespace App\Tests\Models;
+
+use App\Entity\User;
+use App\Models\LoginModel;
+use App\Repository\UserRepository;
+use App\Resource\JsonResponse\ErrorResponse;
+use App\Resource\JsonResponse\SuccessResponse;
+use App\Resource\LoginRequest;
+use Doctrine\ORM\EntityManager;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
+
+class LoginModelTest extends TestCase
+{
+    /** @var EntityManager */
+    private $em;
+
+    /** @var UserRepository */
+    private $userRepository;
+
+    /** @var LoginModel */
+    private $loginModel;
+
+    public function setUp(): void
+    {
+        $this->em = $this->createMock(EntityManager::class);
+        $this->userRepository = $this->createMock(UserRepository::class);
+        $this->loginModel = new LoginModel($this->em, $this->userRepository);
+    }
+
+    public function testLoginShouldReturnErrorResponseIfRequestIsInvalid(): void
+    {
+        /** @var LoginRequest|MockObject $loginRequest */
+        $loginRequest = $this->createMock(LoginRequest::class);
+        $loginRequest->expects($this->once())->method('isValid')->willReturn(false);
+
+        $result = $this->loginModel->login($loginRequest);
+        $this->assertInstanceOf(ErrorResponse::class, $result);
+        $expectedError = new ErrorResponse(ErrorResponse::INVALID_DATA_SENT);
+        $this->assertSame($expectedError->getContent(), $result->getContent());
+    }
+
+    public function testLoginShouldReturnInvalidCredentialsIfPasswordVerifyFails(): void
+    {
+        $loginRequest = new LoginRequest();
+        $loginRequest->user = 'abc';
+        $loginRequest->password = 'def';
+
+        /** @var User|MockObject $user */
+        $user = $this->createMock(User::class);
+        $user
+            ->expects($this->once())
+            ->method('verifyPassword')
+            ->with($loginRequest->password)
+            ->willReturn(false);
+
+        /** @var UserRepository|MockObject $userRepository */
+        $userRepository = $this->createMock(UserRepository::class);
+        $userRepository
+            ->expects($this->once())
+            ->method('findOneBy')
+            ->with([
+                'loginName' => $loginRequest->user,
+            ])
+            ->willReturn($user);
+
+        $this->loginModel = new LoginModel($this->em, $userRepository);
+
+        $result = $this->loginModel->login($loginRequest);
+
+        $this->assertInstanceOf(ErrorResponse::class, $result);
+        $expectedError = new ErrorResponse(ErrorResponse::INVALID_CREDENTIALS_SENT);
+        $this->assertSame($expectedError->getContent(), $result->getContent());
+    }
+
+    public function testLoginShouldReturnInvalidCredentialsIfUserIsNotFound(): void
+    {
+        /** @var LoginRequest|MockObject $loginRequest */
+        $loginRequest = $this->createMock(LoginRequest::class);
+        $loginRequest->expects($this->once())->method('isValid')->willReturn(true);
+
+        /** @var UserRepository|MockObject $userRepository */
+        $userRepository = $this->createMock(UserRepository::class);
+        $userRepository->expects($this->once())->method('findOneBy')->with([
+            'loginName' => null
+        ])->willReturn(null);
+
+        $this->loginModel = new LoginModel($this->em, $userRepository);
+
+        $result = $this->loginModel->login($loginRequest);
+
+        $this->assertInstanceOf(ErrorResponse::class, $result);
+        $expectedError = new ErrorResponse(ErrorResponse::INVALID_CREDENTIALS_SENT);
+        $this->assertSame($expectedError->getContent(), $result->getContent());
+    }
+
+    public function testLoginSuccess(): void
+    {
+        /** @var LoginRequest $loginRequest */
+        $loginRequest = new LoginRequest();
+        $loginRequest->user = 'abc';
+        $loginRequest->password = 'abc';
+
+        /** @var User|MockObject $user */
+        $user = $this->createMock(User::class);
+        $user->expects($this->once())->method('verifyPassword')->willReturn(true);
+        $user->expects($this->once())->method('asArray')->willReturn(['test' => 'value']);
+
+        /** @var UserRepository|MockObject $userRepository */
+        $userRepository = $this->createMock(UserRepository::class);
+        $userRepository->expects($this->once())->method('findOneBy')->with([
+            'loginName' => 'abc'
+        ])->willReturn($user);
+
+        $loginModel = new LoginModel($this->em, $userRepository);
+        $result = $loginModel->login($loginRequest);
+        $this->assertInstanceOf(SuccessResponse::class, $result);
+        $expectedError = new SuccessResponse([
+            'isLoggedIn' => true,
+            'user' => [
+                'test' => 'value'
+            ]
+        ]);
+        $this->assertSame($expectedError->getContent(), $result->getContent());
+    }
+}

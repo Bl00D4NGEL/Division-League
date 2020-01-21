@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Player;
+use App\Resource\AddPlayerRequest;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -12,11 +13,23 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method Player[]    findAll()
  * @method Player[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-final class PlayerRepository extends ServiceEntityRepository
+class PlayerRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Player::class);
+    }
+
+    public function createFrom(AddPlayerRequest $request): Player
+    {
+        return (new Player())
+            ->setDivision($request->division)
+            ->setElo($request->elo)
+            ->setName($request->name)
+            ->setPlayerId($request->playerId)
+            ->setLeague($request->league)
+            ->setWins($request->wins)
+            ->setLoses($request->loses);
     }
 
     /**

@@ -2,7 +2,9 @@
 
 namespace App\Repository;
 
+use App\DataObjects\Match;
 use App\Entity\History;
+use App\Resource\AddHistoryRequest;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -12,15 +14,18 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method History[]    findAll()
  * @method History[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-final class HistoryRepository extends ServiceEntityRepository
+class HistoryRepository extends ServiceEntityRepository
 {
     /** @var RosterRepository */
     private $rosterRepository;
+    /** @var PlayerRepository */
+    private $playerRepository;
 
-    public function __construct(ManagerRegistry $registry, RosterRepository $rosterRepository)
+    public function __construct(ManagerRegistry $registry, RosterRepository $rosterRepository, PlayerRepository $playerRepository)
     {
         parent::__construct($registry, History::class);
         $this->rosterRepository = $rosterRepository;
+        $this->playerRepository = $playerRepository;
     }
 
     /**
@@ -53,5 +58,20 @@ final class HistoryRepository extends ServiceEntityRepository
     public function findLastEntries(int $limit = 100): array
     {
         return $this->findBy([], ['id' => 'DESC'], $limit);
+    }
+
+    /**
+     * @param AddHistoryRequest $request
+     * @return Match
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function createMatchFrom(AddHistoryRequest $request): Match {
+        $match = new Match($this->rosterRepository, $this->playerRepository);
+        $match
+            ->setWinner($request->winner, $request->winnerTeamName)
+            ->setLoser($request->loser, $request->loserTeamName)
+            ->setProofUrl($request->proofUrl);
+        return $match;
     }
 }

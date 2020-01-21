@@ -4,7 +4,7 @@ namespace App\Resource;
 use JMS\Serializer\Annotation\SerializedName;
 use JMS\Serializer\Annotation\Type;
 
-final class AddPlayerRequest
+class AddPlayerRequest
 {
     /**
      * @Type("string")

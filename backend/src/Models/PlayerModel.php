@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Entity\Player;
 use App\Repository\PlayerRepository;
 use App\Resource\AddPlayerRequest;
 use App\Resource\JsonResponse\ErrorResponse;
@@ -10,7 +9,7 @@ use App\Resource\JsonResponse\SuccessResponse;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-final class PlayerModel
+class PlayerModel
 {
     /** @var PlayerRepository */
     private $playerRepository;
@@ -30,23 +29,23 @@ final class PlayerModel
      */
     public function addPlayer(AddPlayerRequest $request): JsonResponse
     {
-        if ($request->isValid()) {
-            if ($this->doesPlayerAlreadyExist($request)) {
-                return new ErrorResponse(sprintf(ErrorResponse::PLAYER_DOES_ALREADY_EXIST, $request->name));
-            }
-            $player = Player::fromAddPlayerRequest($request);
-
-            $this->entityManager->persist($player);
-            $this->entityManager->flush();
-            return new SuccessResponse([
-                "playerId" => $player->getId()
-            ]);
-        } else {
+        if (!$request->isValid()) {
             return new ErrorResponse(ErrorResponse::INVALID_DATA_SENT);
         }
+        if ($this->doesPlayerAlreadyExist($request)) {
+            return new ErrorResponse(sprintf(ErrorResponse::PLAYER_DOES_ALREADY_EXIST, $request->name));
+        }
+        $player = $this->playerRepository->createFrom($request);
+
+        $this->entityManager->persist($player);
+        $this->entityManager->flush();
+        return new SuccessResponse([
+            "playerId" => $player->getId()
+        ]);
     }
 
-    public function getPlayerAll(): JsonResponse {
+    public function getPlayerAll(): JsonResponse
+    {
         $players = [];
         foreach ($this->playerRepository->findAll() as $player) {
             $players[] = $player->asArray();

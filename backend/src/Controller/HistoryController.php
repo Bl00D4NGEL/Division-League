@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Resource\AddHistoryMultiRequest;
 use App\Resource\AddHistoryRequest;
 use JMS\Serializer\SerializerInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,7 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 use App\Models\HistoryModel;
 
-final class HistoryController extends AbstractController
+class HistoryController extends AbstractController
 {
     /** @var SerializerInterface */
     private $serializer;
@@ -28,19 +27,6 @@ final class HistoryController extends AbstractController
     }
 
     /**
-     * @Route("/history/add", name="history_add")
-     * @param Request $request
-     * @return JsonResponse
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     */
-    public function historyAdd(Request $request)
-    {
-        $req = $this->serializer->deserialize($request->getContent(), AddHistoryRequest::class, 'json');
-        return $this->historyModel->addHistory($req);
-    }
-
-    /**
      * @Route("/history/addMulti", name="history_add_multi")
      * @param Request $request
      * @return Response
@@ -49,8 +35,7 @@ final class HistoryController extends AbstractController
      */
     public function historyAddMulti(Request $request)
     {
-        $req = $this->serializer->deserialize($request->getContent(), AddHistoryMultiRequest::class, 'json');
-        return $this->historyModel->addHistoryMulti($req);
+        return $this->historyModel->addHistory($this->serializer->deserialize($request->getContent(), AddHistoryRequest::class, 'json'));
     }
 
     /**

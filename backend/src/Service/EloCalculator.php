@@ -2,7 +2,7 @@
 
 namespace App\Service;
 
-final class EloCalculator
+class EloCalculator
 {
     private const MAX_K_FACTOR = 16;
 

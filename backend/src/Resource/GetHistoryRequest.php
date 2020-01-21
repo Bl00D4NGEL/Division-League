@@ -4,7 +4,7 @@ namespace App\Resource;
 use App\Entity\History;
 use JMS\Serializer\Annotation\Type;
 
-final class GetHistoryRequest
+class GetHistoryRequest
 {
     /**
      * @var History $history

@@ -14,7 +14,7 @@ use Doctrine\Common\Persistence\ManagerRegistry;
  * @method Roster[]    findAll()
  * @method Roster[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-final class RosterRepository extends ServiceEntityRepository
+class RosterRepository extends ServiceEntityRepository
 {
     /** @var TeamRepository */
     private $teamRepository;
