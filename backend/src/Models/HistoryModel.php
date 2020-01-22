@@ -71,6 +71,4 @@ class HistoryModel
     {
         return new SuccessResponse($this->historyFormatter->format($this->historyRepository->findWithHistoryEntity($request->history, $request->limit)));
     }
-
-
 }

@@ -4,7 +4,6 @@ namespace App\Repository;
 
 use App\ValueObjects\Match;
 use App\Entity\History;
-use App\Entity\Team;
 use App\Resource\AddHistoryRequest;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -68,24 +67,9 @@ class HistoryRepository extends ServiceEntityRepository
         $match = new Match();
 
         $match
-            ->setWinner($this->getOrCreateTeam($request->winner, $request->winnerTeamName))
-            ->setLoser($this->getOrCreateTeam($request->loser, $request->loserTeamName))
+            ->setWinner($this->rosterRepository->getOrCreateTeam($request->winner, $request->winnerTeamName))
+            ->setLoser($this->rosterRepository->getOrCreateTeam($request->loser, $request->loserTeamName))
             ->setProofUrl($request->proofUrl);
         return $match;
-    }
-
-    /**
-     * @param int[] $playerIds
-     * @param string|null $teamName
-     * @return Team
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     */
-    private function getOrCreateTeam(array $playerIds, ?string $teamName): Team {
-        $winner = $this->rosterRepository->getTeamForPlayers($playerIds);
-        if ($winner === null) {
-            $winner = $this->rosterRepository->createTeamForPlayers($playerIds, $teamName);
-        }
-        return $winner;
     }
 }

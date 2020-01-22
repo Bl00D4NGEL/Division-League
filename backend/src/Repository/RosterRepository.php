@@ -170,4 +170,19 @@ class RosterRepository extends ServiceEntityRepository
         }
         return $team;
     }
+
+    /**
+     * @param int[] $playerIds
+     * @param string|null $teamName
+     * @return Team
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function getOrCreateTeam(array $playerIds, ?string $teamName): Team {
+        $winner = $this->getTeamForPlayers($playerIds);
+        if ($winner === null) {
+            $winner = $this->createTeamForPlayers($playerIds, $teamName);
+        }
+        return $winner;
+    }
 }
