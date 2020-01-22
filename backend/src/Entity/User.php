@@ -10,10 +10,8 @@ use InvalidArgumentException;
  */
 class User
 {
-    public const ROLES = [self::ROLE_NORMAL, self::ROLE_MODERATOR, self::ROLE_ADMIN];
-    private const ROLE_ADMIN = 'ADMIN';
-    private const ROLE_MODERATOR = 'MODERATOR';
-    private const ROLE_NORMAL = 'NORMAL';
+    public const ROLES = ['NORMAL', 'MODERATOR', 'ADMIN'];
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()

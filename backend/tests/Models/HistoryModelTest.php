@@ -2,8 +2,8 @@
 
 namespace App\Tests\Models;
 
-use App\DataObjects\HistoryFormatter;
-use App\DataObjects\Match;
+use App\ValueObjects\HistoryFormatter;
+use App\ValueObjects\Match;
 use App\Entity\History;
 use App\Entity\Team;
 use App\Models\HistoryModel;

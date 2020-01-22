@@ -30,8 +30,9 @@ class PlayerModelTest extends TestCase
     {
         $this->em = $this->createMock(EntityManager::class);
         $this->playerRepository = $this->createMock(PlayerRepository::class);
-        $this->playerModel = new PlayerModel($this->em, $this->playerRepository);
         $this->player = $this->createMock(Player::class);
+
+        $this->buildPlayerModel();
     }
 
     public function testAddPlayerReturnsErrorResponseIfRequestIsInvalid()
@@ -52,8 +53,7 @@ class PlayerModelTest extends TestCase
         $request = $this->createDummyAddPlayerRequest();
 
         $this->playerRepository->expects($this->once())->method('findByName')->with($request->name)->willReturn($this->player);
-
-        $this->playerModel = new PlayerModel($this->em, $this->playerRepository);
+        $this->buildPlayerModel();
 
         $result = $this->playerModel->addPlayer($request);
 
@@ -69,7 +69,7 @@ class PlayerModelTest extends TestCase
         $this->playerRepository->expects($this->once())->method('findByName')->with($request->name)->willReturn(null);
         $this->playerRepository->expects($this->once())->method('findByPlayerId')->with($request->playerId)->willReturn($this->player);
 
-        $this->playerModel = new PlayerModel($this->em, $this->playerRepository);
+        $this->buildPlayerModel();
 
         $result = $this->playerModel->addPlayer($request);
 
@@ -80,21 +80,22 @@ class PlayerModelTest extends TestCase
 
     public function testAddPlayerReturnsSuccessResponseIfPlayerIsCreated()
     {
-        $this->player->method('getId')->willReturn(1);
         $request = $this->createDummyAddPlayerRequest();
 
+        $this->player->expects($this->once())->method('getId')->willReturn(1);
         $this->playerRepository->expects($this->once())->method('findByName')->with($request->name)->willReturn(null);
         $this->playerRepository->expects($this->once())->method('findByPlayerId')->with($request->playerId)->willReturn(null);
         $this->playerRepository->expects($this->once())->method('createFrom')->with($request)->willReturn($this->player);
 
         $this->em->expects($this->once())->method('persist')->with($this->player);
         $this->em->expects($this->once())->method('flush');
-        $this->playerModel = new PlayerModel($this->em, $this->playerRepository);
+
+        $this->buildPlayerModel();
 
         $result = $this->playerModel->addPlayer($request);
 
         $this->assertInstanceOf(SuccessResponse::class, $result);
-        $expectedResponse= new SuccessResponse([
+        $expectedResponse = new SuccessResponse([
             'playerId' => 1
         ]);
         $this->assertSame($expectedResponse->getContent(), $result->getContent());
@@ -103,7 +104,7 @@ class PlayerModelTest extends TestCase
     public function testGetPlayerAllEmptyResponse()
     {
         $this->playerRepository->expects($this->once())->method('findAll')->willReturn([]);
-        $this->playerModel = new PlayerModel($this->em, $this->playerRepository);
+        $this->buildPlayerModel();
 
         $result = $this->playerModel->getPlayerAll();
 
@@ -121,7 +122,7 @@ class PlayerModelTest extends TestCase
         ]);
 
         $this->playerRepository->expects($this->once())->method('findAll')->willReturn([$player]);
-        $this->playerModel = new PlayerModel($this->em, $this->playerRepository);
+        $this->buildPlayerModel();
 
         $result = $this->playerModel->getPlayerAll();
 
@@ -143,5 +144,10 @@ class PlayerModelTest extends TestCase
         $request->playerId = 123;
         $request->league = 'league';
         return $request;
+    }
+
+    private function buildPlayerModel(): void
+    {
+        $this->playerModel = new PlayerModel($this->em, $this->playerRepository);
     }
 }

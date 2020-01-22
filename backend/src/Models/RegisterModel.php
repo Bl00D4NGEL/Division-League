@@ -21,8 +21,8 @@ class RegisterModel
 
     public function __construct(EntityManagerInterface $entityManager, UserRepository $userRepository)
     {
-        $this->userRepository = $userRepository;
         $this->entityManager = $entityManager;
+        $this->userRepository = $userRepository;
     }
 
     public function register(RegisterRequest $registerRequest): JsonResponse

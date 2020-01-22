@@ -39,18 +39,6 @@ class HistoryController extends AbstractController
     }
 
     /**
-     * @Route("/history/get/all", name="history_get_all")
-     * @return JsonResponse
-     */
-    public function historyGetAll()
-    {
-        return new JsonResponse([
-            "status" => "OK"
-        ]); // $this->historyModel->getHistoryAll();
-    }
-
-
-    /**
      * @Route("/history/get/recent", name="history_get_all")
      * @return JsonResponse
      */

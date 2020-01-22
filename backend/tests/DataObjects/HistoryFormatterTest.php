@@ -2,7 +2,7 @@
 
 namespace App\Tests\DataObjects;
 
-use App\DataObjects\HistoryFormatter;
+use App\ValueObjects\HistoryFormatter;
 use App\Entity\History;
 use App\Entity\Player;
 use App\Repository\RosterRepository;

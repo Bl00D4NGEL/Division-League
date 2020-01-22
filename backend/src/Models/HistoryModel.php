@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\DataObjects\HistoryFormatter;
+use App\ValueObjects\HistoryFormatter;
 use App\Repository\HistoryRepository;
 use App\Resource\AddHistoryRequest;
 use App\Resource\GetHistoryRequest;
@@ -56,11 +56,6 @@ class HistoryModel
         $this->entityManager->persist($match->getLoser());
         $this->entityManager->flush();
         return new SuccessResponse($this->historyFormatter->format([$match->getHistory()]));
-    }
-
-    public function getHistoryAll(): JsonResponse
-    {
-        return new SuccessResponse($this->historyFormatter->format($this->historyRepository->findAll()));
     }
 
     public function getHistoryRecent(): JsonResponse

@@ -14,10 +14,10 @@ use PHPUnit\Framework\TestCase;
 
 class LoginModelTest extends TestCase
 {
-    /** @var EntityManager */
+    /** @var EntityManager|MockObject */
     private $em;
 
-    /** @var UserRepository */
+    /** @var UserRepository|MockObject */
     private $userRepository;
 
     /** @var LoginModel */
@@ -27,7 +27,8 @@ class LoginModelTest extends TestCase
     {
         $this->em = $this->createMock(EntityManager::class);
         $this->userRepository = $this->createMock(UserRepository::class);
-        $this->loginModel = new LoginModel($this->em, $this->userRepository);
+
+        $this->buildLoginModel();
     }
 
     public function testLoginShouldReturnErrorResponseIfRequestIsInvalid(): void
@@ -37,6 +38,7 @@ class LoginModelTest extends TestCase
         $loginRequest->expects($this->once())->method('isValid')->willReturn(false);
 
         $result = $this->loginModel->login($loginRequest);
+
         $this->assertInstanceOf(ErrorResponse::class, $result);
         $expectedError = new ErrorResponse(ErrorResponse::INVALID_DATA_SENT);
         $this->assertSame($expectedError->getContent(), $result->getContent());
@@ -56,9 +58,7 @@ class LoginModelTest extends TestCase
             ->with($loginRequest->password)
             ->willReturn(false);
 
-        /** @var UserRepository|MockObject $userRepository */
-        $userRepository = $this->createMock(UserRepository::class);
-        $userRepository
+        $this->userRepository
             ->expects($this->once())
             ->method('findOneBy')
             ->with([
@@ -66,7 +66,7 @@ class LoginModelTest extends TestCase
             ])
             ->willReturn($user);
 
-        $this->loginModel = new LoginModel($this->em, $userRepository);
+        $this->buildLoginModel();
 
         $result = $this->loginModel->login($loginRequest);
 
@@ -82,12 +82,11 @@ class LoginModelTest extends TestCase
         $loginRequest->expects($this->once())->method('isValid')->willReturn(true);
 
         /** @var UserRepository|MockObject $userRepository */
-        $userRepository = $this->createMock(UserRepository::class);
-        $userRepository->expects($this->once())->method('findOneBy')->with([
+        $this->userRepository->expects($this->once())->method('findOneBy')->with([
             'loginName' => null
         ])->willReturn(null);
 
-        $this->loginModel = new LoginModel($this->em, $userRepository);
+        $this->buildLoginModel();
 
         $result = $this->loginModel->login($loginRequest);
 
@@ -98,24 +97,21 @@ class LoginModelTest extends TestCase
 
     public function testLoginSuccess(): void
     {
-        /** @var LoginRequest $loginRequest */
         $loginRequest = new LoginRequest();
         $loginRequest->user = 'abc';
         $loginRequest->password = 'abc';
 
-        /** @var User|MockObject $user */
         $user = $this->createMock(User::class);
         $user->expects($this->once())->method('verifyPassword')->willReturn(true);
         $user->expects($this->once())->method('asArray')->willReturn(['test' => 'value']);
 
-        /** @var UserRepository|MockObject $userRepository */
-        $userRepository = $this->createMock(UserRepository::class);
-        $userRepository->expects($this->once())->method('findOneBy')->with([
+        $this->userRepository->expects($this->once())->method('findOneBy')->with([
             'loginName' => 'abc'
         ])->willReturn($user);
 
-        $loginModel = new LoginModel($this->em, $userRepository);
-        $result = $loginModel->login($loginRequest);
+        $this->buildLoginModel();
+
+        $result = $this->loginModel->login($loginRequest);
         $this->assertInstanceOf(SuccessResponse::class, $result);
         $expectedError = new SuccessResponse([
             'isLoggedIn' => true,
@@ -124,5 +120,10 @@ class LoginModelTest extends TestCase
             ]
         ]);
         $this->assertSame($expectedError->getContent(), $result->getContent());
+    }
+
+    private function buildLoginModel(): void
+    {
+        $this->loginModel = new LoginModel($this->em, $this->userRepository);
     }
 }

@@ -2,8 +2,9 @@
 
 namespace App\Repository;
 
-use App\DataObjects\Match;
+use App\ValueObjects\Match;
 use App\Entity\History;
+use App\Entity\Team;
 use App\Resource\AddHistoryRequest;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -18,14 +19,11 @@ class HistoryRepository extends ServiceEntityRepository
 {
     /** @var RosterRepository */
     private $rosterRepository;
-    /** @var PlayerRepository */
-    private $playerRepository;
 
-    public function __construct(ManagerRegistry $registry, RosterRepository $rosterRepository, PlayerRepository $playerRepository)
+    public function __construct(ManagerRegistry $registry, RosterRepository $rosterRepository)
     {
         parent::__construct($registry, History::class);
         $this->rosterRepository = $rosterRepository;
-        $this->playerRepository = $playerRepository;
     }
 
     /**
@@ -67,11 +65,27 @@ class HistoryRepository extends ServiceEntityRepository
      * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function createMatchFrom(AddHistoryRequest $request): Match {
-        $match = new Match($this->rosterRepository, $this->playerRepository);
+        $match = new Match();
+
         $match
-            ->setWinner($request->winner, $request->winnerTeamName)
-            ->setLoser($request->loser, $request->loserTeamName)
+            ->setWinner($this->getOrCreateTeam($request->winner, $request->winnerTeamName))
+            ->setLoser($this->getOrCreateTeam($request->loser, $request->loserTeamName))
             ->setProofUrl($request->proofUrl);
         return $match;
+    }
+
+    /**
+     * @param int[] $playerIds
+     * @param string|null $teamName
+     * @return Team
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    private function getOrCreateTeam(array $playerIds, ?string $teamName): Team {
+        $winner = $this->rosterRepository->getTeamForPlayers($playerIds);
+        if ($winner === null) {
+            $winner = $this->rosterRepository->createTeamForPlayers($playerIds, $teamName);
+        }
+        return $winner;
     }
 }

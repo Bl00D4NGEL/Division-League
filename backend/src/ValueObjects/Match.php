@@ -1,23 +1,15 @@
 <?php
 
-namespace App\DataObjects;
+namespace App\ValueObjects;
 
 use App\Entity\History;
 use App\Entity\Player;
 use App\Entity\Team;
-use App\Repository\PlayerRepository;
-use App\Repository\RosterRepository;
 use App\Service\EloCalculator;
 use Exception;
 
 class Match
 {
-    /** @var RosterRepository */
-    private $rosterRepository;
-
-    /** @var PlayerRepository */
-    private $playerRepository;
-
     /** @var Team */
     private $winner;
 
@@ -30,43 +22,24 @@ class Match
     /** @var History */
     private $history;
 
-    public function __construct(RosterRepository $rosterRepository, PlayerRepository $playerRepository)
-    {
-        $this->rosterRepository = $rosterRepository;
-        $this->playerRepository = $playerRepository;
-    }
-
     /**
-     * @param int[] $playerIds
-     * @param string $name (Optional) name of team if it is to be created
+     * @param Team $team
      * @return Match
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function setWinner(array $playerIds, ?string $name = ''): self
+    public function setWinner(Team $team): self
     {
-        $winner = $this->rosterRepository->getTeamForPlayers($playerIds);
-        if ($winner === null) {
-            $winner = $this->rosterRepository->createTeamForPlayers($playerIds, $name);
-        }
-        $this->winner = $winner;
+        $this->winner = $team;
+
         return $this;
     }
 
     /**
-     * @param int[] $playerIds
-     * @param string $name (Optional) name of team if it is to be created
+     * @param Team $team
      * @return Match
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function setLoser(array $playerIds, ?string $name = ''): self
+    public function setLoser(Team $team): self
     {
-        $loser = $this->rosterRepository->getTeamForPlayers($playerIds);
-        if ($loser === null) {
-            $loser = $this->rosterRepository->createTeamForPlayers($playerIds, $name);
-        }
-        $this->loser = $loser;
+        $this->loser = $team;
 
         return $this;
     }
@@ -89,8 +62,7 @@ class Match
     }
 
     /**
-     * @return History
-     * @throws Exception
+     * @return void
      */
     public function execute(): void
     {
@@ -112,7 +84,7 @@ class Match
     }
 
     /**
-     * @param array $players
+     * @param Player[] $players
      * @return int
      */
     private function getAverageEloForPlayers(array $players): int

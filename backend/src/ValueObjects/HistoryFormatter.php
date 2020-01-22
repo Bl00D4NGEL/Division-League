@@ -1,6 +1,6 @@
 <?php
 
-namespace App\DataObjects;
+namespace App\ValueObjects;
 
 use App\Entity\History;
 use App\Entity\Player;
