@@ -1,19 +1,18 @@
 import CustomRequest from "../helpers/CustomRequest/CustomRequest";
 import Config from "../Config";
 
-export default function AddHistoryService({setIsLoaded, winner, loser, proofUrl, setChanges, setError}) {
-    setIsLoaded(false);
+export default function AddHistoryService({winner, loser, proofUrl, setError, winnerTeamName, loserTeamName, setChanges}) {
     CustomRequest(
         Config.addHistoryEndPoint(),
         responseData => {
-            setChanges({ ...responseData.data });
-            setIsLoaded(true);
+            setChanges(responseData.data[0]);
         }, error => {
-            setIsLoaded(true);
-            setError(error);
+            setError(error.message);
         },{
             winner,
+            winnerTeamName,
             loser,
+            loserTeamName,
             proofUrl
         }
     );

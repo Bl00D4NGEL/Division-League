@@ -7,7 +7,7 @@ import TextInput from "../BaseReactComponents/TextInput/TextInput";
 import LoserSelect from "../PlayerSelect/LoserSelect";
 import WinnerSelect from "../PlayerSelect/WinnerSelect";
 import MultiPlayerSelect from "./MultiPlayerSelect";
-import AddHistoryMultiService from "../../services/AddHistoryMultiService";
+import AddHistoryService from "../../services/AddHistoryService";
 import EloChangeDisplayMulti from "../EloChangeDisplayMulti/EloChangeDisplayMulti";
 import Error from "../Error/Error";
 
@@ -34,7 +34,7 @@ export default function AddHistoryMultiForm({players}) {
             setError('Proof URL must be set');
             return;
         }
-        AddHistoryMultiService({
+        AddHistoryService({
             winner: selectedWinner,
             loser: selectedLoser,
             winnerTeamName,

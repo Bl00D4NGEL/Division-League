@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\DataObjects;
+namespace App\Tests\ValueObjects;
 
 use App\ValueObjects\HistoryFormatter;
 use App\Entity\History;

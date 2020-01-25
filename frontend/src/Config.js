@@ -35,10 +35,6 @@ export default class Config {
         return new Endpoint(this.historyEndpointUrl('add'), 'POST');
     }
 
-    static addHistoryMultiEndPoint() {
-        return new Endpoint(this.historyEndpointUrl('addMulti'), 'POST');
-    }
-
     static addPlayerEndPoint() {
         return new Endpoint(this.playerEndpointUrl('add'), 'POST');
     }

@@ -27,13 +27,13 @@ class HistoryController extends AbstractController
     }
 
     /**
-     * @Route("/history/addMulti", name="history_add_multi")
+     * @Route("/history/add", name="history_add")
      * @param Request $request
      * @return Response
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function historyAddMulti(Request $request)
+    public function historyAdd(Request $request)
     {
         return $this->historyModel->addHistory($this->serializer->deserialize($request->getContent(), AddHistoryRequest::class, 'json'));
     }

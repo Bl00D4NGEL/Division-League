@@ -5,7 +5,6 @@ namespace App\Models;
 use App\ValueObjects\HistoryFormatter;
 use App\Repository\HistoryRepository;
 use App\Resource\AddHistoryRequest;
-use App\Resource\GetHistoryRequest;
 use App\Resource\JsonResponse\ErrorResponse;
 use App\Resource\JsonResponse\SuccessResponse;
 use Doctrine\ORM\EntityManagerInterface;
@@ -61,14 +60,5 @@ class HistoryModel
     public function getHistoryRecent(): JsonResponse
     {
         return new SuccessResponse($this->historyFormatter->format($this->historyRepository->findLastEntries(20)));
-    }
-
-    /**
-     * @param GetHistoryRequest $request
-     * @return JsonResponse
-     */
-    public function getHistory(GetHistoryRequest $request): JsonResponse
-    {
-        return new SuccessResponse($this->historyFormatter->format($this->historyRepository->findWithHistoryEntity($request->history, $request->limit)));
     }
 }

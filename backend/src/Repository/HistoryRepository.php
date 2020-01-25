@@ -26,29 +26,6 @@ class HistoryRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param History $history
-     * @param int $limit
-     * @return mixed
-     */
-    public function findWithHistoryEntity(History $history, int $limit = 0)
-    {
-        $queryBuilder = $this->createQueryBuilder('h');
-
-        foreach ($history->asArray() as $field => $value) {
-            if (null !== $value) {
-                $queryBuilder->andWhere('h.' . $field . ' = :' . $field)
-                    ->setParameter($field, $value);
-            }
-        }
-
-        if (0 !== $limit) {
-            $queryBuilder->setMaxResults($limit);
-        }
-
-        return $queryBuilder->getQuery()->execute();
-    }
-
-    /**
      * @param int $limit The maximum amount of entries to return
      * @return History[]
      */
