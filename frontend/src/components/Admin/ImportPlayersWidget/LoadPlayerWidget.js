@@ -17,8 +17,10 @@ export default function LoadPlayerWidget({divisionToLoad, defaultLeague}) {
     const loadPlayers = async () => {
         LoadPlayersFromMdrService({
             division: divisionToLoad,
-            setError: () => {},
-            setIsLoaded: () => {},
+            setError: () => {
+            },
+            setIsLoaded: () => {
+            },
             setPlayers: setMembers
         });
     };
@@ -67,15 +69,16 @@ export default function LoadPlayerWidget({divisionToLoad, defaultLeague}) {
     };
 
     const generateRows = () => {
+        console.log(members);
         setIsAlreadyLoaded(members, players);
-        return members.map((member) => {
-            return [
+        return members.map(member =>
+            [
                 member.name,
                 member.id,
                 member.rank,
                 generateCheckbox(member)
-            ];
-        });
+            ]
+        );
     };
 
     const saveSelectedPlayers = (e) => {
@@ -101,7 +104,8 @@ export default function LoadPlayerWidget({divisionToLoad, defaultLeague}) {
                     <SubmitButton value="Save Players"/>
                 </div>
                 <div>
-                    <Loader isLoaded={players.length !== 0 && members.length !== 0} error={error} content={generatePlayerTable()}/>
+                    <Loader isLoaded={members.length !== 0} error={error}
+                            content={generatePlayerTable()}/>
                 </div>
             </div>
         }/>

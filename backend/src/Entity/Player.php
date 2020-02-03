@@ -51,6 +51,11 @@ class Player
      */
     private $league;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $deleted = false;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -163,6 +168,18 @@ class Player
     {
         $this->elo += $eloLose;
         $this->loses++;
+        return $this;
+    }
+
+    public function getDeleted(): ?bool
+    {
+        return $this->deleted;
+    }
+
+    public function setDeleted(bool $deleted): self
+    {
+        $this->deleted = $deleted;
+
         return $this;
     }
 }

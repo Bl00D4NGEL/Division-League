@@ -63,7 +63,8 @@ class PlayerRepository extends ServiceEntityRepository
         if (null === $player) {
             throw new Exception(sprintf("Player with id %s does not exist!", $id));
         }
-        $this->getEntityManager()->remove($player);
+        $player->setDeleted(true);
+        $this->getEntityManager()->persist($player);
         $this->getEntityManager()->flush();
     }
 }

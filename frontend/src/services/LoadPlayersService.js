@@ -5,7 +5,7 @@ export default function LoadPlayersService({setError, setIsLoaded, setPlayers}) 
     CustomRequest(
         Config.getAllPlayersEndpoint(),
         (result) => {
-            setPlayers(result.data);
+            setPlayers(result.data.filter(p => !p.deleted));
             setIsLoaded(true);
         },
         (error) => {
