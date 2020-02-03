@@ -5,9 +5,11 @@ namespace App\Models;
 use App\Factory\PlayerFactory;
 use App\Repository\PlayerRepository;
 use App\Resource\AddPlayerRequest;
+use App\Resource\DeletePlayerRequest;
 use App\Resource\JsonResponse\ErrorResponse;
 use App\Resource\JsonResponse\SuccessResponse;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\ORMException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class PlayerModel
@@ -65,5 +67,20 @@ class PlayerModel
             $this->playerRepository->findByName($request->name) !== null
             || $this->playerRepository->findByPlayerId($request->playerId) !== null
         );
+    }
+
+    public function playerDelete(DeletePlayerRequest $request): JsonResponse {
+        if (!$request->isValid()) {
+            return new ErrorResponse(ErrorResponse::INVALID_DATA_SENT);
+        }
+
+        try {
+            $this->playerRepository->deleteById($request->id);
+        } catch (ORMException $ORMException) {
+            return new ErrorResponse('Deletion of player failed');
+        } catch (\Exception $e) {
+            return new ErrorResponse($e->getMessage());
+        }
+        return new SuccessResponse();
     }
 }

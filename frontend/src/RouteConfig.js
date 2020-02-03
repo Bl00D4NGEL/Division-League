@@ -13,7 +13,8 @@ export default class RouteConfig {
             'component': PlayerTable,
             'name': 'Players',
             'requiresLogin': false,
-            'default': true
+            'default': true,
+            'shouldRender': true
         },
         {
             'path': '/history',

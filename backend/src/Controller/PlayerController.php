@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Models\PlayerModel;
 use App\Resource\AddPlayerRequest;
+use App\Resource\DeletePlayerRequest;
 use JMS\Serializer\SerializerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -29,7 +30,8 @@ class PlayerController extends AbstractController
      * @param Request $request
      * @return JsonResponse
      */
-    public function playerAdd(Request $request){
+    public function playerAdd(Request $request)
+    {
         $req = $this->serializer->deserialize($request->getContent(), AddPlayerRequest::class, 'json');
         return $this->playerModel->addPlayer($req);
     }
@@ -38,7 +40,19 @@ class PlayerController extends AbstractController
      * @Route("/player/get/all", name="player_get_all")
      * @return JsonResponse
      */
-    public function playerGetAll() {
+    public function playerGetAll()
+    {
         return $this->playerModel->getPlayerAll();
+    }
+
+    /**
+     * @Route("/player", name="player_delete", methods={"DELETE"})
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function playerDelete(Request $request)
+    {
+        $req = $this->serializer->deserialize($request->getContent(), DeletePlayerRequest::class, 'json');
+        return $this->playerModel->playerDelete($req);
     }
 }

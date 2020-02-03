@@ -14,7 +14,7 @@ export default function AppRouter() {
             if (route.shouldRender === true) {
                 return <Route key={route.path} path={route.path}
                               render={() => <route.component isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn}
-                                                             setUserData={setUser}/>}/>;
+                                                             user={user} setUserData={setUser}/>}/>;
             }
             return <Route key={route.path} path={route.path} exact component={route.component}/>;
         });

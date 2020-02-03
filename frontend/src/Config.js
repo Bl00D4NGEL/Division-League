@@ -39,6 +39,10 @@ export default class Config {
         return new Endpoint(this.playerEndpointUrl('add'), 'POST');
     }
 
+    static deletePlayerEndPoint() {
+        return new Endpoint(this.playerEndpointUrl(), 'DELETE')
+    }
+
     static loginEndpoint() {
         return new Endpoint(this.loginEndpointUrl(), 'POST');
     }

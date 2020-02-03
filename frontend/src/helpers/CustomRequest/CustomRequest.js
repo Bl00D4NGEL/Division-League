@@ -22,7 +22,7 @@ export default function CustomRequest(endpoint, onSuccess, onError, data) {
         return new Request(endpoint.url());
     };
 
-    const preparePostRequest = (postData) => {
+    const prepareRequest = (postData) => {
         return new Request(
             endpoint.url(),
             {
@@ -37,10 +37,8 @@ export default function CustomRequest(endpoint, onSuccess, onError, data) {
     const fetchRequest = (method, requestData) => {
         if (method === 'GET') {
             return prepareGetRequest();
-        } else if (method === 'POST') {
-            return preparePostRequest(requestData);
         }
-        return new Request(undefined);
+        return prepareRequest(requestData);
     };
 
     fetch(fetchRequest(endpoint.method(), data)).then(res => res.json())
@@ -48,8 +46,7 @@ export default function CustomRequest(endpoint, onSuccess, onError, data) {
             (res) => {
                 if (res.status === 'error') {
                     onError(res);
-                }
-                else {
+                } else {
                     onSuccess(res);
                 }
             },

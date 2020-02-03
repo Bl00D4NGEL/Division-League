@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Player;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Exception;
 
 /**
  * @method Player|null find($id, $lockMode = null, $lockVersion = null)
@@ -49,5 +50,20 @@ class PlayerRepository extends ServiceEntityRepository
         return $this->findBy([
             'id' => $ids
         ]);
+    }
+
+    /**
+     * @param int $id
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws Exception
+     */
+    public function deleteById(int $id): void {
+        $player = $this->find($id);
+        if (null === $player) {
+            throw new Exception(sprintf("Player with id %s does not exist!", $id));
+        }
+        $this->getEntityManager()->remove($player);
+        $this->getEntityManager()->flush();
     }
 }
