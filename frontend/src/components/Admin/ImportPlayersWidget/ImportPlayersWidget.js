@@ -1,17 +1,18 @@
-import React, {useState} from 'react';
+import React from 'react';
 import LoadPlayerWidget from "./LoadPlayerWidget";
 import Label from "../../BaseReactComponents/Label/Label";
 import TextInput from "../../BaseReactComponents/TextInput/TextInput";
+import {useOnChangeSetter} from "../../../customHooks/useOnChangeSetter";
 
 export default function () {
-    const [division, setDivision] = useState('');
-    const [defaultLeague, setDefaultLeague] = useState('Unknown');
+    const [division, setDivision] = useOnChangeSetter('');
+    const [defaultLeague, setDefaultLeague] = useOnChangeSetter('Unknown');
     return <div>
         <Label text='Division to load' formField={
-            <TextInput onChangeSetter={setDivision}/>
+            <TextInput onChange={setDivision}/>
         } />
         <Label text='Default league for player' formField={
-            <TextInput value={defaultLeague} onChangeSetter={setDefaultLeague}/>
+            <TextInput value={defaultLeague} onChange={setDefaultLeague}/>
         } />
         <LoadPlayerWidget divisionToLoad={division} defaultLeague={defaultLeague}/>
     </div>

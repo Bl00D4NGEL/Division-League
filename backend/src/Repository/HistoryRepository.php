@@ -2,9 +2,7 @@
 
 namespace App\Repository;
 
-use App\ValueObjects\Match;
 use App\Entity\History;
-use App\Resource\AddHistoryRequest;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -16,13 +14,9 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class HistoryRepository extends ServiceEntityRepository
 {
-    /** @var RosterRepository */
-    private $rosterRepository;
-
-    public function __construct(ManagerRegistry $registry, RosterRepository $rosterRepository)
+    public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, History::class);
-        $this->rosterRepository = $rosterRepository;
     }
 
     /**
@@ -32,21 +26,5 @@ class HistoryRepository extends ServiceEntityRepository
     public function findLastEntries(int $limit = 100): array
     {
         return $this->findBy([], ['id' => 'DESC'], $limit);
-    }
-
-    /**
-     * @param AddHistoryRequest $request
-     * @return Match
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     */
-    public function createMatchFrom(AddHistoryRequest $request): Match {
-        $match = new Match();
-
-        $match
-            ->setWinner($this->rosterRepository->getOrCreateTeam($request->winner, $request->winnerTeamName))
-            ->setLoser($this->rosterRepository->getOrCreateTeam($request->loser, $request->loserTeamName))
-            ->setProofUrl($request->proofUrl);
-        return $match;
     }
 }

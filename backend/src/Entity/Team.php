@@ -55,9 +55,32 @@ class Team
         return $this->players;
     }
 
-    public function addPlayer(Player $player): self {
-        $this->players[] = $player;
+    /**
+     * @param Player[] $players
+     * @return Team
+     */
+    public function addPlayers(array $players): self {
+        foreach ($players as $player) {
+            $this->addPlayer($player);
+        }
+
         return $this;
+    }
+
+    public function addPlayer(Player $player): self {
+        if (!$this->doesPlayerExist($player)) {
+            $this->players[] = $player;
+        }
+        return $this;
+    }
+
+    private function doesPlayerExist(Player $player): bool {
+        foreach ($this->getPlayers() as $p) {
+            if ($p->getId() === $player->getId()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

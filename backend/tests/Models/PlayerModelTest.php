@@ -3,6 +3,7 @@
 namespace App\Tests\Models;
 
 use App\Entity\Player;
+use App\Factory\PlayerFactory;
 use App\Models\PlayerModel;
 use App\Repository\PlayerRepository;
 use App\Resource\AddPlayerRequest;
@@ -26,10 +27,14 @@ class PlayerModelTest extends TestCase
     /** @var Player|MockObject */
     private $player;
 
+    /** @var PlayerFactory|MockObject */
+    private $playerFactory;
+
     public function setUp(): void
     {
         $this->em = $this->createMock(EntityManager::class);
         $this->playerRepository = $this->createMock(PlayerRepository::class);
+        $this->playerFactory = $this->createMock(PlayerFactory::class);
         $this->player = $this->createMock(Player::class);
 
         $this->buildPlayerModel();
@@ -85,7 +90,7 @@ class PlayerModelTest extends TestCase
         $this->player->expects($this->once())->method('getId')->willReturn(1);
         $this->playerRepository->expects($this->once())->method('findByName')->with($request->name)->willReturn(null);
         $this->playerRepository->expects($this->once())->method('findByPlayerId')->with($request->playerId)->willReturn(null);
-        $this->playerRepository->expects($this->once())->method('createFrom')->with($request)->willReturn($this->player);
+        $this->playerFactory->expects($this->once())->method('createFromRequest')->with($request)->willReturn($this->player);
 
         $this->em->expects($this->once())->method('persist')->with($this->player);
         $this->em->expects($this->once())->method('flush');
@@ -148,6 +153,6 @@ class PlayerModelTest extends TestCase
 
     private function buildPlayerModel(): void
     {
-        $this->playerModel = new PlayerModel($this->em, $this->playerRepository);
+        $this->playerModel = new PlayerModel($this->em, $this->playerRepository, $this->playerFactory);
     }
 }

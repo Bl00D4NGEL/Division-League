@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Factory\UserFactory;
 use App\Repository\UserRepository;
 use App\Resource\JsonResponse\ErrorResponse;
 use App\Resource\JsonResponse\SuccessResponse;
@@ -19,10 +20,14 @@ class RegisterModel
     /** @var UserRepository */
     private $userRepository;
 
-    public function __construct(EntityManagerInterface $entityManager, UserRepository $userRepository)
+    /** @var UserFactory */
+    private $userFactory;
+
+    public function __construct(EntityManagerInterface $entityManager, UserRepository $userRepository, UserFactory $userFactory)
     {
         $this->entityManager = $entityManager;
         $this->userRepository = $userRepository;
+        $this->userFactory = $userFactory;
     }
 
     public function register(RegisterRequest $registerRequest): JsonResponse
@@ -35,7 +40,7 @@ class RegisterModel
             return new ErrorResponse(self::USER_ALREADY_EXISTS);
         }
 
-        $user = $this->userRepository->createFrom($registerRequest);
+        $user = $this->userFactory->createFromRequest($registerRequest);
 
         $this->entityManager->persist($user);
         $this->entityManager->flush();

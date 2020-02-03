@@ -6,7 +6,6 @@ use App\ValueObjects\Match;
 use App\Entity\History;
 use App\Entity\Player;
 use App\Entity\Team;
-use Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -40,7 +39,7 @@ class MatchTest extends TestCase
         $this->match->setWinner($winnerTeam);
         $this->match->setLoser($loserTeam);
         $this->match->setProofUrl('proof.url');
-        $this->match->execute();
+        $history = $this->match->execute();
 
         $expected = new History();
         $expected->setProofUrl('proof.url')
@@ -49,13 +48,7 @@ class MatchTest extends TestCase
             ->setWinnerGain(12)
             ->setLoserGain(-12);
 
-        $this->assertInstanceOf(History::class, $this->match->getHistory());
-        $this->assertSame($expected->asArray(), $this->match->getHistory()->asArray());
-    }
-
-    public function testGetHistoryShouldThrowExceptionIfExecuteHasNotBeenCalled(): void {
-        $this->expectException(Exception::class);
-        $this->expectExceptionMessage('Execute function hasn\'t generated a history yet. Please call `execute` before this.');
-        $this->match->getHistory();
+        $this->assertInstanceOf(History::class, $history);
+        $this->assertSame($expected->asArray(), $history->asArray());
     }
 }

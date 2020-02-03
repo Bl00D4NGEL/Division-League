@@ -2,6 +2,7 @@
 namespace App\Tests\Models;
 
 use App\Entity\User;
+use App\Factory\UserFactory;
 use App\Models\RegisterModel;
 use App\Repository\UserRepository;
 use App\Resource\JsonResponse\ErrorResponse;
@@ -25,12 +26,16 @@ class RegisterModelTest extends TestCase
     /** @var User|MockObject */
     private $user;
 
+    /** @var UserFactory|MockObject */
+    private $userFactory;
+
     public function setUp(): void
     {
         $this->em = $this->createMock(EntityManager::class);
         $this->userRepository = $this->createMock(UserRepository::class);
-        $this->registerModel = new RegisterModel($this->em, $this->userRepository);
+        $this->userFactory = $this->createMock(UserFactory::class);
         $this->user = $this->createMock(User::class);
+        $this->buildRegisterModel();
     }
 
 
@@ -53,7 +58,8 @@ class RegisterModelTest extends TestCase
         $this->userRepository->expects($this->once())->method('findOneBy')->with(
             ['loginName' => $registerRequest->user]
         )->willReturn($this->user);
-        $this->registerModel = new RegisterModel($this->em, $this->userRepository);
+
+        $this->buildRegisterModel();
 
         $result = $this->registerModel->register($registerRequest);
 
@@ -66,11 +72,11 @@ class RegisterModelTest extends TestCase
     {
         $this->user->method('getId')->willReturn(1);
         $registerRequest = $this->createDummyRegisterRequest();
-        $this->userRepository->expects($this->once())->method('createFrom')->with($registerRequest)->willReturn($this->user);
+        $this->userFactory->expects($this->once())->method('createFromRequest')->with($registerRequest)->willReturn($this->user);
 
         $this->em->expects($this->once())->method('persist')->with($this->user);
         $this->em->expects($this->once())->method('flush');
-        $this->registerModel = new RegisterModel($this->em, $this->userRepository);
+        $this->buildRegisterModel();
 
         $result = $this->registerModel->register($registerRequest);
 
@@ -89,5 +95,10 @@ class RegisterModelTest extends TestCase
         $registerRequest->password = 'password';
         $registerRequest->role = User::ROLES[0];
         return $registerRequest;
+    }
+
+    protected function buildRegisterModel(): void
+    {
+        $this->registerModel = new RegisterModel($this->em, $this->userRepository, $this->userFactory);
     }
 }

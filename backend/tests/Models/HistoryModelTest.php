@@ -2,9 +2,10 @@
 
 namespace App\Tests\Models;
 
+use App\Factory\RosterFactory;
+use App\Factory\TeamFactory;
+use App\Tests\TestObjectFactory;
 use App\ValueObjects\HistoryFormatter;
-use App\ValueObjects\Match;
-use App\Entity\History;
 use App\Entity\Team;
 use App\Models\HistoryModel;
 use App\Repository\HistoryRepository;
@@ -32,12 +33,15 @@ class HistoryModelTest extends TestCase
     /** @var HistoryModel */
     private $historyModel;
 
+    /** @var TeamFactory|MockObject */
+    private $teamFactory;
+
     public function setUp(): void
     {
         $this->em = $this->createMock(EntityManager::class);
         $this->historyRepository = $this->createMock(HistoryRepository::class);
         $this->historyFormatter = $this->createMock(HistoryFormatter::class);
-
+        $this->teamFactory = $this->createMock(TeamFactory::class);
         $this->buildHistoryModel();
     }
 
@@ -58,24 +62,16 @@ class HistoryModelTest extends TestCase
     {
         $request = $this->createDummyAddHistoryRequest();
 
+        /** @var Team|MockObject $winnerTeam */
         $winnerTeam = $this->createMock(Team::class);
+        $winnerTeam->method('getId')->willReturn(1);
+        $winnerTeam->method('getPlayers')->willReturn([TestObjectFactory::createPlayer('Player 1')]);
+        /** @var Team|MockObject $loserTeam */
         $loserTeam = $this->createMock(Team::class);
-        $history = $this->createMock(History::class);
-
-        $match = $this->createMock(Match::class);
-        $match->expects($this->once())->method('execute');
-        $match->expects($this->once())->method('getWinner')->willReturn($winnerTeam);
-        $match->expects($this->once())->method('getLoser')->willReturn($loserTeam);
-        $match->expects($this->exactly(2))->method('getHistory')->willReturn($history);
-
-        $this->historyRepository->expects($this->once())->method('createMatchFrom')->with($request)->willReturn($match);
-
-        $this->em->expects($this->at(0))->method('persist')->with($history);
-        $this->em->expects($this->at(1))->method('persist')->with($winnerTeam);
-        $this->em->expects($this->at(2))->method('persist')->with($loserTeam);
-        $this->em->expects($this->once())->method('flush');
-
-        $this->historyFormatter->expects($this->once())->method('format')->with([$history]);
+        $loserTeam->method('getId')->willReturn(2);
+        $loserTeam->method('getPlayers')->willReturn([TestObjectFactory::createPlayer('Player21')]);
+        $this->teamFactory->expects($this->at(0))->method('createTeamFromPlayerIds')->with(self::WINNER_IDS)->willReturn($winnerTeam);
+        $this->teamFactory->expects($this->at(1))->method('createTeamFromPlayerIds')->with(self::LOSER_IDS)->willReturn($loserTeam);
 
         $result = $this->historyModel->addHistory($request);
 
@@ -87,7 +83,9 @@ class HistoryModelTest extends TestCase
         $this->historyModel = new HistoryModel(
             $this->em,
             $this->historyRepository,
-            $this->historyFormatter
+            $this->historyFormatter,
+            $this->teamFactory,
+            $this->createMock(RosterFactory::class)
         );
     }
 
@@ -102,33 +100,3 @@ class HistoryModelTest extends TestCase
         return $request;
     }
 }
-
-/*
- *
- *
- * For Match test:
-        $player = $this->createMock(Player::class);
-        $player->expects($this->exactly(2))->method('getElo')->willReturn(1000);
-$winnerTeam = $this->createMock(Team::class);
-$winnerTeam->expects($this->once())->method('getId')->willReturn(1);
-$winnerTeam->expects($this->once())->method('win')->with(10);
-$winnerTeam->expects($this->once())->method('getPlayers')->willReturn([$player]);
-$this->rosterRepository
-    ->expects($this->at(0))
-    ->method('getTeamForPlayers')
-    ->with(self::WINNER_IDS)
-    ->willReturn($winnerTeam);
-
-$loserTeam = $this->createMock(Team::class);
-$loserTeam->expects($this->once())->method('getId')->willReturn(2);
-$loserTeam->expects($this->once())->method('lose')->with(-10);
-$loserTeam->expects($this->once())->method('getPlayers')->willReturn([$player]);
-$this->rosterRepository
-    ->expects($this->at(1))
-    ->method('getTeamForPlayers')
-    ->with(self::LOSER_IDS)
-    ->willReturn($loserTeam);
-
-$this->buildHistoryModel();
-
-*/

@@ -5,6 +5,9 @@ namespace App\Tests;
 
 
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Common\Persistence\ManagerRegistry;
+use Exception;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class DatabaseTestCase extends KernelTestCase
@@ -23,21 +26,37 @@ class DatabaseTestCase extends KernelTestCase
     /**
      * @param array $tableNames
      * @param bool $cascade
-     * @throws \Doctrine\DBAL\DBALException
      */
-    protected function truncateTables($tableNames = array(), $cascade = false) {
+    protected function truncateTables($tableNames = array(), $cascade = false): void {
         $connection = $this->getEntityManager()->getConnection();
-        $platform = $connection->getDatabasePlatform();
-        $connection->executeQuery('SET FOREIGN_KEY_CHECKS = 0;');
-        foreach ($tableNames as $name) {
-            $connection->executeUpdate($platform->getTruncateTableSQL($name,$cascade));
+        try {
+            $platform = $connection->getDatabasePlatform();
+            $connection->executeQuery('SET FOREIGN_KEY_CHECKS = 0;');
+            foreach ($tableNames as $name) {
+                $connection->executeUpdate($platform->getTruncateTableSQL($name, $cascade));
+            }
+            $connection->executeQuery('SET FOREIGN_KEY_CHECKS = 1;');
+        } catch(Exception $e) {
+            printf ("Could not truncate tables: %s because: %s", implode(', ', $tableNames), $e->getMessage());
         }
-        $connection->executeQuery('SET FOREIGN_KEY_CHECKS = 1;');
     }
 
+    protected function truncateDatabase(): void {
+        throw new Exception('Not implemented yet');
+    }
 
     protected function getTableNameForEntity(string $entity): string
     {
         return $this->getEntityManager()->getClassMetadata($entity)->getTableName();
+    }
+
+    /**
+     * @return ManagerRegistry|MockObject
+     */
+    protected function getMockedManagerRegistryForClass(): ManagerRegistry
+    {
+        $managerRegistry = $this->createMock(ManagerRegistry::class);
+        $managerRegistry->method('getManagerForClass')->willReturn($this->getEntityManager());
+        return $managerRegistry;
     }
 }

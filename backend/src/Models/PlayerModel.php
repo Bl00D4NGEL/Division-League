@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Factory\PlayerFactory;
 use App\Repository\PlayerRepository;
 use App\Resource\AddPlayerRequest;
 use App\Resource\JsonResponse\ErrorResponse;
@@ -17,10 +18,14 @@ class PlayerModel
     /** @var EntityManagerInterface */
     private $entityManager;
 
-    public function __construct(EntityManagerInterface $entityManager, PlayerRepository $playerRepository)
+    /** @var PlayerFactory */
+    private $playerFactory;
+
+    public function __construct(EntityManagerInterface $entityManager, PlayerRepository $playerRepository, PlayerFactory $playerFactory)
     {
         $this->playerRepository = $playerRepository;
         $this->entityManager = $entityManager;
+        $this->playerFactory = $playerFactory;
     }
 
     /**
@@ -35,7 +40,7 @@ class PlayerModel
         if ($this->doesPlayerAlreadyExist($request)) {
             return new ErrorResponse(sprintf(ErrorResponse::PLAYER_DOES_ALREADY_EXIST, $request->name));
         }
-        $player = $this->playerRepository->createFrom($request);
+        $player = $this->playerFactory->createFromRequest($request);
 
         $this->entityManager->persist($player);
         $this->entityManager->flush();

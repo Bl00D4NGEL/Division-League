@@ -6,7 +6,6 @@ use App\Entity\History;
 use App\Entity\Player;
 use App\Entity\Team;
 use App\Service\EloCalculator;
-use Exception;
 
 class Match
 {
@@ -18,9 +17,6 @@ class Match
 
     /** @var string */
     private $proofUrl;
-
-    /** @var History */
-    private $history;
 
     /**
      * @param Team $team
@@ -61,10 +57,7 @@ class Match
         return $this;
     }
 
-    /**
-     * @return void
-     */
-    public function execute(): void
+    public function execute(): History
     {
         $eloCalculator = new EloCalculator(
             $this->getAverageEloForPlayers($this->winner->getPlayers()),
@@ -74,13 +67,14 @@ class Match
         $this->loser->lose($eloCalculator->getEloChangeForLoser());
         $this->winner->win($eloCalculator->getEloChangeForWinner());
 
-        $this->history = new History();
-        $this->history
+        $history = new History();
+        $history
             ->setLoser($this->loser->getId())
             ->setWinner($this->winner->getId())
             ->setLoserGain($eloCalculator->getEloChangeForLoser())
             ->setWinnerGain($eloCalculator->getEloChangeForWinner())
             ->setProofUrl($this->proofUrl);
+        return $history;
     }
 
     /**
@@ -96,17 +90,5 @@ class Match
                 }, $players)
             ) / count($players)
         );
-    }
-
-    /**
-     * @return History
-     * @throws Exception
-     */
-    public function getHistory(): History
-    {
-        if ($this->history === null) {
-            throw new Exception('Execute function hasn\'t generated a history yet. Please call `execute` before this.');
-        }
-        return $this->history;
     }
 }

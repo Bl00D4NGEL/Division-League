@@ -4,23 +4,16 @@ namespace App\ValueObjects;
 
 use App\Entity\History;
 use App\Entity\Player;
-use App\Repository\RosterRepository;
-use App\Repository\TeamRepository;
+use App\Factory\TeamFactory;
 
 class HistoryFormatter
 {
-    /** @var RosterRepository */
-    private $rosterRepository;
+    /** @var TeamFactory */
+    private $teamFactory;
 
-    /** @var TeamRepository */
-    private $teamRepository;
-
-    public function __construct(
-        RosterRepository $rosterRepository,
-        TeamRepository $teamRepository)
+    public function __construct(TeamFactory $teamFactory)
     {
-        $this->rosterRepository = $rosterRepository;
-        $this->teamRepository = $teamRepository;
+        $this->teamFactory = $teamFactory;
     }
 
     /**
@@ -31,15 +24,17 @@ class HistoryFormatter
     {
         $historyData = [];
         foreach ($histories as $history) {
+            $winnerTeam = $this->teamFactory->createFromId($history->getWinner());
+            $loserTeam = $this->teamFactory->createFromId($history->getLoser());
             $historyData[] = [
-                "winner" => $this->mapPlayerArray($this->rosterRepository->getPlayersForTeam($history->getWinner())),
-                "loser" => $this->mapPlayerArray($this->rosterRepository->getPlayersForTeam($history->getLoser())),
+                "winner" => $this->mapPlayerArray($winnerTeam->getPlayers()),
+                "loser" => $this->mapPlayerArray($loserTeam->getPlayers()),
                 "proofUrl" => $history->getProofUrl(),
-                "winnerTeamName" => $this->teamRepository->getTeamName($history->getWinner()),
-                "loserTeamName" => $this->teamRepository->getTeamName($history->getLoser()),
+                "winnerTeamName" => $winnerTeam->getName(),
+                "loserTeamName" => $loserTeam->getName(),
                 "winnerEloWin" => $history->getWinnerGain(),
                 "loserEloLose" => $history->getLoserGain(),
-                "id" => $history->getId()
+                "id" => $history->getId(),
             ];
         }
         return $historyData;
