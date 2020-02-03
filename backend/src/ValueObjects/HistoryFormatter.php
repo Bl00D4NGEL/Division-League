@@ -34,6 +34,7 @@ class HistoryFormatter
                 "loserTeamName" => $loserTeam->getName(),
                 "winnerEloWin" => $history->getWinnerGain(),
                 "loserEloLose" => $history->getLoserGain(),
+                "creationTime" => $history->getCreateTime()->getTimestamp(),
                 "id" => $history->getId(),
             ];
         }

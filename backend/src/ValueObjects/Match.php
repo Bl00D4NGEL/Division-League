@@ -6,6 +6,7 @@ use App\Entity\History;
 use App\Entity\Player;
 use App\Entity\Team;
 use App\Service\EloCalculator;
+use DateTime;
 
 class Match
 {
@@ -73,7 +74,8 @@ class Match
             ->setWinner($this->winner->getId())
             ->setLoserGain($eloCalculator->getEloChangeForLoser())
             ->setWinnerGain($eloCalculator->getEloChangeForWinner())
-            ->setProofUrl($this->proofUrl);
+            ->setProofUrl($this->proofUrl)
+            ->setCreateTime(new DateTime());
         return $history;
     }
 

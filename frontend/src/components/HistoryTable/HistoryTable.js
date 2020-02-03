@@ -17,6 +17,7 @@ export default function HistoryTable() {
         return historyData.map(entry => {
             return [
                 entry.id,
+                new Date(entry.creationTime * 1000).toLocaleString(),
                 entry.winner[0].league,
                 <div>
                     <span title={entry.winner.map(w => w.name).join(", ")}>{entry.winnerTeamName}</span>
@@ -34,7 +35,7 @@ export default function HistoryTable() {
     return <Loader
         isLoaded={isLoaded}
         error={error}
-        content={<Table defaultReverseSort={true} sortable={true} defaultSortKey={0} tableHead={['ID', 'League', 'Winner', 'Loser', 'Proof']}
+        content={<Table defaultReverseSort={true} sortable={true} defaultSortKey={0} tableHead={['ID', 'Creation time', 'League', 'Winner', 'Loser', 'Proof']}
                         tableData={generateHistoryTableRows()}/>}
     />
 

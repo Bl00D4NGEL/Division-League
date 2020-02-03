@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -40,6 +41,11 @@ class History
      * @ORM\Column(type="string", length=255)
      */
     private $proofUrl;
+
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $createTime;
 
     public function getId(): ?int
     {
@@ -110,6 +116,18 @@ class History
     public function setProofUrl(string $proof_url): self
     {
         $this->proofUrl = $proof_url;
+
+        return $this;
+    }
+
+    public function getCreateTime(): ?DateTimeInterface
+    {
+        return $this->createTime;
+    }
+
+    public function setCreateTime(DateTimeInterface $createTime): self
+    {
+        $this->createTime = $createTime;
 
         return $this;
     }
