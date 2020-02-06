@@ -47,8 +47,12 @@ class MatchTest extends TestCase
             ->setLoser(2)
             ->setWinnerGain(12)
             ->setLoserGain(-12);
+        $expectedValues = $expected->asArray();
+        $actualValues = $history->asArray();
+        // Manually set this to null because comparing dates is hard
+        $actualValues['createTime'] = null;
 
         $this->assertInstanceOf(History::class, $history);
-        $this->assertSame($expected->asArray(), $history->asArray());
+        $this->assertSame($expectedValues, $actualValues);
     }
 }

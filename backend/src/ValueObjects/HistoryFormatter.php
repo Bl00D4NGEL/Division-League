@@ -4,16 +4,16 @@ namespace App\ValueObjects;
 
 use App\Entity\History;
 use App\Entity\Player;
-use App\Factory\TeamFactory;
+use App\Factory\HistoryFactory;
 
 class HistoryFormatter
 {
-    /** @var TeamFactory */
-    private $teamFactory;
+    /** @var HistoryFactory */
+    private $historyFactory;
 
-    public function __construct(TeamFactory $teamFactory)
+    public function __construct(HistoryFactory $historyFactory)
     {
-        $this->teamFactory = $teamFactory;
+        $this->historyFactory = $historyFactory;
     }
 
     /**
@@ -24,8 +24,9 @@ class HistoryFormatter
     {
         $historyData = [];
         foreach ($histories as $history) {
-            $winnerTeam = $this->teamFactory->createFromId($history->getWinner());
-            $loserTeam = $this->teamFactory->createFromId($history->getLoser());
+            $richHistory = $this->historyFactory->createFromId($history->getId());
+            $winnerTeam = $richHistory->getWinnerObject();
+            $loserTeam = $richHistory->getLoserObject();
             $historyData[] = [
                 "winner" => $this->mapPlayerArray($winnerTeam->getPlayers()),
                 "loser" => $this->mapPlayerArray($loserTeam->getPlayers()),

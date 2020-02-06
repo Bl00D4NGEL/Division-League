@@ -3,10 +3,12 @@
 namespace App\Tests\ValueObjects;
 
 use App\Entity\Team;
-use App\Factory\TeamFactory;
+use App\Factory\HistoryFactory;
 use App\ValueObjects\HistoryFormatter;
 use App\Entity\History;
 use App\Entity\Player;
+use App\ValueObjects\RichHistory;
+use DateTime;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -15,12 +17,12 @@ class HistoryFormatterTest extends TestCase
     /** @var HistoryFormatter */
     private $formatter;
 
-    /** @var TeamFactory|MockObject */
-    private $teamFactory;
+    /** @var HistoryFactory|MockObject */
+    private $historyFactory;
 
     public function setUp(): void
     {
-        $this->teamFactory = $this->createMock(TeamFactory::class);
+        $this->historyFactory = $this->createMock(HistoryFactory::class);
         $this->buildFormatter();
     }
 
@@ -34,27 +36,31 @@ class HistoryFormatterTest extends TestCase
     {
         $history = $this->createMock(History::class);
 
-        $history->expects($this->once())->method('getWinner')->willReturn(1);
-        $history->expects($this->once())->method('getLoser')->willReturn(2);
-
         $history->expects($this->once())->method('getProofUrl')->willReturn('proof.url');
         $history->expects($this->once())->method('getWinnerGain')->willReturn(1);
         $history->expects($this->once())->method('getLoserGain')->willReturn(2);
-        $history->expects($this->once())->method('getId')->willReturn(1);
+        $history->expects($this->exactly(2))->method('getId')->willReturn(1);
+        $dateTime = $this->createMock(DateTime::class);
+        $dateTime->expects($this->once())->method('getTimestamp')->willReturn(123456789);
+        $history->expects($this->once())->method('getCreateTime')->willReturn($dateTime);
 
         $winner = $this->createMock(Player::class);
         $winner->expects($this->once())->method('asArray')->willReturn(['player' => 1]);
         $winnerTeam = $this->createMock(Team::class);
         $winnerTeam->expects($this->once())->method('getPlayers')->willReturn([$winner]);
         $winnerTeam->expects($this->once())->method('getName')->willReturn('winner');
-        $this->teamFactory->expects($this->at(0))->method('createFromId')->with(1)->willReturn($winnerTeam);
 
         $loser = $this->createMock(Player::class);
         $loser->expects($this->once())->method('asArray')->willReturn(['player' => 2]);
         $loserTeam = $this->createMock(Team::class);
         $loserTeam->expects($this->once())->method('getPlayers')->willReturn([$loser]);
         $loserTeam->expects($this->once())->method('getName')->willReturn('loser');
-        $this->teamFactory->expects($this->at(1))->method('createFromId')->with(2)->willReturn($loserTeam);
+
+        $richHistory = $this->createMock(RichHistory::class);
+        $richHistory->expects($this->once())->method('getLoserObject')->willReturn($loserTeam);
+        $richHistory->expects($this->once())->method('getWinnerObject')->willReturn($winnerTeam);
+
+        $this->historyFactory->expects($this->once())->method('createFromId')->willReturn($richHistory);
 
         $this->buildFormatter();
 
@@ -76,6 +82,7 @@ class HistoryFormatterTest extends TestCase
                 "loserTeamName" => "loser",
                 "winnerEloWin" => 1,
                 "loserEloLose" => 2,
+                "creationTime" => 123456789,
                 "id" => 1
             ]
         ];
@@ -85,6 +92,6 @@ class HistoryFormatterTest extends TestCase
 
     private function buildFormatter(): void
     {
-        $this->formatter = new HistoryFormatter($this->teamFactory);
+        $this->formatter = new HistoryFormatter($this->historyFactory);
     }
 }

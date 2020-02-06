@@ -1,9 +1,11 @@
 <?php
+
 namespace App\Tests\Repository;
 
 use App\Entity\History;
 use App\Repository\HistoryRepository;
 use App\Tests\DatabaseTestCase;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 
 /**
@@ -40,11 +42,12 @@ class HistoryRepositoryTest extends DatabaseTestCase
         $expectedLastTwo = [];
         for ($i = 0; $i < 5; $i++) {
             $history = new History();
-            $history->setWinner($i+1)
-                ->setLoser($i+2)
+            $history->setWinner($i + 1)
+                ->setLoser($i + 2)
                 ->setWinnerGain(10)
                 ->setLoserGain(-10)
-                ->setProofUrl('test.url');
+                ->setProofUrl('test.url')
+                ->setCreateTime(new DateTime());
 
             $this->entityManager->persist($history);
             if ($i > 2) {
