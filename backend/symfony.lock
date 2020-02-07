@@ -158,7 +158,7 @@
             "repo": "github.com/symfony/recipes",
             "branch": "master",
             "version": "1.5",
-            "ref": "f0436fc35fca88eada758311f8de43bfb61f1980"
+            "ref": "6388de23860284db9acce0a7a5d9d13153bcb571"
         },
         "files": [
             "./config/packages/nelmio_cors.yaml"
@@ -476,6 +476,9 @@
     },
     "symplify/smart-file-system": {
         "version": "v7.2.1"
+    },
+    "tracy/tracy": {
+        "version": "v2.7.2"
     },
     "twig/twig": {
         "version": "v2.11.3"

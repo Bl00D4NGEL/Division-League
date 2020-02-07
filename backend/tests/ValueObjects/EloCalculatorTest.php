@@ -1,7 +1,7 @@
 <?php
 namespace App\Tests\Service;
 
-use App\Service\EloCalculator;
+use App\ValueObjects\EloCalculator;
 use PHPUnit\Framework\TestCase;
 
 class EloCalculatorTest extends TestCase

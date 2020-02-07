@@ -15,6 +15,7 @@ class ErrorResponse extends JsonResponse
     public function __construct($message = null, int $status = null, array $headers = [])
     {
         $headers["X-Content-Type-Options"] = 'nosniff';
+        $headers['Access-Control-Allow-Origin'] = '*';
         parent::__construct(["status" => "error", "message" => $message], $status ?? Response::HTTP_BAD_REQUEST, $headers);
     }
 }

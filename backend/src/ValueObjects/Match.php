@@ -5,7 +5,6 @@ namespace App\ValueObjects;
 use App\Entity\History;
 use App\Entity\Player;
 use App\Entity\Team;
-use App\Service\EloCalculator;
 use DateTime;
 
 class Match

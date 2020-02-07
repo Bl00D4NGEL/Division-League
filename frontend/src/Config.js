@@ -1,4 +1,4 @@
-const _apiUrl = 'http://localhost:8000';
+const _apiUrl = 'https://localhost:8000';
 
 const _mdrUrL = 'http://localhost:2048';
 
