@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Models\StatisticModel;
 use JMS\Serializer\SerializerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -12,21 +13,21 @@ class StatisticController extends AbstractController
 {
     /** @var SerializerInterface */
     private $serializer;
+    /** @var StatisticModel */
+    private $statisticModel;
 
-    public function __construct(SerializerInterface $serializer)
+    public function __construct(SerializerInterface $serializer, StatisticModel $statisticModel)
     {
         $this->serializer = $serializer;
+        $this->statisticModel = $statisticModel;
     }
 
     /**
      * @Route("/statistics/get/gamesPerWeek", name="statistics_get_games_per_week")
-     * @param Request $request
      * @return JsonResponse
      */
-    public function statisticsGetGamesPerWeek(Request $request)
+    public function statisticsGetGamesPerWeek(): JsonResponse
     {
-        return new JsonResponse([
-            'hello' => 'world'
-        ]);
+        return $this->statisticModel->getGamesPerWeek();
     }
 }

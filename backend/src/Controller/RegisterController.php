@@ -29,7 +29,7 @@ class RegisterController extends AbstractController
      * @param Request $request
      * @return JsonResponse
      */
-    public function login(Request $request): JsonResponse
+    public function register(Request $request): JsonResponse
     {
         $req = $this->serializer->deserialize($request->getContent(), RegisterRequest::class, 'json');
         return $this->registerModel->register($req);
