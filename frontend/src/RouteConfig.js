@@ -5,6 +5,7 @@ import Login from "./components/Login/Login";
 import UserRoles from "./UserRoles";
 import Admin from "./components/Admin/Admin";
 import AddHistoryMulti from "./components/AddHistoryMulti/AddHistoryMulti";
+import Statistics from "./components/Statistics/Statistics";
 
 export default class RouteConfig {
     static config = [
@@ -33,6 +34,13 @@ export default class RouteConfig {
             'path': '/add/player',
             'component': AddPlayer,
             'name': 'Add Player',
+            'requiresLogin': true,
+            'requiredRole': UserRoles.MODERATOR
+        },
+        {
+            'path': '/statistics',
+            'component': Statistics,
+            'name': 'Statistics',
             'requiresLogin': true,
             'requiredRole': UserRoles.MODERATOR
         },

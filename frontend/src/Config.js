@@ -54,6 +54,10 @@ export default class Config {
     static mdrDivisionMembersEndPoint(division) {
         return new Endpoint(_mdrUrL + '/get/divisionMembers/' + division);
     }
+
+    static getStatisticsEndPoint() {
+        return new Endpoint(this._getApiUrlBase() + '/statistics/get/gamesPerWeek');
+    }
 }
 
 class Endpoint {
