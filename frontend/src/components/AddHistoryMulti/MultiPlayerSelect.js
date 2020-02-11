@@ -41,7 +41,7 @@ export default function MultiPlayerSelect({RenderComponent, players, setSelected
                 selectedPlayers.map((p, i) => <div key={i} style={{margin: '0 20px 0 0'}}>
                         <RenderComponent
                             value={p}
-                            players={players}
+                            players={players.sort((a,b) => a.name.localeCompare(b.name))}
                             onChange={
                                 e => {
                                     setSelectedPlayersBoth(
