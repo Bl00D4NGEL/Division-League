@@ -15,6 +15,7 @@ use App\Tests\TestObjectFactory;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 
+/** @group Database */
 class StatisticModelTest extends DatabaseTestCase
 {
     /** @var StatisticModel */

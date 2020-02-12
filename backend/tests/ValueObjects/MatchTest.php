@@ -45,8 +45,8 @@ class MatchTest extends TestCase
         $expected->setProofUrl('proof.url')
             ->setWinner(1)
             ->setLoser(2)
-            ->setWinnerGain(12)
-            ->setLoserGain(-12);
+            ->setWinnerGain(14)
+            ->setLoserGain(-9);
         $expectedValues = $expected->asArray();
         $actualValues = $history->asArray();
         // Manually set this to null because comparing dates is hard

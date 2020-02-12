@@ -20,12 +20,12 @@ class EloCalculator
 
     public function getEloChangeForLoser(): int
     {
-        return -ceil($this->getKFactor() * $this->calculateLoseChance());
+        return -ceil($this->getKFactor() * $this->calculateLoseChance() * 0.75);
     }
 
     public function getEloChangeForWinner(): int
     {
-        return ceil($this->getKFactor() * $this->calculateWinChance());
+        return ceil($this->getKFactor() * $this->calculateWinChance() * 1.25);
     }
 
     private function getKFactor(): float
