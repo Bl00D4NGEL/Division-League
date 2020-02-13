@@ -1,0 +1,12 @@
+{
+  "type": "module",
+  "name": "importnewplayers",
+  "version": "1.0.0",
+  "description": "Imports new players into the division league",
+  "main": "index.js",
+  "author": "Dominik Bl00D4NGEL Peters",
+  "license": "ISC",
+  "dependencies": {
+    "node-fetch": "^2.6.0"
+  }
+}
