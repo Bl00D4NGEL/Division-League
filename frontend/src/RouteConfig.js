@@ -66,10 +66,19 @@ export default class RouteConfig {
     }
 
     static getDefaultPath() {
-        const defaultConfig = RouteConfig.config.filter(d => {return d.default});
-        if (defaultConfig !== undefined && defaultConfig.length === 1) {
-            return defaultConfig[0].path;
+
+        const defaultConfig = this.getDefault();
+        if (null !== defaultConfig) {
+            return defaultConfig.path;
         }
         return '/';
+    }
+
+    static getDefault() {
+        const defaultConfig = RouteConfig.config.filter(d => {return d.default});
+        if (defaultConfig !== undefined && defaultConfig.length === 1) {
+            return defaultConfig[0];
+        }
+        return null;
     }
 }

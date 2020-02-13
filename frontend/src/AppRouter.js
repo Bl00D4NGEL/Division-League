@@ -1,5 +1,5 @@
 import RouteConfig from "./RouteConfig";
-import {BrowserRouter, Redirect, Route} from "react-router-dom";
+import {BrowserRouter, Redirect, Route, Switch} from "react-router-dom";
 import React, {useState} from "react";
 import UserRoles from "./UserRoles";
 import Navigation from "./components/Navigation/Navigation";
@@ -10,7 +10,11 @@ export default function AppRouter() {
     const [user, setUser] = useState({role: UserRoles.NORMAL});
 
     const generateRoutes = () => {
-        return RouteConfig.getAll().map((route) => {
+        return RouteConfig.getAll().map(route => {
+            console.log(route);
+            if (route.requiresLogin && !isLoggedIn) {
+                return null;
+            }
             if (route.shouldRender === true) {
                 return <Route key={route.path} path={route.path}
                               render={() => <route.component isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn}
@@ -21,11 +25,13 @@ export default function AppRouter() {
     };
 
     return <BrowserRouter>
-        {window.location.pathname === '/' ? <Redirect to={RouteConfig.getDefaultPath()}/> : null}
         <div className="main">
             <Navigation isLoggedIn={isLoggedIn} user={user}/>
             <div className="content">
-                {generateRoutes()}
+                <Switch>
+                    {generateRoutes()}
+                    <Redirect to={RouteConfig.getDefaultPath()}/>
+                </Switch>
             </div>
             <Footer/>
         </div>
