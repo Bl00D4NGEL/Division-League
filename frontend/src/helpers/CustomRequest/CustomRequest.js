@@ -1,10 +1,10 @@
 export default function CustomRequest(endpoint, onSuccess, onError, data) {
-    const _successCallback = (result) => {
-        console.log(result);
-    };
-    const _errorCallback = (error) => {
-        console.error(error);
-    };
+    if (endpoint === undefined) {
+        return;
+    }
+
+    const _successCallback = console.log;
+    const _errorCallback = console.error;
 
     if (onSuccess === undefined) {
         onSuccess = _successCallback;
@@ -12,10 +12,6 @@ export default function CustomRequest(endpoint, onSuccess, onError, data) {
 
     if (onError === undefined) {
         onError = _errorCallback;
-    }
-
-    if (endpoint === undefined) {
-        return;
     }
 
     const prepareRequest = () => {
@@ -29,12 +25,10 @@ export default function CustomRequest(endpoint, onSuccess, onError, data) {
         return new Request(endpoint.url(), opts);
     };
 
-    fetch(prepareRequest()).then(data => {
-        console.log(data);
-        return data;
-    }).then(res => res.json())
+    fetch(prepareRequest())
+        .then(res => res.json())
         .then(
-            (res) => {
+            res => {
                 if (res.status === 'error') {
                     onError(res);
                 } else {
