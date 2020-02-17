@@ -3,36 +3,15 @@ import Label from "../BaseReactComponents/Label/Label";
 import TextInput from "../BaseReactComponents/TextInput/TextInput";
 import SubmitButton from "../BaseReactComponents/SubmitButton/SubmitButton";
 
-export default function AddPlayerFormFields({setName, setDivision, setPlayerId, setLeague}) {
-    const labelConfig = [
-        {
-            text: 'Name',
-            key: 'name',
-            setter: setName
-        },
-        {
-            text: 'Division',
-            key: 'division',
-            setter: setDivision
-        }, {
-            text: 'Player ID',
-            key: 'playerId',
-            setter: setPlayerId
-        }, {
-            text: 'League',
-            key: 'league',
-            setter: setLeague
-        }
-    ];
-
+export default function AddPlayerFormFields({labelConfig}) {
     const generateLabels = () => {
         return (
             <div>
-                {labelConfig.map((c) => {
+                {labelConfig.map(config => {
                     return <div>
                         <Label
-                            text={c.text}
-                            formField={generateTextInput(c.key, c.setter)}
+                            text={config.text}
+                            formField={generateTextInput(config.key, config.setter)}
                         />
                     </div>
                 })}

@@ -15,7 +15,28 @@ export default function AddPlayerForm() {
     const [playerId, setPlayerId] = useOnChangeSetter(undefined);
     const [league, setLeague] = useOnChangeSetter(undefined);
 
-    const handleSubmit = (e) => {
+    const labelConfig = [
+        {
+            text: 'Name',
+            key: 'name',
+            setter: setName
+        },
+        {
+            text: 'Division',
+            key: 'division',
+            setter: setDivision
+        }, {
+            text: 'Player ID',
+            key: 'playerId',
+            setter: setPlayerId
+        }, {
+            text: 'League',
+            key: 'league',
+            setter: setLeague
+        }
+    ];
+
+    const handleSubmit = e => {
         e.preventDefault();
         if (AddPlayerValidator.isValid({name, division, playerId, league})) {
             AddPlayerService({setIsLoaded, setResult, setError, name, division, playerId, league});
@@ -26,10 +47,7 @@ export default function AddPlayerForm() {
             onSubmit={handleSubmit}
             formFields={
                 <AddPlayerFormFields
-                    setDivision={setDivision}
-                    setLeague={setLeague}
-                    setName={setName}
-                    setPlayerId={setPlayerId}
+                    labelConfig={labelConfig}
                 />
             }
         />

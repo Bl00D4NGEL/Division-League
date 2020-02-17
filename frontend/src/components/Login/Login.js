@@ -4,7 +4,6 @@ import Config from "../../Config";
 import Label from "../BaseReactComponents/Label/Label";
 import TextInput from "../BaseReactComponents/TextInput/TextInput";
 import PasswordInput from "../BaseReactComponents/PasswordInput/PasswordInput";
-import FakeLoader from "../BaseReactComponents/Loader/FakeLoader";
 import CustomForm from "../BaseReactComponents/Form/Form";
 import Loader from "../BaseReactComponents/Loader/Loader";
 import SubmitButton from "../BaseReactComponents/SubmitButton/SubmitButton";
@@ -63,20 +62,18 @@ export default function Login({isLoggedIn, setIsLoggedIn, setUserData}) {
         );
     };
 
-    return <FakeLoader content={
-        <CustomForm
-            onSubmit={handleSubmit}
-            formFields={
-                <div>
-                    {generateFormFields()}
-                    <SubmitButton value="Login"/>
-                    <Loader
-                        isLoaded={isLoaded}
-                        error={error}
-                        content={(isLoggedIn ? 'User logged in!' : '')}
-                    />
-                </div>
-            }
-        />
-    }/>;
+    return <CustomForm
+        onSubmit={handleSubmit}
+        formFields={
+            <div>
+                {generateFormFields()}
+                <SubmitButton value="Login"/>
+                <Loader
+                    isLoaded={isLoaded}
+                    error={error}
+                    content={(isLoggedIn ? 'User logged in!' : '')}
+                />
+            </div>
+        }
+    />
 }
