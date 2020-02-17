@@ -25,7 +25,7 @@ class LoginController extends AbstractController
     }
 
     /**
-     * @Route("/login", name="login")
+     * @Route("/login", name="login", methods={"POST"})
      * @param Request $request
      * @return JsonResponse
      */
@@ -33,5 +33,14 @@ class LoginController extends AbstractController
     {
         $req = $this->serializer->deserialize($request->getContent(), LoginRequest::class, 'json');
         return $this->loginModel->login($req);
+    }
+
+    /**
+     * @Route("/auth", name="auth", methods={"GET"})
+     * @return JsonResponse
+     */
+    public function auth(): JsonResponse
+    {
+        return $this->loginModel->auth();
     }
 }

@@ -18,6 +18,10 @@ export default class Config {
     static loginEndpointUrl() {
         return this._getApiUrlBase() + '/login';
     }
+
+    static authEndpointUrl() {
+        return this._getApiUrlBase() + '/auth';
+    }
     
     static registerEndpointUrl() {
         return this._getApiUrlBase() + '/register';
@@ -45,6 +49,10 @@ export default class Config {
 
     static loginEndpoint() {
         return new Endpoint(this.loginEndpointUrl(), 'POST');
+    }
+
+    static authEndpoint() {
+        return new Endpoint(this.authEndpointUrl(), 'GET');
     }
 
     static registerUserEndPoint() {

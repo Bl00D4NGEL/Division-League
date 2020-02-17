@@ -12,7 +12,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use PHPUnit\Framework\MockObject\MockObject;
 
-/** group Database */
+/** @group Database */
 class TeamRepositoryTest extends DatabaseTestCase
 {
     /** @var EntityManagerInterface */

@@ -18,30 +18,21 @@ export default function CustomRequest(endpoint, onSuccess, onError, data) {
         return;
     }
 
-    const prepareGetRequest = () => {
-        return new Request(endpoint.url());
-    };
-
-    const prepareRequest = (postData) => {
-        return new Request(
-            endpoint.url(),
-            {
-                method: endpoint.method(),
-                body: JSON.stringify(
-                    postData !== undefined ? postData : {}
-                )
-            }
-        );
-    };
-
-    const fetchRequest = (method, requestData) => {
-        if (method === 'GET') {
-            return prepareGetRequest();
+    const prepareRequest = () => {
+        const opts = {
+            method: endpoint.method(),
+            credentials: 'include'
+        };
+        if (data !== undefined) {
+            opts.body = JSON.stringify(data);
         }
-        return prepareRequest(requestData);
+        return new Request(endpoint.url(), opts);
     };
 
-    fetch(fetchRequest(endpoint.method(), data)).then(res => res.json())
+    fetch(prepareRequest()).then(data => {
+        console.log(data);
+        return data;
+    }).then(res => res.json())
         .then(
             (res) => {
                 if (res.status === 'error') {

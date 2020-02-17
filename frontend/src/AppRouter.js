@@ -1,13 +1,12 @@
 import RouteConfig from "./RouteConfig";
 import {BrowserRouter, Redirect, Route, Switch} from "react-router-dom";
-import React, {useState} from "react";
-import UserRoles from "./UserRoles";
+import React from "react";
 import Navigation from "./components/Navigation/Navigation";
 import Footer from "./components/Footer/Footer";
+import {useAuth} from "./customHooks/useAuth";
 
 export default function AppRouter() {
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [user, setUser] = useState({role: UserRoles.NORMAL});
+    const {user, setUser, isLoggedIn, setIsLoggedIn} = useAuth();
 
     const generateRoutes = () => {
         return RouteConfig.getAll().map(route => {
