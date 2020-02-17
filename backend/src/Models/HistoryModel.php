@@ -29,6 +29,7 @@ class HistoryModel
 
     /** @var TeamFactory */
     private $teamFactory;
+
     /** @var RosterFactory */
     private $rosterFactory;
 
@@ -50,8 +51,6 @@ class HistoryModel
     /**
      * @param AddHistoryRequest $request
      * @return JsonResponse
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
      * @throws Exception
      */
     public function addHistory(AddHistoryRequest $request): JsonResponse
@@ -64,12 +63,17 @@ class HistoryModel
         if (!empty($request->winnerTeamName)) {
             $winner->setName($request->winnerTeamName);
         }
-        $this->entityManager->persist($winner);
 
         $loser = $this->teamFactory->createTeamFromPlayerIds($request->loser);
         if (!empty($request->loserTeamName)) {
             $loser->setName($request->loserTeamName);
         }
+
+        if (!$winner->isPlayerEloDifferenceValid() || !$loser->isPlayerEloDifferenceValid()) {
+            return new ErrorResponse(ErrorResponse::ELO_DIFFERENCE_TOO_BIG);
+        }
+
+        $this->entityManager->persist($winner);
         $this->entityManager->persist($loser);
 
         $this->entityManager->flush();

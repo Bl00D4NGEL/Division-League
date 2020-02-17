@@ -3,7 +3,6 @@
 namespace App\ValueObjects;
 
 use App\Entity\History;
-use App\Entity\Player;
 use App\Entity\Team;
 use DateTime;
 
@@ -60,8 +59,8 @@ class Match
     public function execute(): History
     {
         $eloCalculator = new EloCalculator(
-            $this->getAverageEloForPlayers($this->winner->getPlayers()),
-            $this->getAverageEloForPlayers($this->loser->getPlayers())
+            $this->winner->getAverageElo(),
+            $this->loser->getAverageElo()
         );
 
         $this->loser->lose($eloCalculator->getEloChangeForLoser());
@@ -76,20 +75,5 @@ class Match
             ->setProofUrl($this->proofUrl)
             ->setCreateTime(new DateTime());
         return $history;
-    }
-
-    /**
-     * @param Player[] $players
-     * @return int
-     */
-    private function getAverageEloForPlayers(array $players): int
-    {
-        return ceil(
-            array_sum(
-                array_map(function (Player $val) {
-                    return $val->getElo();
-                }, $players)
-            ) / count($players)
-        );
     }
 }

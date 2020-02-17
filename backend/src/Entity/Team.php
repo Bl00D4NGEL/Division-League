@@ -9,6 +9,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Team
 {
+    public const MAX_ELO_DIFFERENCE = 300;
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -114,5 +116,26 @@ class Team
             $player->lose($eloLose);
         }
         return $this;
+    }
+
+    public function getAverageElo(): int
+    {
+        return ceil(
+            array_sum(
+                array_map(function (Player $val) {
+                    return $val->getElo();
+                }, $this->getPlayers())
+            ) / count($this->getPlayers())
+        );
+    }
+
+    public function isPlayerEloDifferenceValid(): bool {
+        $elos = array_map(function (Player $val) {
+            return $val->getElo();
+        }, $this->getPlayers());
+        $max = max($elos);
+        $min = min($elos);
+        $diff = $max - $min;
+        return $diff < self::MAX_ELO_DIFFERENCE;
     }
 }

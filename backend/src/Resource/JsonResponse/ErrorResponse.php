@@ -11,6 +11,7 @@ class ErrorResponse extends JsonResponse
     public const PLAYER_DOES_ALREADY_EXIST = 'Player %s does already exist!';
     public const INVALID_CREDENTIALS_SENT = 'Invalid credentials sent';
     public const ERROR_PERSISTING_DATA = 'Error persisting data';
+    public const ELO_DIFFERENCE_TOO_BIG = 'Elo difference too big';
 
     public function __construct($message = null, int $status = null, array $headers = [])
     {
