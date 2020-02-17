@@ -13,12 +13,36 @@ import Error from "../Error/Error";
 
 export default function AddHistoryMultiForm({players}) {
     const [proofUrl, setProofUrl] = useOnChangeSetter(undefined);
-    const [selectedWinner, setSelectedWinner] = useState([]);
+    const [selectedWinner, _setSelectedWinner] = useState([]);
     const [winnerTeamName, setWinnerTeamName] = useOnChangeSetter('');
-    const [selectedLoser, setSelectedLoser] = useState([]);
+    const [selectedLoser, _setSelectedLoser] = useState([]);
     const [loserTeamName, setLoserTeamName] = useOnChangeSetter('');
     const [changes, _setChanges] = useState(undefined);
     const [error, setError] = useState(undefined);
+
+    const setSelectedWinner = val => {
+        if (val.length > selectedWinner.length) {
+            _setSelectedLoser(
+                [
+                    ...selectedLoser,
+                    val[val.length - 1]
+                ]
+            );
+        }
+        _setSelectedWinner(val);
+    };
+
+    const setSelectedLoser = val => {
+        if (val.length > selectedLoser.length) {
+            _setSelectedWinner(
+                [
+                    ...selectedWinner,
+                    val[val.length - 1]
+                ]
+            );
+        }
+        _setSelectedLoser(val);
+    };
 
     const setChanges = val => {
         if (val !== undefined) {
@@ -50,13 +74,13 @@ export default function AddHistoryMultiForm({players}) {
             <Label text="Winner Team name (optional)" formField={
                 <TextInput onChange={setWinnerTeamName}/>
             }/>
-            <MultiPlayerSelect RenderComponent={WinnerSelect} setSelectedPlayers={setSelectedWinner} players={players}/>
+            <MultiPlayerSelect RenderComponent={WinnerSelect} selectedPlayers={selectedWinner} setSelectedPlayers={setSelectedWinner} players={players}/>
         </div>
         <div>
             <Label text="Loser Team name (optional)" formField={
                 <TextInput onChange={setLoserTeamName}/>
             }/>
-            <MultiPlayerSelect RenderComponent={LoserSelect} setSelectedPlayers={setSelectedLoser} players={players}/>
+            <MultiPlayerSelect RenderComponent={LoserSelect} selectedPlayers={selectedLoser} setSelectedPlayers={setSelectedLoser} players={players}/>
         </div>
         <Label text="Enter proof url" formField={
             <TextInput required="required" value={proofUrl} onChange={setProofUrl}/>

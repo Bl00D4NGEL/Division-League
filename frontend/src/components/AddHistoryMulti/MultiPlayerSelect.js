@@ -1,27 +1,19 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import Button from "../BaseReactComponents/Button/Button";
 import Warning from "../Warning/Warning";
 
 const MAX_ELO_DIFFERENCE = 300;
-export default function MultiPlayerSelect({RenderComponent, players, setSelectedPlayers}) {
-    const [selectedPlayers, _setSelectedPlayers] = useState([]);
-    const setSelectedPlayersBoth = val => {
-        _setSelectedPlayers(val);
-        if (setSelectedPlayers !== undefined) {
-            setSelectedPlayers(val);
-        }
-    };
-
+export default function MultiPlayerSelect({RenderComponent, players, setSelectedPlayers, selectedPlayers}) {
     const setDefaultPlayer = () => {
         if (players.length > 0 && selectedPlayers.length === 0) {
-            setSelectedPlayersBoth([players[0].id]);
+            setSelectedPlayers([players[0].id]);
         }
     };
 
     useEffect(setDefaultPlayer, [players]);
 
     const addPlayerSelect = () => {
-        setSelectedPlayersBoth(
+        setSelectedPlayers(
             [
                 ...selectedPlayers,
                 players[0].id
@@ -30,7 +22,7 @@ export default function MultiPlayerSelect({RenderComponent, players, setSelected
     };
 
     const removePlayerSelect = i => {
-        setSelectedPlayersBoth(
+        setSelectedPlayers(
             selectedPlayers.filter((p, j) => i !== j)
         );
     };
@@ -44,7 +36,7 @@ export default function MultiPlayerSelect({RenderComponent, players, setSelected
                             players={players.sort((a,b) => a.name.localeCompare(b.name))}
                             onChange={
                                 e => {
-                                    setSelectedPlayersBoth(
+                                    setSelectedPlayers(
                                         selectedPlayers.map((x, j) => {
                                             if (j === i) {
                                                 return parseInt(e.target.value);
@@ -69,13 +61,13 @@ export default function MultiPlayerSelect({RenderComponent, players, setSelected
         const warnings = [];
         if (max - min > MAX_ELO_DIFFERENCE) {
             warnings.push(
-                <Warning
+                <Warning key='ELO_DIFFERENCE'
                     message={"Elo difference too big. Max elo difference: " + MAX_ELO_DIFFERENCE + " Current difference: " + (max - min)}/>
             );
         }
         if (selectedPlayers.length === 0) {
             warnings.push(
-                <Warning
+                <Warning key='NO_0_PLAYERS'
                     message={"You cannot have 0 players. Please add at least one player to proceed"}/>
             );
         }

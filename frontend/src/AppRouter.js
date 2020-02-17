@@ -11,7 +11,6 @@ export default function AppRouter() {
 
     const generateRoutes = () => {
         return RouteConfig.getAll().map(route => {
-            console.log(route);
             if (route.requiresLogin && !isLoggedIn) {
                 return null;
             }
