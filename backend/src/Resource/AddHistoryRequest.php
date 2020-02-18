@@ -20,8 +20,8 @@ class AddHistoryRequest
 
     /**
      * @SerializedName("proofUrl")
-     * @Type("string")
-     * @var string $proofUrl
+     * @Type("array")
+     * @var string[] $proofUrl
      */
     public $proofUrl;
 
@@ -41,17 +41,15 @@ class AddHistoryRequest
 
     public function isValid(): bool
     {
-        $playersAreDifferent = true;
         foreach ($this->winner as $player) {
             if (in_array($player, $this->loser, true)) {
-                $playersAreDifferent = false;
+                return false;
             }
         }
         return (
             count($this->winner) > 0
             && count($this->loser) > 0
-            && isset($this->proofUrl)
-            && $playersAreDifferent
+            && count($this->proofUrl) > 0
         );
     }
 }

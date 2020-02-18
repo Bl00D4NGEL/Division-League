@@ -12,9 +12,9 @@ use App\Resource\JsonResponse\ErrorResponse;
 use App\Resource\JsonResponse\SuccessResponse;
 use App\ValueObjects\Match;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Exception;
 
-use Symfony\Component\HttpFoundation\JsonResponse;
 
 class HistoryModel
 {

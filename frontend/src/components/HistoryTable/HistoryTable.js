@@ -27,7 +27,7 @@ export default function HistoryTable() {
                     <span title={entry.loser.map(w => w.name).join(", ")}>{entry.loserTeamName}</span>
                     <span> [{entry.loserEloLose}]</span>
                 </div>,
-                <a href={entry.proofUrl} target="_blank" rel="noopener noreferrer">Link</a>
+                entry.proofs.map(p => <a key={p} href={p} style={{paddingRight: 5 + 'px'}} target="_blank" rel="noopener noreferrer">Link</a>)
             ];
         });
     };

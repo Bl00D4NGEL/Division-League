@@ -3,6 +3,7 @@
 namespace App\ValueObjects;
 
 use App\Entity\History;
+use App\Entity\Proof;
 use App\Entity\Team;
 use DateTime;
 
@@ -14,7 +15,7 @@ class Match
     /** @var Team */
     private $loser;
 
-    /** @var string */
+    /** @var string[] */
     private $proofUrl;
 
     /**
@@ -49,7 +50,11 @@ class Match
         return $this->loser;
     }
 
-    public function setProofUrl(string $proof_url): self
+    /**
+     * @param string[] $proof_url
+     * @return Match
+     */
+    public function setProofUrl(array $proof_url): self
     {
         $this->proofUrl = $proof_url;
 
@@ -72,8 +77,15 @@ class Match
             ->setWinner($this->winner->getId())
             ->setLoserGain($eloCalculator->getEloChangeForLoser())
             ->setWinnerGain($eloCalculator->getEloChangeForWinner())
-            ->setProofUrl($this->proofUrl)
             ->setCreateTime(new DateTime());
+
+        foreach ($this->proofUrl as $proofUrl) {
+            $proof = new Proof();
+            $proof->setUrl($proofUrl);
+            $history->addProof($proof);
+        }
+
         return $history;
     }
+
 }

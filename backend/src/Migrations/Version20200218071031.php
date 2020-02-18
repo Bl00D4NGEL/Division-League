@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20200203055911 extends AbstractMigration
+final class Version20200218071031 extends AbstractMigration
 {
     public function getDescription() : string
     {
@@ -22,7 +22,10 @@ final class Version20200203055911 extends AbstractMigration
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
 
-        $this->addSql('ALTER TABLE history ADD create_time DATETIME NOT NULL');
+        $this->addSql('CREATE TABLE proof (id INT AUTO_INCREMENT NOT NULL, history_id INT NOT NULL, url VARCHAR(255) NOT NULL, INDEX IDX_FBF940DD1E058452 (history_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('ALTER TABLE proof ADD CONSTRAINT FK_FBF940DD1E058452 FOREIGN KEY (history_id) REFERENCES history (id)');
+        $this->addSql('INSERT INTO proof (history_id, url) SELECT id, proof_url FROM history;');
+        $this->addSql('ALTER TABLE history DROP proof_url');
     }
 
     public function down(Schema $schema) : void
@@ -30,6 +33,7 @@ final class Version20200203055911 extends AbstractMigration
         // this down() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
 
-        $this->addSql('ALTER TABLE history DROP create_time');
+        $this->addSql('DROP TABLE proof');
+        $this->addSql('ALTER TABLE history ADD proof_url VARCHAR(255) CHARACTER SET utf8mb4 NOT NULL COLLATE `utf8mb4_unicode_ci`');
     }
 }

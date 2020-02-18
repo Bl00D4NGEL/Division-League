@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use DateTimeInterface;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -38,14 +40,19 @@ class History
     private $loserGain;
 
     /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $proofUrl;
-
-    /**
      * @ORM\Column(type="datetime")
      */
     private $createTime;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Proof", mappedBy="history", orphanRemoval=true, cascade={"persist"})
+     */
+    private $proof;
+
+    public function __construct()
+    {
+        $this->proof = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -55,7 +62,11 @@ class History
     public function asArray(): array {
         $data = [];
         foreach($this as $field => $value) {
-            $data[$field] = $value;
+            if ($value instanceof Collection) {
+                $data[$field] = $value->getValues();
+            } else {
+                $data[$field] = $value;
+            }
         }
         return $data;
     }
@@ -108,26 +119,45 @@ class History
         return $this;
     }
 
-    public function getProofUrl(): ?string
-    {
-        return $this->proofUrl;
-    }
-
-    public function setProofUrl(string $proof_url): self
-    {
-        $this->proofUrl = $proof_url;
-
-        return $this;
-    }
-
     public function getCreateTime(): ?DateTimeInterface
     {
         return $this->createTime;
     }
 
-    public function setCreateTime(DateTimeInterface $createTime): self
+    public function setCreateTime(?DateTimeInterface $createTime): self
     {
         $this->createTime = $createTime;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Proof[]
+     */
+    public function getProof(): Collection
+    {
+        return $this->proof;
+    }
+
+    public function addProof(Proof $proof): self
+    {
+        if (!$this->proof->contains($proof)) {
+            $this->proof[] = $proof;
+            $proof->setHistory($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProof(Proof $proof): self
+    {
+        if ($this->proof->contains($proof)) {
+            $this->proof->removeElement($proof);
+            // set the owning side to null (unless already changed)
+            if ($proof->getHistory() === $this) {
+                $proof->setHistory(null);
+            }
+        }
 
         return $this;
     }

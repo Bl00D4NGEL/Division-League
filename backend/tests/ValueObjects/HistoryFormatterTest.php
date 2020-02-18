@@ -2,6 +2,7 @@
 
 namespace App\Tests\ValueObjects;
 
+use App\Entity\Proof;
 use App\Entity\Team;
 use App\Factory\HistoryFactory;
 use App\ValueObjects\HistoryFormatter;
@@ -9,6 +10,7 @@ use App\Entity\History;
 use App\Entity\Player;
 use App\ValueObjects\RichHistory;
 use DateTime;
+use Doctrine\Common\Collections\Collection;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -36,7 +38,11 @@ class HistoryFormatterTest extends TestCase
     {
         $history = $this->createMock(History::class);
 
-        $history->expects($this->once())->method('getProofUrl')->willReturn('proof.url');
+        $proof = $this->createMock(Proof::class);
+        $proof->expects($this->once())->method('getUrl')->willReturn('proof.url');
+        $collection = $this->createMock(Collection::class);
+        $collection->expects($this->once())->method('getValues')->willReturn([$proof]);
+        $history->expects($this->once())->method('getProof')->willReturn($collection);
         $history->expects($this->once())->method('getWinnerGain')->willReturn(1);
         $history->expects($this->once())->method('getLoserGain')->willReturn(2);
         $history->expects($this->exactly(2))->method('getId')->willReturn(1);
@@ -77,7 +83,7 @@ class HistoryFormatterTest extends TestCase
                         'player' => 2
                     ]
                 ],
-                "proofUrl" => "proof.url",
+                "proofs" => ["proof.url"],
                 "winnerTeamName" => "winner",
                 "loserTeamName" => "loser",
                 "winnerEloWin" => 1,

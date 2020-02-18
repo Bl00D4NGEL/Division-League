@@ -22,7 +22,6 @@ export default function LeagueDisplay({leagueName, players, ...props}) {
         ];
 
         if (props.isLoggedIn && UserRoles[props.user.role] > 0) {
-            console.log("Add action");
             baseData.push(
                 <Button text="Delete player" onClick={() => deletePlayer(p)}/>
             );

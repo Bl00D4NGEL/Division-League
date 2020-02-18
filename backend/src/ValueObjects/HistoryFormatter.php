@@ -4,6 +4,7 @@ namespace App\ValueObjects;
 
 use App\Entity\History;
 use App\Entity\Player;
+use App\Entity\Proof;
 use App\Factory\HistoryFactory;
 
 class HistoryFormatter
@@ -30,7 +31,9 @@ class HistoryFormatter
             $historyData[] = [
                 "winner" => $this->mapPlayerArray($winnerTeam->getPlayers()),
                 "loser" => $this->mapPlayerArray($loserTeam->getPlayers()),
-                "proofUrl" => $history->getProofUrl(),
+                "proofs" => array_map(static function (Proof $proof) {
+                    return $proof->getUrl();
+                }, $history->getProof()->getValues()),
                 "winnerTeamName" => $winnerTeam->getName(),
                 "loserTeamName" => $loserTeam->getName(),
                 "winnerEloWin" => $history->getWinnerGain(),

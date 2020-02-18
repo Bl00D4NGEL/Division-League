@@ -66,10 +66,14 @@ class HistoryModelTest extends TestCase
         $winnerTeam = $this->createMock(Team::class);
         $winnerTeam->method('getId')->willReturn(1);
         $winnerTeam->method('getPlayers')->willReturn([TestObjectFactory::createPlayer('Player 1')]);
+        $winnerTeam->method('isPlayerEloDifferenceValid')->willReturn(true);
+
         /** @var Team|MockObject $loserTeam */
         $loserTeam = $this->createMock(Team::class);
         $loserTeam->method('getId')->willReturn(2);
         $loserTeam->method('getPlayers')->willReturn([TestObjectFactory::createPlayer('Player21')]);
+        $loserTeam->method('isPlayerEloDifferenceValid')->willReturn(true);
+
         $this->teamFactory->expects($this->at(0))->method('createTeamFromPlayerIds')->with(self::WINNER_IDS)->willReturn($winnerTeam);
         $this->teamFactory->expects($this->at(1))->method('createTeamFromPlayerIds')->with(self::LOSER_IDS)->willReturn($loserTeam);
 
@@ -94,7 +98,7 @@ class HistoryModelTest extends TestCase
         $request = new AddHistoryRequest();
         $request->winner = self::WINNER_IDS;
         $request->loser = self::LOSER_IDS;
-        $request->proofUrl = 'proof.url';
+        $request->proofUrl = ['proof.url'];
         $request->winnerTeamName = 'winnerTeam';
         $request->loserTeamName = 'loserTeam';
         return $request;

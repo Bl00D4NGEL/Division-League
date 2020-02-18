@@ -113,6 +113,7 @@ class LoginModelTest extends TestCase
         $loginRequest->password = 'abc';
 
         $user = $this->createMock(User::class);
+        $user->expects($this->once())->method('getId')->willReturn(0);
         $user->expects($this->once())->method('verifyPassword')->willReturn(true);
         $user->expects($this->once())->method('asArray')->willReturn(['test' => 'value']);
 

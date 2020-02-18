@@ -30,8 +30,7 @@ class HistoryController extends AbstractController
      * @Route("/history/add", name="history_add")
      * @param Request $request
      * @return Response
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws \Exception
      */
     public function historyAdd(Request $request)
     {
