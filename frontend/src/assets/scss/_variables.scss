@@ -4,6 +4,14 @@ $primary_bg: #131313;
 $table_field_bg_color: #444;
 $table_head_bg_color: #292929;
 
+$primary_bg_color:  #131313;
+$nav_mixin_color: #111;
+$nav_bg_color: mix($primary_bg_color, $nav_mixin_color, 50);
+$nav_bg_active_color: mix($nav_bg_color, #aaa, 83%);
+
+$footer_bg_color: #303030;
+$main_content_bg_color: #131313;
+
 /* Damage Inc */
 $dmg_inc_red: #b64240;
 $dmg_inc_white: #ddd;
@@ -13,3 +21,6 @@ $main_height: 7vh;
 $main_font_size: 1.5vw;
 $line_height: 1.4;
 $nav_menu_width: 210px;
+
+$small_device_max_width: 450px;
+$medium_device_max_width: 768px;

@@ -4,6 +4,7 @@ import React from "react";
 import Navigation from "./components/Navigation/Navigation";
 import Footer from "./components/Footer/Footer";
 import {useAuth} from "./customHooks/useAuth";
+import './app-router.scss';
 
 export default function AppRouter() {
     const {user, setUser, isLoggedIn, setIsLoggedIn} = useAuth();
@@ -23,14 +24,14 @@ export default function AppRouter() {
     };
 
     return <BrowserRouter>
-        <div className="main">
+        <div className="container">
             <Navigation isLoggedIn={isLoggedIn} user={user}/>
-            <div className="content">
+            <main>
                 <Switch>
                     {generateRoutes()}
                     <Redirect to={RouteConfig.getDefaultPath()}/>
                 </Switch>
-            </div>
+            </main>
             <Footer/>
         </div>
     </BrowserRouter>

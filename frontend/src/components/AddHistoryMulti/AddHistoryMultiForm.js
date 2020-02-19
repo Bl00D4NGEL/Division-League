@@ -99,10 +99,10 @@ export default function AddHistoryMultiForm({players}) {
                     Enter proof url
                 </div>
             </div>
-            <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: 20 + 'px'}}>
+            <div style={{display: 'flex', marginBottom: 20 + 'px'}}>
                 {
                     proofUrls.map((p, i) => {
-                        return <div key={i} style={{paddingBottom: 5 + 'px'}}>
+                        return <div key={i} style={{paddingBottom: 5 + 'px', paddingRight: 20 + 'px'}}>
                             <span style={{paddingRight: 10 + 'px'}}>Game {i + 1}</span>
                             <TextInput onChange={e => {
                                 const proofs = proofUrls;
