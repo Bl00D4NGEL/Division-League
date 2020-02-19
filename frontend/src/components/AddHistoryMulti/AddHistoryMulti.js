@@ -13,7 +13,7 @@ export default function AddHistoryMulti() {
     }
 
     return <div>
-        <LeagueSelect leagues={leagues} setLeague={setLeague}/>
+        {leagues.length > 1 ? <LeagueSelect leagues={leagues} setLeague={setLeague}/> : null}
         <AddHistoryMultiForm players={filteredPlayers}/>
     </div>
 }

@@ -1,15 +1,12 @@
 import React from 'react';
-import Label from "../BaseReactComponents/Label/Label";
 import CustomSelect from "../BaseReactComponents/Select/Select";
 
-export default function PlayerSelect({players, label, onChange, ...rest}) {
-    return <Label text={label} formField={
-        <CustomSelect
-            {...rest}
-            onChange={onChange}
-            options={mapPlayersToOptions(players)}
-        />
-    }/>
+export default function PlayerSelect({players, onChange, ...rest}) {
+    return <CustomSelect
+        {...rest}
+        onChange={onChange}
+        options={mapPlayersToOptions(players)}
+    />
 }
 
 const mapPlayersToOptions = players => players.map(p => ({

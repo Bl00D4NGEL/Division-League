@@ -1,11 +1,11 @@
-import React from 'react';
+import React, {Fragment} from 'react';
 import './label.scss';
 
 export default function Label({text, formField}) {
-    return <div className='label-div'>
+    return <Fragment>
         <div>
             <label>{text}</label>
         </div>
         <div>{formField}</div>
-    </div>
+    </Fragment>
 }

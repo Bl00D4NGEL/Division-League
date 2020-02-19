@@ -1,9 +1,10 @@
 import React, {useEffect} from 'react';
 import Button from "../BaseReactComponents/Button/Button";
 import Warning from "../Warning/Warning";
+import PlayerSelect from "../PlayerSelect/PlayerSelect";
 
 const MAX_ELO_DIFFERENCE = 300;
-export default function MultiPlayerSelect({RenderComponent, players, setSelectedPlayers, selectedPlayers}) {
+export default function MultiPlayerSelect({players, setSelectedPlayers, selectedPlayers}) {
     const setDefaultPlayer = () => {
         if (players.length > 0 && selectedPlayers.length === 0) {
             setSelectedPlayers([players[0].id]);
@@ -28,10 +29,11 @@ export default function MultiPlayerSelect({RenderComponent, players, setSelected
     };
 
     const renderSelects = () => {
-        return <div style={{display: 'flex'}}>
+        return <div>
             {
                 selectedPlayers.map((p, i) => <div key={i} style={{margin: '0 20px 0 0'}}>
-                        <RenderComponent
+                        <PlayerSelect
+                            style={{marginTop: 10 + 'px', marginBottom: 10 + 'px'}}
                             value={p}
                             players={players.sort((a,b) => a.name.localeCompare(b.name))}
                             onChange={
@@ -47,7 +49,7 @@ export default function MultiPlayerSelect({RenderComponent, players, setSelected
                                 }
                             }
                         />
-                    {selectedPlayers.length > 1 ? <Button text="Remove Player" onClick={() => removePlayerSelect(i)}/> : <div/>}
+                    {selectedPlayers.length > 1 ? <Button style={{marginLeft: 20 + 'px'}} text="Remove Player" onClick={() => removePlayerSelect(i)}/> : <div/>}
                     </div>
                 )
             }
@@ -65,7 +67,7 @@ export default function MultiPlayerSelect({RenderComponent, players, setSelected
                     message={"Elo difference too big. Max elo difference: " + MAX_ELO_DIFFERENCE + " Current difference: " + (max - min)}/>
             );
         }
-        if (selectedPlayers.length === 0) {
+        if (players.length > 0 && selectedPlayers.length === 0) {
             warnings.push(
                 <Warning key='NO_0_PLAYERS'
                     message={"You cannot have 0 players. Please add at least one player to proceed"}/>
@@ -93,7 +95,7 @@ export default function MultiPlayerSelect({RenderComponent, players, setSelected
     };
 
     return <div>
-        <div>
+        <div style={{marginTop: 10 + 'px'}}>
             Player average Elo = {getAverageElo()}
             <Button style={{marginLeft: 10 + 'px'}} onClick={addPlayerSelect} text='Add Player'/>
         </div>
