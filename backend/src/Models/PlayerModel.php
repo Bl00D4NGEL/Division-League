@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Entity\Player;
 use App\Factory\PlayerFactory;
 use App\Repository\PlayerRepository;
 use App\Resource\AddPlayerRequest;
@@ -39,7 +40,11 @@ class PlayerModel
         if (!$request->isValid()) {
             return new ErrorResponse(ErrorResponse::INVALID_DATA_SENT);
         }
-        if ($this->doesPlayerAlreadyExist($request)) {
+        $existingPlayer = $this->getPlayer($request);
+        if (null !== $existingPlayer) {
+            if (true === $existingPlayer->isDeleted()) {
+                return new ErrorResponse(sprintf('Player %s already existed and had %d elo but has been deleted.', $existingPlayer->getName(), $existingPlayer->getElo()));
+            }
             return new ErrorResponse(sprintf(ErrorResponse::PLAYER_DOES_ALREADY_EXIST, $request->name));
         }
         $player = $this->playerFactory->createFromRequest($request);
@@ -48,6 +53,28 @@ class PlayerModel
         $this->entityManager->flush();
         return new SuccessResponse([
             "playerId" => $player->getId()
+        ]);
+    }
+
+    public function addDeletedPlayer(AddPlayerRequest $request): JsonResponse {
+        if (!$request->isValid()) {
+            return new ErrorResponse(ErrorResponse::INVALID_DATA_SENT);
+        }
+        $existingPlayer = $this->getPlayer($request);
+        if (null === $existingPlayer) {
+            return new ErrorResponse('Player does not exist');
+        }
+
+        if (false === $existingPlayer->isDeleted()) {
+            return new ErrorResponse('Player is not deleted');
+        }
+
+        $existingPlayer->setDeleted(false);
+
+        $this->entityManager->persist($existingPlayer);
+        $this->entityManager->flush();
+        return new SuccessResponse([
+            "message" => "Player has been added again"
         ]);
     }
 
@@ -61,15 +88,22 @@ class PlayerModel
         return new SuccessResponse($players);
     }
 
-    private function doesPlayerAlreadyExist(AddPlayerRequest $request)
-    {
-        return (
-            $this->playerRepository->findByName($request->name) !== null
-            || $this->playerRepository->findByPlayerId($request->playerId) !== null
-        );
+    private function getPlayer(AddPlayerRequest $request): ?Player {
+        $player =  $this->playerRepository->findByName($request->name);
+        if (null !== $player) {
+            return $player;
+        }
+
+        $player =  $this->playerRepository->findByPlayerId($request->playerId);
+        if (null !== $player) {
+            return $player;
+        }
+
+        return null;
     }
 
-    public function playerDelete(DeletePlayerRequest $request): JsonResponse {
+    public function playerDelete(DeletePlayerRequest $request): JsonResponse
+    {
         if (!$request->isValid()) {
             return new ErrorResponse(ErrorResponse::INVALID_DATA_SENT);
         }

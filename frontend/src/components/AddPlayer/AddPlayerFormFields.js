@@ -8,7 +8,7 @@ export default function AddPlayerFormFields({labelConfig}) {
         return (
             <div>
                 {labelConfig.map(config => {
-                    return <div>
+                    return <div key={config.key}>
                         <Label
                             text={config.text}
                             formField={generateTextInput(config.key, config.setter)}

@@ -43,6 +43,10 @@ export default class Config {
         return new Endpoint(this.playerEndpointUrl('add'), 'POST');
     }
 
+    static addDeletedPlayerEndPoint() {
+        return new Endpoint(this.playerEndpointUrl('add/confirm'), 'POST');
+    }
+
     static deletePlayerEndPoint() {
         return new Endpoint(this.playerEndpointUrl(), 'DELETE')
     }

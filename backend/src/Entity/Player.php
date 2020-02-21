@@ -182,4 +182,8 @@ class Player
 
         return $this;
     }
+
+    public function isDeleted(): bool {
+        return $this->getDeleted() === true;
+    }
 }

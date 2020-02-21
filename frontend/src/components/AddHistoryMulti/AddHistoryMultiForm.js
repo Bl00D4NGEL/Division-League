@@ -49,7 +49,7 @@ export default function AddHistoryMultiForm({players}) {
     const setChanges = val => {
         if (val !== undefined) {
             setError(undefined);
-            setProofUrls(defaultProofUrls);
+            setProofUrls(Array(MAX_GAMES_FOR_BEST_OF_N).fill(''));
             _setChanges(val);
         }
     };

@@ -37,6 +37,17 @@ class PlayerController extends AbstractController
     }
 
     /**
+     * @Route("/player/add/confirm", name="player_add_confirm")
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function playerAddConfirm(Request $request)
+    {
+        $req = $this->serializer->deserialize($request->getContent(), AddPlayerRequest::class, 'json');
+        return $this->playerModel->addDeletedPlayer($req);
+    }
+
+    /**
      * @Route("/player/get/all", name="player_get_all")
      * @return JsonResponse
      */

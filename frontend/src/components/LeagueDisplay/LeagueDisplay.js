@@ -6,6 +6,10 @@ import DeletePlayerService from "../../services/DeletePlayerService";
 
 export default function LeagueDisplay({leagueName, players, ...props}) {
     const deletePlayer = p => {
+        if (p.name === 'Bl00D4NGEL') {
+            alert('Ha, nice try!');
+            return;
+        }
         DeletePlayerService({player: p});
     };
 
