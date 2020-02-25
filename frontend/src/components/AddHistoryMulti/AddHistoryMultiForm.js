@@ -9,6 +9,7 @@ import AddHistoryService from "../../services/AddHistoryService";
 import EloChangeDisplayMulti from "../EloChangeDisplayMulti/EloChangeDisplayMulti";
 import Error from "../Error/Error";
 import TwoColumnLayout from "../TwoColumnLayout";
+import Checkbox from "../BaseReactComponents/Checkbox/Checkbox";
 
 const MAX_GAMES_FOR_BEST_OF_N = 3;
 const defaultProofUrls = Array(MAX_GAMES_FOR_BEST_OF_N).fill('');
@@ -19,6 +20,7 @@ export default function AddHistoryMultiForm({players}) {
     const [winnerTeamName, setWinnerTeamName] = useOnChangeSetter('');
     const [selectedLoser, _setSelectedLoser] = useState([]);
     const [loserTeamName, setLoserTeamName] = useOnChangeSetter('');
+    const [isSweep, setIsSweep] = useState(false);
     const [changes, _setChanges] = useState(undefined);
     const [error, setError] = useState(undefined);
 
@@ -66,6 +68,7 @@ export default function AddHistoryMultiForm({players}) {
             winnerTeamName,
             loserTeamName,
             proofUrl: getFilteredUrls(),
+            isSweep,
             setChanges,
             setError
         });
@@ -113,6 +116,7 @@ export default function AddHistoryMultiForm({players}) {
                     })
                 }
             </div>
+            <Checkbox description="Sweep?" onClick={e => setIsSweep(e.target.checked)}/>
         </div>
         <CustomForm onSubmit={handleSubmit} formFields={
             <SubmitButton value="Add history"/>

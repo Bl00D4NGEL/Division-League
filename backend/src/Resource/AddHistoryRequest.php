@@ -39,6 +39,13 @@ class AddHistoryRequest
      */
     public $loserTeamName;
 
+    /**
+     * @SerializedName("isSweep")
+     * @Type("bool")
+     * @var bool
+     */
+    public $isSweep;
+
     public function isValid(): bool
     {
         foreach ($this->winner as $player) {
@@ -50,6 +57,7 @@ class AddHistoryRequest
             count($this->winner) > 0
             && count($this->loser) > 0
             && count($this->proofUrl) > 0
+            && isset($this->isSweep)
         );
     }
 }

@@ -82,6 +82,7 @@ class HistoryModel
         $match->setWinner($winner);
         $match->setLoser($loser);
         $match->setProofUrl($request->proofUrl);
+        $match->setIsSweep($request->isSweep);
         $history = $match->execute();
 
         $this->entityManager->persist($history);

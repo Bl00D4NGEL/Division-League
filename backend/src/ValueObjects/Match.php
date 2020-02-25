@@ -5,6 +5,9 @@ namespace App\ValueObjects;
 use App\Entity\History;
 use App\Entity\Proof;
 use App\Entity\Team;
+use App\ValueObjects\EloCalculator\DefaultEloMultiplier;
+use App\ValueObjects\EloCalculator\EloCalculator;
+use App\ValueObjects\EloCalculator\SweepEloMultiplier;
 use DateTime;
 
 class Match
@@ -17,6 +20,9 @@ class Match
 
     /** @var string[] */
     private $proofUrl;
+
+    /** @var bool */
+    private $isSweep = false;
 
     /**
      * @param Team $team
@@ -61,11 +67,19 @@ class Match
         return $this;
     }
 
+    public function setIsSweep(bool $isSweep): self {
+        $this->isSweep = $isSweep;
+
+        return $this;
+    }
+
     public function execute(): History
     {
+        $eloMultiplier = $this->isSweep ? new SweepEloMultiplier() : new DefaultEloMultiplier();
         $eloCalculator = new EloCalculator(
             $this->winner->getAverageElo(),
-            $this->loser->getAverageElo()
+            $this->loser->getAverageElo(),
+            $eloMultiplier
         );
 
         $this->loser->lose($eloCalculator->getEloChangeForLoser());

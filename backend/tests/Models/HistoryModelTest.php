@@ -101,6 +101,7 @@ class HistoryModelTest extends TestCase
         $request->proofUrl = ['proof.url'];
         $request->winnerTeamName = 'winnerTeam';
         $request->loserTeamName = 'loserTeam';
+        $request->isSweep = false;
         return $request;
     }
 }

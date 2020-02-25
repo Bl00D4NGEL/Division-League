@@ -1,6 +1,6 @@
 <?php
 
-namespace App\ValueObjects;
+namespace App\ValueObjects\EloCalculator;
 
 class EloCalculator
 {
@@ -11,21 +11,24 @@ class EloCalculator
 
     /** @var int */
     private $loserElo;
+    /** @var EloMultiplier */
+    private $eloMultiplier;
 
-    public function __construct(int $winnerElo, int $loserElo)
+    public function __construct(int $winnerElo, int $loserElo, EloMultiplier $eloMultiplier)
     {
         $this->winnerElo = $winnerElo;
         $this->loserElo = $loserElo;
+        $this->eloMultiplier = $eloMultiplier;
     }
 
     public function getEloChangeForLoser(): int
     {
-        return -ceil($this->getKFactor() * $this->calculateLoseChance() * 0.75);
+        return -ceil($this->getKFactor() * $this->calculateLoseChance() * $this->eloMultiplier->getLoseFactor());
     }
 
     public function getEloChangeForWinner(): int
     {
-        return ceil($this->getKFactor() * $this->calculateWinChance() * 1.25);
+        return ceil($this->getKFactor() * $this->calculateWinChance() * $this->eloMultiplier->getWinFactor());
     }
 
     private function getKFactor(): float
