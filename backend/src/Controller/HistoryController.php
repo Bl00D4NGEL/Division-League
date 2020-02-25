@@ -38,11 +38,20 @@ class HistoryController extends AbstractController
     }
 
     /**
-     * @Route("/history/get/recent", name="history_get_all")
+     * @Route("/history/get/recent", name="history_get_recent")
      * @return JsonResponse
      */
     public function historyGetRecent()
     {
         return $this->historyModel->getHistoryRecent();
+    }
+
+    /**
+     * @Route("/history/get/all", name="history_get_all")
+     * @return JsonResponse
+     */
+    public function historyGetAll()
+    {
+        return $this->historyModel->getHistoryAll();
     }
 }

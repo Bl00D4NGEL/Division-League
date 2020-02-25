@@ -108,6 +108,10 @@ class HistoryModel
 
     public function getHistoryRecent(): JsonResponse
     {
-        return new SuccessResponse($this->historyFormatter->format($this->historyRepository->findLastEntries(20)));
+        return new SuccessResponse($this->historyFormatter->format($this->historyRepository->findLastEntries(35)));
+    }
+
+    public function getHistoryAll(): JsonResponse {
+        return new SuccessResponse($this->historyFormatter->format($this->historyRepository->findAll()));
     }
 }
