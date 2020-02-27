@@ -39,6 +39,7 @@ class HistoryFormatter
                 "winnerEloWin" => $history->getWinnerGain(),
                 "loserEloLose" => $history->getLoserGain(),
                 "creationTime" => $history->getCreateTime()->getTimestamp(),
+                "isSweep" => $history->getIsSweep(),
                 "id" => $history->getId(),
             ];
         }

@@ -49,6 +49,7 @@ class HistoryFormatterTest extends TestCase
         $dateTime = $this->createMock(DateTime::class);
         $dateTime->expects($this->once())->method('getTimestamp')->willReturn(123456789);
         $history->expects($this->once())->method('getCreateTime')->willReturn($dateTime);
+        $history->expects($this->once())->method('getIsSweep')->willReturn(false);
 
         $winner = $this->createMock(Player::class);
         $winner->expects($this->once())->method('asArray')->willReturn(['player' => 1]);
@@ -89,6 +90,7 @@ class HistoryFormatterTest extends TestCase
                 "winnerEloWin" => 1,
                 "loserEloLose" => 2,
                 "creationTime" => 123456789,
+                "isSweep" => false,
                 "id" => 1
             ]
         ];

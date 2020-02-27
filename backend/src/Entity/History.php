@@ -49,6 +49,11 @@ class History
      */
     private $proof;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isSweep;
+
     public function __construct()
     {
         $this->proof = new ArrayCollection();
@@ -158,6 +163,18 @@ class History
                 $proof->setHistory(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getIsSweep(): ?bool
+    {
+        return $this->isSweep;
+    }
+
+    public function setIsSweep(bool $isSweep): self
+    {
+        $this->isSweep = $isSweep;
 
         return $this;
     }

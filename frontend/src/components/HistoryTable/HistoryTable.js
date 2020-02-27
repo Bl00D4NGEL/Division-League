@@ -14,29 +14,37 @@ export default function HistoryTable() {
         if (historyData.length === 0) {
             return null;
         }
-        return historyData.map(entry => {
-            return [
-                entry.id,
-                new Date(entry.creationTime * 1000).toLocaleString(),
-                entry.winner[0].league,
-                <div>
-                    <span title={entry.winner.map(w => w.name).join(", ")}>{entry.winnerTeamName}</span>
-                    <span> [+{entry.winnerEloWin}]</span>
-                </div>,
-                <div>
-                    <span title={entry.loser.map(w => w.name).join(", ")}>{entry.loserTeamName}</span>
-                    <span> [{entry.loserEloLose}]</span>
-                </div>,
-                entry.proofs.map(p => <a key={p} href={p} style={{paddingRight: 5 + 'px'}} target="_blank" rel="noopener noreferrer">Link</a>)
-            ];
-        });
+        return historyData.map(entry => (
+                [
+                    entry.id,
+                    new Date(entry.creationTime * 1000).toLocaleString(),
+                    entry.winner[0].league,
+                    <div>
+                        <span title={entry.winner.map(w => w.name).join(", ")}>{entry.winnerTeamName}</span>
+                        <span> [+{entry.winnerEloWin}]</span>
+                    </div>,
+                    <div>
+                        <span title={entry.loser.map(w => w.name).join(", ")}>{entry.loserTeamName}</span>
+                        <span> [{entry.loserEloLose}]</span>
+                    </div>,
+                    entry.isSweep ? '✓' : 'X',
+                    entry.proofs.map(p => <a key={p} href={p} style={{paddingRight: 5 + 'px'}} target="_blank"
+                                             rel="noopener noreferrer">Link</a>)
+                ]
+            )
+        );
     };
 
     return <Loader
         isLoaded={isLoaded}
         error={error}
-        content={<Table defaultReverseSort={true} sortable={true} defaultSortKey={0} tableHead={['ID', 'Creation time', 'League', 'Winner', 'Loser', 'Proof']}
-                        tableData={generateHistoryTableRows()}/>}
+        content={<Table
+            defaultReverseSort={true}
+            sortable={true}
+            defaultSortKey={0}
+            tableHead={['ID', 'Creation time', 'League', 'Winner', 'Loser', 'Sweep?', 'Proof']}
+            tableData={generateHistoryTableRows()}
+        />}
     />
 
 }

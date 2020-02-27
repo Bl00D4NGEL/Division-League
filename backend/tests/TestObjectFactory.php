@@ -47,15 +47,15 @@ class TestObjectFactory
     }
 
     public static function createHistory(
-        int $winnerTeamId, int $loserTeamId, DateTime $createTime = null, ?string $proofUrl = 'proof.url', int $winnerGain = 1, int $loserGain = 1
+        int $winnerTeamId, int $loserTeamId, DateTime $createTime = null
     ): History
     {
         $history = new History();
         $history->setWinner($winnerTeamId)
             ->setLoser($loserTeamId)
-            ->setProofUrl($proofUrl)
-            ->setWinnerGain($winnerGain)
-            ->setLoserGain($loserGain);
+            ->setWinnerGain(1)
+            ->setLoserGain(1)
+            ->setIsSweep(false);
 
         if (null === $createTime) {
             $createTime = new DateTime();

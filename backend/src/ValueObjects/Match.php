@@ -67,7 +67,8 @@ class Match
         return $this;
     }
 
-    public function setIsSweep(bool $isSweep): self {
+    public function setIsSweep(bool $isSweep): self
+    {
         $this->isSweep = $isSweep;
 
         return $this;
@@ -91,7 +92,8 @@ class Match
             ->setWinner($this->winner->getId())
             ->setLoserGain($eloCalculator->getEloChangeForLoser())
             ->setWinnerGain($eloCalculator->getEloChangeForWinner())
-            ->setCreateTime(new DateTime());
+            ->setCreateTime(new DateTime())
+            ->setIsSweep($this->isSweep);
 
         foreach ($this->proofUrl as $proofUrl) {
             $proof = new Proof();

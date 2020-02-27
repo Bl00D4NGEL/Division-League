@@ -46,8 +46,8 @@ class HistoryRepositoryTest extends DatabaseTestCase
                 ->setLoser($i + 2)
                 ->setWinnerGain(10)
                 ->setLoserGain(-10)
-                ->setProofUrl('test.url')
-                ->setCreateTime(new DateTime());
+                ->setCreateTime(new DateTime())
+                ->setIsSweep(false);
 
             $this->entityManager->persist($history);
             if ($i > 2) {

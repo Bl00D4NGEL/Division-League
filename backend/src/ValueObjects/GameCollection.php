@@ -5,7 +5,6 @@ namespace App\ValueObjects;
 use App\Entity\Player;
 use DateInterval;
 use DateTime;
-use DateTimeInterface;
 use Exception;
 
 class GameCollection
@@ -26,7 +25,7 @@ class GameCollection
 
     /**
      * @param Player[] $players
-     * @param DateTime|DateTimeInterface $gameDate
+     * @param DateTime $gameDate
      * @return void
      * @throws Exception
      */
@@ -37,9 +36,6 @@ class GameCollection
     }
 
     /**
-     * @param string $playerName
-     * @param DateTime $gameDate
-     * @return void
      * @throws Exception
      */
     public function incrementPlayedGamesForPlayerName(string $playerName, DateTime $gameDate): void {
@@ -58,8 +54,6 @@ class GameCollection
     }
 
     /**
-     * @param DateTime $gameDate
-     * @return string
      * @throws Exception
      */
     private function getDateKey(DateTime $gameDate): string
