@@ -2,18 +2,24 @@
 
 namespace App\Models;
 
+use App\Entity\History;
+use App\Entity\Player;
+use App\Entity\Proof;
 use App\Entity\Team;
 use App\Factory\RosterFactory;
 use App\Factory\TeamFactory;
-use App\ValueObjects\HistoryFormatter;
 use App\Repository\HistoryRepository;
 use App\Resource\AddHistoryRequest;
 use App\Resource\JsonResponse\ErrorResponse;
 use App\Resource\JsonResponse\SuccessResponse;
-use App\ValueObjects\Match;
+use App\ValueObjects\EloCalculator\DefaultEloMultiplier;
+use App\ValueObjects\EloCalculator\EloCalculator;
+use App\ValueObjects\EloCalculator\SweepEloMultiplier;
+use App\ValueObjects\HistoryFormatter;
+use App\ValueObjects\Match\Match;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Exception;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 
 class HistoryModel
@@ -79,11 +85,27 @@ class HistoryModel
         $this->entityManager->flush();
 
         $match = new Match();
-        $match->setWinner($winner);
-        $match->setLoser($loser);
-        $match->setProofUrl($request->proofUrl);
-        $match->setIsSweep($request->isSweep);
-        $history = $match->execute();
+
+        $matchResult = $match->play(
+            $this->createMatchTeamFromEntityTeam($winner),
+            $this->createMatchTeamFromEntityTeam($loser),
+            new EloCalculator($request->isSweep ? new SweepEloMultiplier() : new DefaultEloMultiplier())
+        );
+
+        $history = new History();
+        $history
+            ->setLoser($loser->getId())
+            ->setWinner($winner->getId())
+            ->setLoserGain($matchResult->loserLoss())
+            ->setWinnerGain($matchResult->winnerGain())
+            ->setCreateTime($matchResult->creationTime())
+            ->setIsSweep($request->isSweep);
+
+        foreach ($request->proofUrl as $proofUrl) {
+            $proof = new Proof();
+            $proof->setUrl($proofUrl);
+            $history->addProof($proof);
+        }
 
         $this->entityManager->persist($history);
 
@@ -93,6 +115,15 @@ class HistoryModel
 
         $this->entityManager->flush();
         return new SuccessResponse($this->historyFormatter->format([$history]));
+    }
+
+    public function createMatchTeamFromEntityTeam(Team $team): \App\ValueObjects\Match\Team
+    {
+        return new \App\ValueObjects\Match\Team(
+            array_map(static function (Player $player) {
+                return new \App\ValueObjects\Match\Player($player->getElo());
+            }, $team->getPlayers())
+        );
     }
 
     /**
@@ -111,7 +142,8 @@ class HistoryModel
         return new SuccessResponse($this->historyFormatter->format($this->historyRepository->findLastEntries(35)));
     }
 
-    public function getHistoryAll(): JsonResponse {
+    public function getHistoryAll(): JsonResponse
+    {
         return new SuccessResponse($this->historyFormatter->format($this->historyRepository->findAll()));
     }
 }

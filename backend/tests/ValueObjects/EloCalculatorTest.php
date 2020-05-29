@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace App\Tests\Service;
 
@@ -15,9 +15,10 @@ class EloCalculatorTest extends TestCase
     public function testBasicScenario(int $winnerElo, int $loserElo, int $expectedWinnerGain, int $expectedLoserGain): void
     {
         $defaultEloCalculation = new DefaultEloMultiplier();
-        $eloCalc = new EloCalculator($winnerElo, $loserElo, $defaultEloCalculation);
-        $this->assertSame($expectedWinnerGain, $eloCalc->getEloChangeForWinner());
-        $this->assertSame($expectedLoserGain, $eloCalc->getEloChangeForLoser());
+        $eloCalc = new EloCalculator($defaultEloCalculation);
+        $result = $eloCalc->calculate($winnerElo, $loserElo);
+        $this->assertSame($expectedWinnerGain, $result->eloGain());
+        $this->assertSame($expectedLoserGain, $result->eloLoss());
     }
 
     /**
@@ -26,9 +27,10 @@ class EloCalculatorTest extends TestCase
     public function testSweepScenario(int $winnerElo, int $loserElo, int $expectedWinnerGain, int $expectedLoserGain): void
     {
         $defaultEloCalculation = new SweepEloMultiplier();
-        $eloCalc = new EloCalculator($winnerElo, $loserElo, $defaultEloCalculation);
-        $this->assertSame($expectedWinnerGain, $eloCalc->getEloChangeForWinner());
-        $this->assertSame($expectedLoserGain, $eloCalc->getEloChangeForLoser());
+        $eloCalc = new EloCalculator($defaultEloCalculation);
+        $result = $eloCalc->calculate($winnerElo, $loserElo);
+        $this->assertSame($expectedWinnerGain, $result->eloGain());
+        $this->assertSame($expectedLoserGain, $result->eloLoss());
     }
 
     public function eloProvider(): array

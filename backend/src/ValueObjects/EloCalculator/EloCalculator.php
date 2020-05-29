@@ -6,47 +6,46 @@ class EloCalculator
 {
     private const MAX_K_FACTOR = 16;
 
-    /** @var int */
-    private $winnerElo;
+    private EloMultiplier $eloMultiplier;
 
-    /** @var int */
-    private $loserElo;
-    /** @var EloMultiplier */
-    private $eloMultiplier;
-
-    public function __construct(int $winnerElo, int $loserElo, EloMultiplier $eloMultiplier)
+    public function __construct(EloMultiplier $eloMultiplier)
     {
-        $this->winnerElo = $winnerElo;
-        $this->loserElo = $loserElo;
         $this->eloMultiplier = $eloMultiplier;
     }
 
-    public function getEloChangeForLoser(): int
-    {
-        return -ceil($this->getKFactor() * $this->calculateLoseChance() * $this->eloMultiplier->getLoseFactor());
+    public function calculate(int $winnerElo, int $loserElo): EloCalculationResult {
+        return new EloCalculationResult(
+            $this->getEloChangeForWinner($winnerElo, $loserElo),
+            $this->getEloChangeForLoser($winnerElo, $loserElo)
+        );
     }
 
-    public function getEloChangeForWinner(): int
+    private function getEloChangeForLoser(int $winnerElo, int $loserElo): int
     {
-        return ceil($this->getKFactor() * $this->calculateWinChance() * $this->eloMultiplier->getWinFactor());
+        return -ceil($this->getKFactor($winnerElo, $loserElo) * $this->calculateLoseChance($winnerElo, $loserElo) * $this->eloMultiplier->getLoseFactor());
     }
 
-    private function getKFactor(): float
+    private function getEloChangeForWinner(int $winnerElo, int $loserElo): int
     {
-        $kFactor = ($this->loserElo + $this->winnerElo) / 100;
+        return ceil($this->getKFactor($winnerElo, $loserElo) * $this->calculateWinChance($winnerElo, $loserElo) * $this->eloMultiplier->getWinFactor());
+    }
+
+    private function getKFactor(int $winnerElo, int $loserElo): float
+    {
+        $kFactor = ($loserElo + $winnerElo) / 100;
         if ($kFactor < self::MAX_K_FACTOR) {
             $kFactor = self::MAX_K_FACTOR;
         }
         return $kFactor;
     }
 
-    private function calculateWinChance()
+    private function calculateWinChance(int $winnerElo, int $loserElo)
     {
-        return 1 - $this->getQPointsFor($this->winnerElo) / ($this->getQPointsFor($this->winnerElo) + $this->getQPointsFor($this->loserElo));
+        return 1 - $this->getQPointsFor($winnerElo) / ($this->getQPointsFor($winnerElo) + $this->getQPointsFor($loserElo));
     }
 
-    private function calculateLoseChance() {
-        return $this->calculateWinChance();
+    private function calculateLoseChance(int $winnerElo, int $loserElo) {
+        return $this->calculateWinChance($winnerElo, $loserElo);
     }
 
     private function getQPointsFor(int $elo)
