@@ -2,7 +2,6 @@
 
 namespace App\Tests\ValueObjects;
 
-use App\ValueObjects\EloCalculator\DefaultEloMultiplier;
 use App\ValueObjects\EloCalculator\EloCalculator;
 use App\ValueObjects\Match\Match;
 use App\ValueObjects\Match\Player;
@@ -26,9 +25,8 @@ class MatchTest extends TestCase
         $loserTeam = new Team([
             new Player(1000)
         ]);
-        $matchResult = $this->match->play($winnerTeam, $loserTeam, new EloCalculator(new DefaultEloMultiplier()));
+        $matchResult = $this->match->play($winnerTeam, $loserTeam, new EloCalculator());
 
-        static::assertSame(13, $matchResult->winnerGain());
-        static::assertSame(-8, $matchResult->loserLoss());
+        static::assertSame(10, $matchResult->eloChange());
     }
 }

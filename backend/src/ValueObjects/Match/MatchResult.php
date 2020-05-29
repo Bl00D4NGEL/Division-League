@@ -6,29 +6,22 @@ use DateTimeImmutable;
 
 final class MatchResult
 {
-    private int $winnerGain;
-    private int $loserLoss;
     private DateTimeImmutable $creationTime;
+    private int $eloChange;
 
-    public function __construct(int $winnerGain, int $loserLoss)
+    public function __construct(int $eloChange)
     {
-        $this->winnerGain = $winnerGain;
-        $this->loserLoss = $loserLoss;
         $this->creationTime = new DateTimeImmutable();
-    }
-
-    public function winnerGain(): int
-    {
-        return $this->winnerGain;
-    }
-
-    public function loserLoss(): int
-    {
-        return $this->loserLoss;
+        $this->eloChange = $eloChange;
     }
 
     public function creationTime(): DateTimeImmutable
     {
         return $this->creationTime;
+    }
+
+    public function eloChange(): int
+    {
+        return $this->eloChange;
     }
 }

@@ -28,11 +28,7 @@ class StatisticModel
 
     public function getGamesPerWeek(): JsonResponse
     {
-        foreach ($this->historyRepository->findAll() as $history) {
-            $this->gameCollection->processRichHistory(
-                $this->historyFactory->createFromId($history->getId())
-            );
-        }
-        return new SuccessResponse($this->gameCollection->export());
+        // TODO re-implement
+        return new SuccessResponse([]);
     }
 }

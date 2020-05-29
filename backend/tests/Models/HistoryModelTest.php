@@ -3,15 +3,16 @@
 namespace App\Tests\Models;
 
 use App\Entity\History;
-use App\Entity\Team;
+use App\Entity\Player;
 use App\Factory\RosterFactory;
 use App\Factory\TeamFactory;
 use App\Models\HistoryModel;
 use App\Repository\HistoryRepository;
+use App\Repository\PlayerRepository;
 use App\Resource\AddHistoryRequest;
 use App\Resource\InvalidRequestException;
-use App\Tests\TestObjectFactory;
 use App\ValueObjects\HistoryFormatter;
+use App\ValueObjects\StreakDeterminer;
 use App\ValueObjects\Validator\EloValidator\EloDifferenceValidator;
 use Doctrine\ORM\EntityManager;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -48,11 +49,18 @@ class HistoryModelTest extends TestCase
 
     private function buildHistoryModel(): void
     {
+        /** @var MockObject|PlayerRepository $playerRepository */
+        $playerRepository = $this->createMock(PlayerRepository::class);
+        $player = new Player();
+        $player->setElo(1000);
+        $playerRepository->method('find')->willReturn($player);
         $this->historyModel = new HistoryModel(
             $this->em,
             $this->teamFactory,
             $this->createMock(RosterFactory::class),
-            new EloDifferenceValidator()
+            new EloDifferenceValidator(),
+            $playerRepository,
+            new StreakDeterminer()
         );
     }
 
@@ -69,21 +77,6 @@ class HistoryModelTest extends TestCase
     public function testAddHistoryReturnsSuccessResponse(): void
     {
         $request = $this->createDummyAddHistoryRequest();
-
-        /** @var Team|MockObject $winnerTeam */
-        $winnerTeam = $this->createMock(Team::class);
-        $winnerTeam->method('getId')->willReturn(1);
-        $winnerTeam->method('getPlayers')->willReturn([TestObjectFactory::createPlayer('Player 1')]);
-        $winnerTeam->method('isPlayerEloDifferenceValid')->willReturn(true);
-
-        /** @var Team|MockObject $loserTeam */
-        $loserTeam = $this->createMock(Team::class);
-        $loserTeam->method('getId')->willReturn(2);
-        $loserTeam->method('getPlayers')->willReturn([TestObjectFactory::createPlayer('Player21')]);
-        $loserTeam->method('isPlayerEloDifferenceValid')->willReturn(true);
-
-        $this->teamFactory->expects($this->at(0))->method('createTeamFromPlayerIds')->with(self::WINNER_IDS)->willReturn($winnerTeam);
-        $this->teamFactory->expects($this->at(1))->method('createTeamFromPlayerIds')->with(self::LOSER_IDS)->willReturn($loserTeam);
 
         $result = $this->historyModel->addHistory($request);
 

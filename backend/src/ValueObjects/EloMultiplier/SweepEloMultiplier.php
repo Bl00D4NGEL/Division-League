@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\ValueObjects\EloCalculator;
+namespace App\ValueObjects\EloMultiplier;
 
 
 class SweepEloMultiplier implements EloMultiplier

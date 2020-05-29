@@ -20,29 +20,14 @@ class History
     private $id;
 
     /**
-     * @ORM\Column(type="integer")
-     */
-    private $winner;
-
-    /**
-     * @ORM\Column(type="integer")
-     */
-    private $loser;
-
-    /**
-     * @ORM\Column(type="integer")
-     */
-    private $winnerGain;
-
-    /**
-     * @ORM\Column(type="integer")
-     */
-    private $loserGain;
-
-    /**
      * @ORM\Column(type="datetime")
      */
-    private $createTime;
+    private $creationTime;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isSweep;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Proof", mappedBy="history", orphanRemoval=true, cascade={"persist"})
@@ -50,13 +35,14 @@ class History
     private $proof;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\OneToMany(targetEntity="App\Entity\Participant", mappedBy="history", orphanRemoval=true)
      */
-    private $isSweep;
+    private $participants;
 
     public function __construct()
     {
         $this->proof = new ArrayCollection();
+        $this->participants = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -76,68 +62,20 @@ class History
         return $data;
     }
 
-    public function getWinner(): ?int
+    public function getCreationTime(): ?DateTimeInterface
     {
-        return $this->winner;
+        return $this->creationTime;
     }
 
-    public function setWinner(int $winner): self
+    public function setCreationTime(?DateTimeInterface $creationTime): self
     {
-        $this->winner = $winner;
-
-        return $this;
-    }
-
-    public function getLoser(): ?int
-    {
-        return $this->loser;
-    }
-
-    public function setLoser(int $loser): self
-    {
-        $this->loser = $loser;
-
-        return $this;
-    }
-
-    public function getWinnerGain(): ?int
-    {
-        return $this->winnerGain;
-    }
-
-    public function setWinnerGain(int $winnerGain): self
-    {
-        $this->winnerGain = $winnerGain;
-
-        return $this;
-    }
-
-    public function getLoserGain(): ?int
-    {
-        return $this->loserGain;
-    }
-
-    public function setLoserGain(int $loserGain): self
-    {
-        $this->loserGain = $loserGain;
-
-        return $this;
-    }
-
-    public function getCreateTime(): ?DateTimeInterface
-    {
-        return $this->createTime;
-    }
-
-    public function setCreateTime(?DateTimeInterface $createTime): self
-    {
-        $this->createTime = $createTime;
+        $this->creationTime = $creationTime;
 
         return $this;
     }
 
     /**
-     * @return Collection|Proof[]
+     * @return Collection
      */
     public function getProof(): Collection
     {
@@ -175,6 +113,37 @@ class History
     public function setIsSweep(bool $isSweep): self
     {
         $this->isSweep = $isSweep;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getParticipants(): Collection
+    {
+        return $this->participants;
+    }
+
+    public function addParticipant(Participant $participant): self
+    {
+        if (!$this->participants->contains($participant)) {
+            $this->participants[] = $participant;
+            $participant->setHistory($this);
+        }
+
+        return $this;
+    }
+
+    public function removeParticipant(Participant $participant): self
+    {
+        if ($this->participants->contains($participant)) {
+            $this->participants->removeElement($participant);
+            // set the owning side to null (unless already changed)
+            if ($participant->getHistory() === $this) {
+                $participant->setHistory(null);
+            }
+        }
 
         return $this;
     }

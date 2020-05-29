@@ -60,7 +60,7 @@ class TestObjectFactory
         if (null === $createTime) {
             $createTime = new DateTime();
         }
-        $history->setCreateTime($createTime);
+        $history->setCreationTime($createTime);
 
         return $history;
     }
