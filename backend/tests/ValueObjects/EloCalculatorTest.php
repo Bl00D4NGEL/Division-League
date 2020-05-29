@@ -4,36 +4,73 @@ namespace App\Tests\Service;
 
 use App\ValueObjects\EloCalculator\DefaultEloMultiplier;
 use App\ValueObjects\EloCalculator\EloCalculator;
+use App\ValueObjects\EloCalculator\StreakEloMultiplier;
 use App\ValueObjects\EloCalculator\SweepEloMultiplier;
 use PHPUnit\Framework\TestCase;
 
 class EloCalculatorTest extends TestCase
 {
     /**
-     * @dataProvider eloProvider
+     * @dataProvider defaultEloProvider
+     * @param int $winnerElo
+     * @param int $loserElo
+     * @param int $expectedWinnerGain
+     * @param int $expectedLoserGain
      */
-    public function testBasicScenario(int $winnerElo, int $loserElo, int $expectedWinnerGain, int $expectedLoserGain): void
+    public function testDefaultScenario(int $winnerElo, int $loserElo, int $expectedWinnerGain, int $expectedLoserGain): void
     {
-        $defaultEloCalculation = new DefaultEloMultiplier();
-        $eloCalc = new EloCalculator($defaultEloCalculation);
-        $result = $eloCalc->calculate($winnerElo, $loserElo);
+        $eloCalculator = new EloCalculator(new DefaultEloMultiplier());
+        $result = $eloCalculator->calculate($winnerElo, $loserElo);
         $this->assertSame($expectedWinnerGain, $result->eloGain());
         $this->assertSame($expectedLoserGain, $result->eloLoss());
     }
 
     /**
      * @dataProvider sweepEloProvider
+     * @param int $winnerElo
+     * @param int $loserElo
+     * @param int $expectedWinnerGain
+     * @param int $expectedLoserGain
      */
     public function testSweepScenario(int $winnerElo, int $loserElo, int $expectedWinnerGain, int $expectedLoserGain): void
     {
-        $defaultEloCalculation = new SweepEloMultiplier();
-        $eloCalc = new EloCalculator($defaultEloCalculation);
-        $result = $eloCalc->calculate($winnerElo, $loserElo);
+        $eloCalculator = new EloCalculator(new SweepEloMultiplier());
+        $result = $eloCalculator->calculate($winnerElo, $loserElo);
         $this->assertSame($expectedWinnerGain, $result->eloGain());
         $this->assertSame($expectedLoserGain, $result->eloLoss());
     }
 
-    public function eloProvider(): array
+    /**
+     * @dataProvider streakDefaultEloProvider
+     * @param int $winnerElo
+     * @param int $loserElo
+     * @param int $expectedWinnerGain
+     * @param int $expectedLoserGain
+     * @param int $streakLength
+     */
+    public function testDefaultStreakScenario(int $winnerElo, int $loserElo, int $expectedWinnerGain, int $expectedLoserGain, int $streakLength): void {
+        $eloCalculator = new EloCalculator(new StreakEloMultiplier(new DefaultEloMultiplier(), $streakLength));
+        $result = $eloCalculator->calculate($winnerElo, $loserElo);
+        $this->assertSame($expectedWinnerGain, $result->eloGain());
+        $this->assertSame($expectedLoserGain, $result->eloLoss());
+    }
+
+    /**
+     * @dataProvider streakSweepEloProvider
+     * @param int $winnerElo
+     * @param int $loserElo
+     * @param int $expectedWinnerGain
+     * @param int $expectedLoserGain
+     * @param int $streakLength
+     */
+    public function testSweepStreakScenario(int $winnerElo, int $loserElo, int $expectedWinnerGain, int $expectedLoserGain, int $streakLength): void {
+        $eloCalculator = new EloCalculator(new StreakEloMultiplier(new SweepEloMultiplier(), $streakLength));
+        $result = $eloCalculator->calculate($winnerElo, $loserElo);
+        $this->assertSame($expectedWinnerGain, $result->eloGain());
+        $this->assertSame($expectedLoserGain, $result->eloLoss());
+    }
+
+    public function defaultEloProvider(): array
     {
         return [
             [1000, 1000, 13, -8],
@@ -60,6 +97,26 @@ class EloCalculatorTest extends TestCase
             [10000, 5000, 1, -1],
             [5000, 10000, 225, -132],
             [10000, 10000, 150, -88],
+        ];
+    }
+
+    public function streakDefaultEloProvider(): array {
+
+        return [
+            [1000, 1000, 13, -8, 0],
+            [1000, 1000, 14, -8, 1],
+            [1000, 1000, 15, -9, 2],
+            [1000, 1000, 17, -9, 3],
+        ];
+    }
+
+    public function streakSweepEloProvider(): array {
+
+        return [
+            [1000, 1000, 15, -9, 0],
+            [1000, 1000, 17, -10, 1],
+            [1000, 1000, 18, -10, 2],
+            [1000, 1000, 20, -11, 3],
         ];
     }
 }

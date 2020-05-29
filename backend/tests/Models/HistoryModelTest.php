@@ -2,16 +2,17 @@
 
 namespace App\Tests\Models;
 
+use App\Entity\History;
+use App\Entity\Team;
 use App\Factory\RosterFactory;
 use App\Factory\TeamFactory;
-use App\Tests\TestObjectFactory;
-use App\ValueObjects\HistoryFormatter;
-use App\Entity\Team;
 use App\Models\HistoryModel;
 use App\Repository\HistoryRepository;
 use App\Resource\AddHistoryRequest;
-use App\Resource\JsonResponse\ErrorResponse;
-use App\Resource\JsonResponse\SuccessResponse;
+use App\Resource\InvalidRequestException;
+use App\Tests\TestObjectFactory;
+use App\ValueObjects\HistoryFormatter;
+use App\ValueObjects\Validator\EloValidator\EloDifferenceValidator;
 use Doctrine\ORM\EntityManager;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -45,17 +46,24 @@ class HistoryModelTest extends TestCase
         $this->buildHistoryModel();
     }
 
+    private function buildHistoryModel(): void
+    {
+        $this->historyModel = new HistoryModel(
+            $this->em,
+            $this->teamFactory,
+            $this->createMock(RosterFactory::class),
+            new EloDifferenceValidator()
+        );
+    }
+
     public function testAddHistoryReturnsErrorResponseOnInvalidRequest(): void
     {
+        $this->expectException(InvalidRequestException::class);
         /** @var AddHistoryRequest|MockObject $request */
         $request = $this->createMock(AddHistoryRequest::class);
         $request->expects($this->once())->method('isValid')->willReturn(false);
 
-        $result = $this->historyModel->addHistory($request);
-
-        $this->assertInstanceOf(ErrorResponse::class, $result);
-        $expectedResponse = new ErrorResponse(ErrorResponse::INVALID_DATA_SENT);
-        $this->assertSame($expectedResponse->getContent(), $result->getContent());
+        $this->historyModel->addHistory($request);
     }
 
     public function testAddHistoryReturnsSuccessResponse(): void
@@ -79,18 +87,7 @@ class HistoryModelTest extends TestCase
 
         $result = $this->historyModel->addHistory($request);
 
-        $this->assertInstanceOf(SuccessResponse::class, $result);
-    }
-
-    private function buildHistoryModel(): void
-    {
-        $this->historyModel = new HistoryModel(
-            $this->em,
-            $this->historyRepository,
-            $this->historyFormatter,
-            $this->teamFactory,
-            $this->createMock(RosterFactory::class)
-        );
+        $this->assertInstanceOf(History::class, $result);
     }
 
     private function createDummyAddHistoryRequest(): AddHistoryRequest

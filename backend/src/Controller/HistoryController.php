@@ -2,39 +2,58 @@
 
 namespace App\Controller;
 
+use App\Models\HistoryModel;
+use App\Repository\HistoryRepository;
 use App\Resource\AddHistoryRequest;
+use App\Resource\JsonResponse\ErrorResponse;
+use App\Resource\JsonResponse\SuccessResponse;
+use App\ValueObjects\HistoryFormatter;
+use Exception;
 use JMS\Serializer\SerializerInterface;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-
-use App\Models\HistoryModel;
+use Symfony\Component\HttpFoundation\Response;
 
 class HistoryController extends AbstractController
 {
-    /** @var SerializerInterface */
-    private $serializer;
+    private SerializerInterface $serializer;
+    private HistoryModel $historyModel;
+    private HistoryFormatter $historyFormatter;
+    private HistoryRepository $historyRepository;
 
-    /** @var HistoryModel */
-    private $historyModel;
-
-    public function __construct(SerializerInterface $serializer, HistoryModel $historyModel)
+    public function __construct(SerializerInterface $serializer, HistoryModel $historyModel, HistoryFormatter $historyFormatter, HistoryRepository $historyRepository)
     {
         $this->serializer = $serializer;
         $this->historyModel = $historyModel;
+        $this->historyFormatter = $historyFormatter;
+        $this->historyRepository = $historyRepository;
     }
 
     /**
      * @Route("/history/add", name="history_add")
      * @param Request $request
      * @return Response
-     * @throws \Exception
      */
     public function historyAdd(Request $request)
     {
-        return $this->historyModel->addHistory($this->serializer->deserialize($request->getContent(), AddHistoryRequest::class, 'json'));
+        try {
+            return new SuccessResponse(
+                $this->historyFormatter->format(
+                    [
+                        $this->historyModel->addHistory(
+                            $this->serializer->deserialize(
+                                $request->getContent(),
+                                AddHistoryRequest::class,
+                                'json'
+                            )
+                        )
+                    ]
+                )
+            );
+        } catch (Exception $e) {
+            return new ErrorResponse($e->getMessage());
+        }
     }
 
     /**
@@ -43,7 +62,7 @@ class HistoryController extends AbstractController
      */
     public function historyGetRecent()
     {
-        return $this->historyModel->getHistoryRecent();
+        return new SuccessResponse($this->historyFormatter->format($this->historyRepository->findLastEntries(35)));
     }
 
     /**
@@ -52,6 +71,6 @@ class HistoryController extends AbstractController
      */
     public function historyGetAll()
     {
-        return $this->historyModel->getHistoryAll();
+        return new SuccessResponse($this->historyFormatter->format($this->historyRepository->findAll()));
     }
 }

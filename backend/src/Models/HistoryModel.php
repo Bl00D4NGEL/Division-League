@@ -8,76 +8,54 @@ use App\Entity\Proof;
 use App\Entity\Team;
 use App\Factory\RosterFactory;
 use App\Factory\TeamFactory;
-use App\Repository\HistoryRepository;
 use App\Resource\AddHistoryRequest;
-use App\Resource\JsonResponse\ErrorResponse;
-use App\Resource\JsonResponse\SuccessResponse;
+use App\Resource\InvalidRequestException;
 use App\ValueObjects\EloCalculator\DefaultEloMultiplier;
 use App\ValueObjects\EloCalculator\EloCalculator;
+use App\ValueObjects\EloCalculator\StreakEloMultiplier;
 use App\ValueObjects\EloCalculator\SweepEloMultiplier;
-use App\ValueObjects\HistoryFormatter;
 use App\ValueObjects\Match\Match;
+use App\ValueObjects\Validator\EloValidator\EloDifferenceValidator;
 use Doctrine\ORM\EntityManagerInterface;
-use Exception;
-use Symfony\Component\HttpFoundation\JsonResponse;
 
 
 class HistoryModel
 {
-    /** @var EntityManagerInterface */
-    private $entityManager;
-
-    /** @var HistoryRepository */
-    private $historyRepository;
-
-    /** @var HistoryFormatter */
-    private $historyFormatter;
-
-    /** @var TeamFactory */
-    private $teamFactory;
-
-    /** @var RosterFactory */
-    private $rosterFactory;
+    private EntityManagerInterface $entityManager;
+    private TeamFactory $teamFactory;
+    private RosterFactory $rosterFactory;
+    private EloDifferenceValidator $eloDifferenceValidator;
 
     public function __construct(
         EntityManagerInterface $entityManager,
-        HistoryRepository $historyRepository,
-        HistoryFormatter $historyFormatter,
         TeamFactory $teamFactory,
-        RosterFactory $rosterFactory
+        RosterFactory $rosterFactory,
+        EloDifferenceValidator $eloDifferenceValidator
     )
     {
         $this->entityManager = $entityManager;
-        $this->historyRepository = $historyRepository;
-        $this->historyFormatter = $historyFormatter;
         $this->teamFactory = $teamFactory;
         $this->rosterFactory = $rosterFactory;
+        $this->eloDifferenceValidator = $eloDifferenceValidator;
     }
 
-    /**
-     * @param AddHistoryRequest $request
-     * @return JsonResponse
-     * @throws Exception
-     */
-    public function addHistory(AddHistoryRequest $request): JsonResponse
+    public function addHistory(AddHistoryRequest $request): History
     {
         if (!$request->isValid()) {
-            return new ErrorResponse(ErrorResponse::INVALID_DATA_SENT);
+            throw new InvalidRequestException();
         }
 
         $winner = $this->teamFactory->createTeamFromPlayerIds($request->winner);
         if (!empty($request->winnerTeamName)) {
             $winner->setName($request->winnerTeamName);
         }
+        $this->eloDifferenceValidator->validate($this->getEloFromPlayersOfTeam($winner));
 
         $loser = $this->teamFactory->createTeamFromPlayerIds($request->loser);
         if (!empty($request->loserTeamName)) {
             $loser->setName($request->loserTeamName);
         }
-
-        if (!$winner->isPlayerEloDifferenceValid() || !$loser->isPlayerEloDifferenceValid()) {
-            return new ErrorResponse(ErrorResponse::ELO_DIFFERENCE_TOO_BIG);
-        }
+        $this->eloDifferenceValidator->validate($this->getEloFromPlayersOfTeam($loser));
 
         $this->entityManager->persist($winner);
         $this->entityManager->persist($loser);
@@ -89,7 +67,12 @@ class HistoryModel
         $matchResult = $match->play(
             $this->createMatchTeamFromEntityTeam($winner),
             $this->createMatchTeamFromEntityTeam($loser),
-            new EloCalculator($request->isSweep ? new SweepEloMultiplier() : new DefaultEloMultiplier())
+            new EloCalculator(
+                new StreakEloMultiplier(
+                    $request->isSweep ? new SweepEloMultiplier() : new DefaultEloMultiplier(),
+                    0
+                )
+            )
         );
 
         $history = new History();
@@ -112,12 +95,22 @@ class HistoryModel
         $this->createAndPersistRostersForTeam($winner);
         $this->createAndPersistRostersForTeam($loser);
 
-
         $this->entityManager->flush();
-        return new SuccessResponse($this->historyFormatter->format([$history]));
+        return $history;
     }
 
-    public function createMatchTeamFromEntityTeam(Team $team): \App\ValueObjects\Match\Team
+    /**
+     * @param Team $team
+     * @return int[]
+     */
+    private function getEloFromPlayersOfTeam(Team $team): array
+    {
+        return array_map(function (Player $player) {
+            return $player->getElo();
+        }, $team->getPlayers());
+    }
+
+    private function createMatchTeamFromEntityTeam(Team $team): \App\ValueObjects\Match\Team
     {
         return new \App\ValueObjects\Match\Team(
             array_map(static function (Player $player) {
@@ -128,22 +121,11 @@ class HistoryModel
 
     /**
      * @param Team $team
-     * @throws Exception
      */
     private function createAndPersistRostersForTeam(Team $team): void
     {
         foreach ($this->rosterFactory->createRostersFromTeamAndPlayers($team, $team->getPlayers()) as $roster) {
             $this->entityManager->persist($roster);
         }
-    }
-
-    public function getHistoryRecent(): JsonResponse
-    {
-        return new SuccessResponse($this->historyFormatter->format($this->historyRepository->findLastEntries(35)));
-    }
-
-    public function getHistoryAll(): JsonResponse
-    {
-        return new SuccessResponse($this->historyFormatter->format($this->historyRepository->findAll()));
     }
 }

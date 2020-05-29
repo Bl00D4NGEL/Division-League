@@ -4,10 +4,10 @@ namespace App\Factory;
 
 use App\Entity\Player;
 use App\Entity\Team;
+use App\Factory\Exceptions\PlayerNotFoundException;
 use App\Repository\PlayerRepository;
 use App\Repository\RosterRepository;
 use App\Repository\TeamRepository;
-use Exception;
 
 class TeamFactory
 {
@@ -41,7 +41,7 @@ class TeamFactory
     /**
      * @param int[] $playerIds
      * @return Team
-     * @throws Exception
+     * @throws PlayerNotFoundException
      */
     public function createTeamFromPlayerIds(array $playerIds): Team
     {
@@ -49,7 +49,7 @@ class TeamFactory
         foreach ($playerIds as $playerId) {
             $player = $this->playerRepository->find($playerId);
             if (null === $player) {
-                throw new Exception(sprintf('Player with id %s not found in database', $playerId));
+                throw new PlayerNotFoundException($playerId);
             }
             $players[] = $player;
         }
