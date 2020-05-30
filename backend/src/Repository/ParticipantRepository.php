@@ -8,6 +8,7 @@ use App\Entity\Player;
 use DateTimeInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\ORM\Query\Expr\Join;
 
 /**
  * @method Participant|null find($id, $lockMode = null, $lockVersion = null)
@@ -35,11 +36,11 @@ class ParticipantRepository extends ServiceEntityRepository
                     'h.creationTime',
                 ]
             )
-            ->join(Player::class, 'pl')
-            ->join(History::class, 'h')
-            ->where(
+            ->join(Player::class, 'pl', Join::WITH, $qb->expr()->andX(
+                $qb->expr()->eq('pl.id', 'p.player'),
                 $qb->expr()->eq('pl.id', ':playerId')
-            )
+            ))
+            ->join(History::class, 'h', Join::WITH, $qb->expr()->eq('h.id', 'p.history'))
             ->setParameter('playerId', $player->getId());
 
         return array_map(static function(array $result) {

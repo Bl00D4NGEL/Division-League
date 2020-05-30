@@ -10,6 +10,7 @@ use App\Repository\ParticipantRepository;
 use App\Repository\PlayerRepository;
 use App\Resource\AddHistoryRequest;
 use App\Resource\InvalidRequestException;
+use App\ValueObjects\Grouper\DateTime\DateTimeGrouperYearWeek;
 use App\ValueObjects\StreakDeterminer;
 use App\ValueObjects\Validator\EloValidator\EloDifferenceValidator;
 use Doctrine\ORM\EntityManager;
@@ -49,7 +50,7 @@ class HistoryModelTest extends TestCase
         /** @var MockObject|ParticipantRepository $participantRepository */
         $participantRepository = $this->createMock(ParticipantRepository::class);
         $participantRepository->method('getHistoryTimesForPlayer')->willReturn([]);
-        $streakDeterminer = new StreakDeterminer($participantRepository);
+        $streakDeterminer = new StreakDeterminer($participantRepository, new DateTimeGrouperYearWeek());
 
         $this->historyModel = new HistoryModel(
             $this->em,

@@ -4,6 +4,7 @@ namespace App\Tests\ValueObjects;
 
 use App\Entity\Player;
 use App\Repository\ParticipantRepository;
+use App\ValueObjects\Grouper\DateTime\DateTimeGrouperYearWeek;
 use App\ValueObjects\StreakDeterminer;
 use DateTimeImmutable;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -15,7 +16,7 @@ final class StreakDeterminerTest extends TestCase
         /** @var MockObject|ParticipantRepository $participantRepository */
         $participantRepository = $this->createMock(ParticipantRepository::class);
         $participantRepository->method('getHistoryTimesForPlayer')->willReturn([]);
-        $streakDeterminer = new StreakDeterminer($participantRepository, new DateTimeImmutable());
+        $streakDeterminer = new StreakDeterminer($participantRepository, new DateTimeGrouperYearWeek(), new DateTimeImmutable());
 
         static::assertSame(0, $streakDeterminer->getStreakLengthForPlayer(new Player()));
     }
@@ -41,7 +42,7 @@ final class StreakDeterminerTest extends TestCase
             $dateTime,
         ]);
 
-        $streakDeterminer = new StreakDeterminer($participantRepository, $startTime);
+        $streakDeterminer = new StreakDeterminer($participantRepository, new DateTimeGrouperYearWeek(), $startTime);
 
         static::assertSame(1, $streakDeterminer->getStreakLengthForPlayer(new Player()));
     }
@@ -77,7 +78,7 @@ final class StreakDeterminerTest extends TestCase
             $twoWeeksEarlier,
         ]);
 
-        $streakDeterminer = new StreakDeterminer($participantRepository, $startTime);
+        $streakDeterminer = new StreakDeterminer($participantRepository, new DateTimeGrouperYearWeek(), $startTime);
 
         static::assertSame(1, $streakDeterminer->getStreakLengthForPlayer(new Player()));
     }
@@ -122,7 +123,7 @@ final class StreakDeterminerTest extends TestCase
             $twoWeeksEarlier,
         ]);
 
-        $streakDeterminer = new StreakDeterminer($participantRepository, $startTime);
+        $streakDeterminer = new StreakDeterminer($participantRepository, new DateTimeGrouperYearWeek(), $startTime);
 
         static::assertSame(3, $streakDeterminer->getStreakLengthForPlayer(new Player()));
     }

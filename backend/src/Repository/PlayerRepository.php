@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Player;
+use App\Factory\Exceptions\PlayerNotFoundException;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Exception;
@@ -62,10 +63,16 @@ class PlayerRepository extends ServiceEntityRepository
     {
         $player = $this->find($id);
         if (null === $player) {
-            throw new Exception(sprintf("Player with id %s does not exist!", $id));
+            throw new PlayerNotFoundException($id);
         }
         $player->setDeleted(true);
         $this->getEntityManager()->persist($player);
         $this->getEntityManager()->flush();
+    }
+
+    public function getCurrentlyActivePlayers(): ?array {
+        return $this->findBy([
+            'deleted' => 0
+        ]);
     }
 }
