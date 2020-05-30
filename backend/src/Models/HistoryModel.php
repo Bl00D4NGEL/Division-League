@@ -7,8 +7,6 @@ use App\Entity\Participant;
 use App\Entity\Player;
 use App\Entity\Proof;
 use App\Factory\Exceptions\PlayerNotFoundException;
-use App\Factory\RosterFactory;
-use App\Factory\TeamFactory;
 use App\Repository\PlayerRepository;
 use App\Resource\AddHistoryRequest;
 use App\Resource\InvalidRequestException;
@@ -17,6 +15,7 @@ use App\ValueObjects\EloMultiplier\DefaultEloMultiplier;
 use App\ValueObjects\EloMultiplier\StreakEloMultiplier;
 use App\ValueObjects\EloMultiplier\SweepEloMultiplier;
 use App\ValueObjects\Match\Match;
+use App\ValueObjects\Match\MatchResult;
 use App\ValueObjects\Match\Team;
 use App\ValueObjects\StreakDeterminer;
 use App\ValueObjects\Validator\EloValidator\EloDifferenceValidator;
@@ -26,24 +25,18 @@ use Doctrine\ORM\EntityManagerInterface;
 class HistoryModel
 {
     private EntityManagerInterface $entityManager;
-    private TeamFactory $teamFactory;
-    private RosterFactory $rosterFactory;
     private EloDifferenceValidator $eloDifferenceValidator;
     private PlayerRepository $playerRepository;
     private StreakDeterminer $streakDeterminer;
 
     public function __construct(
         EntityManagerInterface $entityManager,
-        TeamFactory $teamFactory,
-        RosterFactory $rosterFactory,
         EloDifferenceValidator $eloDifferenceValidator,
         PlayerRepository $playerRepository,
         StreakDeterminer $streakDeterminer
     )
     {
         $this->entityManager = $entityManager;
-        $this->teamFactory = $teamFactory;
-        $this->rosterFactory = $rosterFactory;
         $this->eloDifferenceValidator = $eloDifferenceValidator;
         $this->playerRepository = $playerRepository;
         $this->streakDeterminer = $streakDeterminer;
@@ -76,43 +69,9 @@ class HistoryModel
 
         $this->addProofsToHistory($request->proofUrl, $history);
 
-        $baseMultiplier = $request->isSweep ? new SweepEloMultiplier() : new DefaultEloMultiplier();
-        foreach ($winners as $winner) {
-            $eloMultiplier = new StreakEloMultiplier(
-                $baseMultiplier,
-                $this->streakDeterminer->getStreakLengthForPlayer($winner)
-            );
-            $winner->setElo($winner->getElo() + $matchResult->eloChange() * $eloMultiplier->getWinFactor());
-            $winner->setWins($winner->getWins() + 1);
-            $participant = new Participant();
-            $participant
-                ->setEloChange($matchResult->eloChange() * $eloMultiplier->getWinFactor())
-                ->setPlayer($winner);
-
-            $history->addParticipant($participant);
-        }
-
-        foreach ($losers as $loser) {
-            $eloMultiplier = new StreakEloMultiplier(
-                $baseMultiplier,
-                $this->streakDeterminer->getStreakLengthForPlayer($loser)
-            );
-            $loser->setElo($loser->getElo() - $matchResult->eloChange() * $eloMultiplier->getLoseFactor());
-            $loser->setLoses($loser->getLoses() + 1);
-
-            $participant = new Participant();
-            $participant
-                ->setEloChange($matchResult->eloChange() * $eloMultiplier->getWinFactor() * -1)
-                ->setPlayer($loser);
-
-            $history->addParticipant($participant);
-        }
+        $history = $this->extendHistoryEntityWithPlayerData($history, $matchResult, $winners, $losers);
 
         $this->entityManager->persist($history);
-//
-//        $this->createAndPersistRostersForTeam($winner);
-//        $this->createAndPersistRostersForTeam($loser);
-
         $this->entityManager->flush();
         return $history;
     }
@@ -141,7 +100,7 @@ class HistoryModel
     private function validatePlayers(array $players): void
     {
         $this->eloDifferenceValidator->validate(
-            $this->getEloFromPlayersOfTeam(
+            $this->getEloFromPlayers(
                 $players
             )
         );
@@ -151,7 +110,7 @@ class HistoryModel
      * @param Player[] $players
      * @return int[]
      */
-    private function getEloFromPlayersOfTeam(array $players): array
+    private function getEloFromPlayers(array $players): array
     {
         return array_map(function (Player $player) {
             return $player->getElo();
@@ -182,5 +141,49 @@ class HistoryModel
             $proof->setUrl($proofUrl);
             $history->addProof($proof);
         }
+    }
+
+    /**
+     * @param History $history
+     * @param MatchResult $matchResult
+     * @param Player[] $winners
+     * @param Player[] $losers
+     * @return History
+     */
+    private function extendHistoryEntityWithPlayerData(History $history, MatchResult $matchResult, array $winners, array $losers): History
+    {
+        $baseMultiplier = $history->getIsSweep() ? new SweepEloMultiplier() : new DefaultEloMultiplier();
+        foreach ($winners as $winner) {
+            $eloMultiplier = new StreakEloMultiplier(
+                $baseMultiplier,
+                $this->streakDeterminer->getStreakLengthForPlayer($winner)
+            );
+            $winner->setElo($winner->getElo() + $matchResult->eloChange() * $eloMultiplier->getWinFactor());
+            $winner->setWins($winner->getWins() + 1);
+            $participant = new Participant();
+            $participant
+                ->setEloChange($matchResult->eloChange() * $eloMultiplier->getWinFactor())
+                ->setPlayer($winner);
+            $this->entityManager->persist($participant);
+
+            $history->addParticipant($participant);
+        }
+
+        foreach ($losers as $loser) {
+            $eloMultiplier = new StreakEloMultiplier(
+                $baseMultiplier,
+                $this->streakDeterminer->getStreakLengthForPlayer($loser)
+            );
+            $loser->setElo($loser->getElo() - $matchResult->eloChange() * $eloMultiplier->getLoseFactor());
+            $loser->setLoses($loser->getLoses() + 1);
+
+            $participant = new Participant();
+            $participant
+                ->setEloChange($matchResult->eloChange() * $eloMultiplier->getWinFactor() * -1)
+                ->setPlayer($loser);
+            $this->entityManager->persist($participant);
+            $history->addParticipant($participant);
+        }
+        return $history;
     }
 }

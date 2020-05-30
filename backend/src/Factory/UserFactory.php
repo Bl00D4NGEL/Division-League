@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Factory;
-
 
 use App\Entity\User;
 use App\Resource\RegisterRequest;

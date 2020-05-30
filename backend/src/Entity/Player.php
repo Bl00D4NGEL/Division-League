@@ -169,20 +169,6 @@ class Player
         return $this;
     }
 
-    public function win(int $eloGain): self
-    {
-        $this->elo += $eloGain;
-        $this->wins++;
-        return $this;
-    }
-
-    public function lose(int $eloLose): self
-    {
-        $this->elo += $eloLose;
-        $this->loses++;
-        return $this;
-    }
-
     public function getDeleted(): ?bool
     {
         return $this->deleted;

@@ -13,11 +13,8 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class PlayerController extends AbstractController
 {
-    /** @var SerializerInterface */
-    private $serializer;
-
-    /** @var PlayerModel */
-    private $playerModel;
+    private SerializerInterface $serializer;
+    private PlayerModel $playerModel;
 
     public function __construct(SerializerInterface $serializer, PlayerModel $playerModel)
     {

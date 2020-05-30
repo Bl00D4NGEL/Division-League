@@ -12,11 +12,8 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class LoginController extends AbstractController
 {
-    /** @var LoginModel */
-    private $loginModel;
-
-    /** @var SerializerInterface */
-    private $serializer;
+    private LoginModel $loginModel;
+    private SerializerInterface $serializer;
 
     public function __construct(SerializerInterface $serializer, LoginModel $loginModel)
     {

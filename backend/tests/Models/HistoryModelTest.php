@@ -4,14 +4,12 @@ namespace App\Tests\Models;
 
 use App\Entity\History;
 use App\Entity\Player;
-use App\Factory\RosterFactory;
-use App\Factory\TeamFactory;
 use App\Models\HistoryModel;
 use App\Repository\HistoryRepository;
+use App\Repository\ParticipantRepository;
 use App\Repository\PlayerRepository;
 use App\Resource\AddHistoryRequest;
 use App\Resource\InvalidRequestException;
-use App\ValueObjects\HistoryFormatter;
 use App\ValueObjects\StreakDeterminer;
 use App\ValueObjects\Validator\EloValidator\EloDifferenceValidator;
 use Doctrine\ORM\EntityManager;
@@ -29,21 +27,14 @@ class HistoryModelTest extends TestCase
     /** @var HistoryRepository|MockObject */
     private $historyRepository;
 
-    /** @var HistoryFormatter|MockObject */
-    private $historyFormatter;
-
     /** @var HistoryModel */
     private $historyModel;
 
-    /** @var TeamFactory|MockObject */
-    private $teamFactory;
 
     public function setUp(): void
     {
         $this->em = $this->createMock(EntityManager::class);
         $this->historyRepository = $this->createMock(HistoryRepository::class);
-        $this->historyFormatter = $this->createMock(HistoryFormatter::class);
-        $this->teamFactory = $this->createMock(TeamFactory::class);
         $this->buildHistoryModel();
     }
 
@@ -54,13 +45,17 @@ class HistoryModelTest extends TestCase
         $player = new Player();
         $player->setElo(1000);
         $playerRepository->method('find')->willReturn($player);
+
+        /** @var MockObject|ParticipantRepository $participantRepository */
+        $participantRepository = $this->createMock(ParticipantRepository::class);
+        $participantRepository->method('getHistoryTimesForPlayer')->willReturn([]);
+        $streakDeterminer = new StreakDeterminer($participantRepository);
+
         $this->historyModel = new HistoryModel(
             $this->em,
-            $this->teamFactory,
-            $this->createMock(RosterFactory::class),
             new EloDifferenceValidator(),
             $playerRepository,
-            new StreakDeterminer()
+            $streakDeterminer
         );
     }
 

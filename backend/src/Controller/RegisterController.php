@@ -12,11 +12,8 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class RegisterController extends AbstractController
 {
-    /** @var SerializerInterface */
-    private $serializer;
-
-    /** @var RegisterModel */
-    private $registerModel;
+    private SerializerInterface $serializer;
+    private RegisterModel $registerModel;
 
     public function __construct(SerializerInterface $serializer, RegisterModel $registerModel)
     {

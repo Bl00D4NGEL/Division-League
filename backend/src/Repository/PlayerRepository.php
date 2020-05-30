@@ -58,7 +58,8 @@ class PlayerRepository extends ServiceEntityRepository
      * @throws \Doctrine\ORM\OptimisticLockException
      * @throws Exception
      */
-    public function deleteById(int $id): void {
+    public function deleteById(int $id): void
+    {
         $player = $this->find($id);
         if (null === $player) {
             throw new Exception(sprintf("Player with id %s does not exist!", $id));

@@ -6,15 +6,12 @@ use App\Models\StatisticModel;
 use JMS\Serializer\SerializerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 class StatisticController extends AbstractController
 {
-    /** @var SerializerInterface */
-    private $serializer;
-    /** @var StatisticModel */
-    private $statisticModel;
+    private SerializerInterface $serializer;
+    private StatisticModel $statisticModel;
 
     public function __construct(SerializerInterface $serializer, StatisticModel $statisticModel)
     {
