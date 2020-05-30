@@ -20,12 +20,14 @@ export default function HistoryTable() {
                     new Date(entry.creationTime * 1000).toLocaleString(),
                     entry.winner[0].league,
                     <div>
-                        <span title={entry.winner.map(w => w.name).join(", ")}>{entry.winnerTeamName}</span>
-                        <span> [+{entry.winnerEloWin}]</span>
+                        {
+                            entry.winner.map(formatPlayer)
+                        }
                     </div>,
                     <div>
-                        <span title={entry.loser.map(w => w.name).join(", ")}>{entry.loserTeamName}</span>
-                        <span> [{entry.loserEloLose}]</span>
+                        {
+                            entry.loser.map(formatPlayer)
+                        }
                     </div>,
                     entry.isSweep ? '✓' : 'X',
                     entry.proofs.map(p => <a key={p} href={p} style={{paddingRight: 5 + 'px'}} target="_blank"
@@ -48,3 +50,10 @@ export default function HistoryTable() {
     />
 
 }
+
+const formatPlayer = p => {
+    const label = p.name + ' [' + (p.eloChange > 0 ? '+' : '') + p.eloChange + ']';
+    return (
+        <span title={label}>{label}&nbsp;</span>
+    )
+};

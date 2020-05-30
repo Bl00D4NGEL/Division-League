@@ -2,11 +2,13 @@
 
 namespace App\Controller;
 
+use App\Entity\History;
 use App\Models\HistoryModel;
 use App\Repository\HistoryRepository;
 use App\Resource\AddHistoryRequest;
 use App\Resource\JsonResponse\ErrorResponse;
 use App\Resource\JsonResponse\SuccessResponse;
+use App\ValueObjects\Transformator\HistoryTransformator;
 use Exception;
 use JMS\Serializer\SerializerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -20,12 +22,14 @@ class HistoryController extends AbstractController
     private SerializerInterface $serializer;
     private HistoryModel $historyModel;
     private HistoryRepository $historyRepository;
+    private HistoryTransformator $historyTransformator;
 
-    public function __construct(SerializerInterface $serializer, HistoryModel $historyModel,HistoryRepository $historyRepository)
+    public function __construct(SerializerInterface $serializer, HistoryModel $historyModel,HistoryRepository $historyRepository, HistoryTransformator $historyTransformator)
     {
         $this->serializer = $serializer;
         $this->historyModel = $historyModel;
         $this->historyRepository = $historyRepository;
+        $this->historyTransformator = $historyTransformator;
     }
 
     /**
@@ -38,13 +42,13 @@ class HistoryController extends AbstractController
         try {
             return new SuccessResponse(
                 [
-                    $this->historyModel->addHistory(
+                    $this->historyTransformator->transform($this->historyModel->addHistory(
                         $this->serializer->deserialize(
                             $request->getContent(),
                             AddHistoryRequest::class,
                             'json'
                         )
-                    )
+                    ))
                 ]
             );
         } catch (Exception $e) {
@@ -58,7 +62,9 @@ class HistoryController extends AbstractController
      */
     public function historyGetRecent()
     {
-        return new SuccessResponse($this->historyRepository->findLastEntries(35));
+        return new SuccessResponse(array_map(function (History $history) {
+            return $this->historyTransformator->transform($history);
+        }, $this->historyRepository->findLastEntries(35)));
     }
 
     /**
@@ -67,6 +73,8 @@ class HistoryController extends AbstractController
      */
     public function historyGetAll()
     {
-        return new SuccessResponse($this->historyRepository->findAll());
+        return new SuccessResponse(array_map(function (History $history) {
+            return $this->historyTransformator->transform($history);
+        }, $this->historyRepository->findAll()));
     }
 }
