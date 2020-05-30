@@ -54,6 +54,6 @@ export default function HistoryTable() {
 const formatPlayer = p => {
     const label = p.name + ' [' + (p.eloChange > 0 ? '+' : '') + p.eloChange + ']';
     return (
-        <span title={label}>{label}&nbsp;</span>
+        <span key={p.name} title={label}>{label}&nbsp;</span>
     )
 };

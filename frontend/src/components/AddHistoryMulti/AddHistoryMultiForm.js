@@ -1,8 +1,6 @@
 import React, {useState, Fragment} from 'react';
 import CustomForm from "../BaseReactComponents/Form/Form";
-import {useOnChangeSetter} from "../../customHooks/useOnChangeSetter";
 import SubmitButton from "../BaseReactComponents/SubmitButton/SubmitButton";
-import Label from "../BaseReactComponents/Label/Label";
 import TextInput from "../BaseReactComponents/TextInput/TextInput";
 import MultiPlayerSelect from "./MultiPlayerSelect";
 import AddHistoryService from "../../services/AddHistoryService";
@@ -17,9 +15,7 @@ const defaultProofUrls = Array(MAX_GAMES_FOR_BEST_OF_N).fill('');
 export default function AddHistoryMultiForm({players}) {
     const [proofUrls, setProofUrls] = useState(defaultProofUrls);
     const [selectedWinner, _setSelectedWinner] = useState([]);
-    const [winnerTeamName, setWinnerTeamName] = useOnChangeSetter('');
     const [selectedLoser, _setSelectedLoser] = useState([]);
-    const [loserTeamName, setLoserTeamName] = useOnChangeSetter('');
     const [isSweep, setIsSweep] = useState(false);
     const [changes, _setChanges] = useState(undefined);
     const [error, setError] = useState(undefined);
@@ -65,8 +61,6 @@ export default function AddHistoryMultiForm({players}) {
         AddHistoryService({
             winner: selectedWinner,
             loser: selectedLoser,
-            winnerTeamName,
-            loserTeamName,
             proofUrl: getFilteredUrls(),
             isSweep,
             setChanges,
@@ -80,9 +74,6 @@ export default function AddHistoryMultiForm({players}) {
                 left={
                     <Fragment>
                         <h1>Winner</h1>
-                        <Label text="Team name (optional)" formField={
-                            <TextInput onChange={setWinnerTeamName}/>
-                        }/>
                         <MultiPlayerSelect selectedPlayers={selectedWinner}
                                            setSelectedPlayers={setSelectedWinner} players={players}/>
                     </Fragment>
@@ -90,9 +81,6 @@ export default function AddHistoryMultiForm({players}) {
                 right={
                     <Fragment>
                         <h1>Loser</h1>
-                        <Label text="Team name (optional)" formField={
-                            <TextInput onChange={setLoserTeamName}/>
-                        }/>
                         <MultiPlayerSelect selectedPlayers={selectedLoser}
                                            setSelectedPlayers={setSelectedLoser} players={players}/>
                     </Fragment>
@@ -125,19 +113,8 @@ export default function AddHistoryMultiForm({players}) {
             error !== undefined ? <Error message={error}/> : <div/>
         }
         {
-            changes !== undefined ?
-                <EloChangeDisplayMulti
-                    loser={{
-                        name: loserTeamName,
-                        players: changes.loser,
-                        change: changes.loserEloLose
-                    }}
-                    winner={{
-                        name: winnerTeamName,
-                        players: changes.winner,
-                        change: changes.winnerEloWin
-                    }}
-                />
+            changes !== undefined
+                ? <EloChangeDisplayMulti changes={changes} />
                 : <div/>
         }
     </div>

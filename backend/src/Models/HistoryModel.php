@@ -179,7 +179,7 @@ class HistoryModel
 
             $participant = new Participant();
             $participant
-                ->setEloChange($matchResult->eloChange() * $eloMultiplier->getWinFactor() * -1)
+                ->setEloChange($matchResult->eloChange() * $eloMultiplier->getLoseFactor() * -1)
                 ->setPlayer($loser);
             $this->entityManager->persist($participant);
             $history->addParticipant($participant);

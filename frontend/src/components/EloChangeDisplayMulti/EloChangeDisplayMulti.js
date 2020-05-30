@@ -1,18 +1,17 @@
 import React from "react";
 
-export default function EloChangeDisplay({winner, loser}) {
+export default function EloChangeDisplay({changes}) {
     return <div style={{marginTop: 25 + 'px'}}>
         <div>Results:</div>
-        <div>{winner.name !== '' ? winner.name : winner.players.map(p => p.name).join(", ")} wins against {loser.name !== '' ? loser.name : loser.players.map(p => p.name).join(", ")}</div>
-        {renderChange(winner.players, winner.change)}
-        {renderChange(loser.players, loser.change)}
+        {renderChange(changes.winner)}
+        {renderChange(changes.loser)}
     </div>
 }
 
-const renderChange = (players, change) => {
+const renderChange = (players) => {
     return <div>
-        {players.map((p, i) => <div key={i}>
-            {p.name} moves from {parseInt(p.elo) - parseInt(change)} to {p.elo} elo
+        {players.map(p => <div key={p.name}>
+            {p.name} {(p.eloChange > 0 ? 'gains' : 'loses')} {Math.abs(p.eloChange)} elo
         </div>)}
     </div>
 };

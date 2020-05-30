@@ -3,7 +3,7 @@ import Button from "../BaseReactComponents/Button/Button";
 import Warning from "../Warning/Warning";
 import PlayerSelect from "../PlayerSelect/PlayerSelect";
 
-const MAX_ELO_DIFFERENCE = 300;
+const MAX_ELO_DIFFERENCE = 400;
 export default function MultiPlayerSelect({players, setSelectedPlayers, selectedPlayers}) {
     const setDefaultPlayer = () => {
         if (players.length > 0 && selectedPlayers.length === 0) {

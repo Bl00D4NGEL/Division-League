@@ -41,15 +41,15 @@ class HistoryController extends AbstractController
     {
         try {
             return new SuccessResponse(
-                [
-                    $this->historyTransformator->transform($this->historyModel->addHistory(
+                $this->historyTransformator->transform(
+                    $this->historyModel->addHistory(
                         $this->serializer->deserialize(
                             $request->getContent(),
                             AddHistoryRequest::class,
                             'json'
                         )
-                    ))
-                ]
+                    )
+                )
             );
         } catch (Exception $e) {
             return new ErrorResponse($e->getMessage());

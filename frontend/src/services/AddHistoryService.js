@@ -14,7 +14,7 @@ export default function AddHistoryService({
     CustomRequest(
         Config.addHistoryEndPoint(),
         responseData => {
-            setChanges(responseData.data[0]);
+            setChanges(responseData.data);
         }, error => {
             setError(error.message);
         }, {
