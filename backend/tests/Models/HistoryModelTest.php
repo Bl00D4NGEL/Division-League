@@ -8,11 +8,13 @@ use App\Models\HistoryModel;
 use App\Repository\HistoryRepository;
 use App\Repository\ParticipantRepository;
 use App\Repository\PlayerRepository;
+use App\Repository\ProofRepository;
 use App\Resource\AddHistoryRequest;
 use App\Resource\InvalidRequestException;
 use App\ValueObjects\Grouper\DateTime\DateTimeGrouperYearWeek;
 use App\ValueObjects\StreakDeterminer;
 use App\ValueObjects\Validator\EloValidator\EloDifferenceValidator;
+use App\ValueObjects\Validator\Proof\ProofValidator;
 use Doctrine\ORM\EntityManager;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -55,6 +57,7 @@ class HistoryModelTest extends TestCase
         $this->historyModel = new HistoryModel(
             $this->em,
             new EloDifferenceValidator(),
+            new ProofValidator($this->createMock(ProofRepository::class)),
             $playerRepository,
             $streakDeterminer
         );

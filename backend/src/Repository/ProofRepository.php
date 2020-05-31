@@ -18,4 +18,26 @@ class ProofRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Proof::class);
     }
+
+    /**
+     * @param string[] $proofUrls
+     * @return string[]
+     */
+    public function getProofsFromUrls(array $proofUrls): array
+    {
+        $qb = $this->createQueryBuilder('p');
+        $qb
+            ->select(
+                'p.url'
+            )
+            ->where(
+                $qb->expr()->in('p.url', $proofUrls)
+            );
+
+        $result = $qb->getQuery()->getArrayResult();
+        if (0 < count($result)) {
+            return array_map(static function(array $r) { return $r['url']; }, $result);
+        }
+        return [];
+    }
 }

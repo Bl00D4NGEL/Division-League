@@ -19,6 +19,7 @@ use App\ValueObjects\Match\MatchResult;
 use App\ValueObjects\Match\Team;
 use App\ValueObjects\StreakDeterminer;
 use App\ValueObjects\Validator\EloValidator\EloDifferenceValidator;
+use App\ValueObjects\Validator\Proof\ProofValidator;
 use Doctrine\ORM\EntityManagerInterface;
 
 
@@ -26,18 +27,21 @@ class HistoryModel
 {
     private EntityManagerInterface $entityManager;
     private EloDifferenceValidator $eloDifferenceValidator;
+    private ProofValidator $proofValidator;
     private PlayerRepository $playerRepository;
     private StreakDeterminer $streakDeterminer;
 
     public function __construct(
         EntityManagerInterface $entityManager,
         EloDifferenceValidator $eloDifferenceValidator,
+        ProofValidator $proofValidator,
         PlayerRepository $playerRepository,
         StreakDeterminer $streakDeterminer
     )
     {
         $this->entityManager = $entityManager;
         $this->eloDifferenceValidator = $eloDifferenceValidator;
+        $this->proofValidator = $proofValidator;
         $this->playerRepository = $playerRepository;
         $this->streakDeterminer = $streakDeterminer;
     }
@@ -53,6 +57,8 @@ class HistoryModel
 
         $losers = $this->getPlayerEntitiesFromIds($request->loser);
         $this->validatePlayers($losers);
+
+        $this->validateProofUrls($request->proofUrl);
 
         $match = new Match();
 
@@ -115,6 +121,13 @@ class HistoryModel
         return array_map(function (Player $player) {
             return $player->getElo();
         }, $players);
+    }
+
+    /**
+     * @param string[] $proofUrls
+     */
+    private function validateProofUrls(array $proofUrls): void {
+        $this->proofValidator->validate($proofUrls);
     }
 
     /**
