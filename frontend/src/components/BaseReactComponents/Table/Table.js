@@ -23,15 +23,16 @@ export default function CustomTable({sortable, tableData, tableHead, extraClassN
             <thead>
             <tr>
                 {tableHead.map((prop, key) => {
-                    let extra = null;
-                    if (extraClassNames !== undefined) {
-                        extra = extraClassNames[key]
-                    }
-                    const tdClass = classNames({
+                    const classes = {
                         'sort-order': sortKey === key,
                         'reverse': reverseSort,
-                        [extra]: extra !== undefined
-                    });
+                    };
+
+                    if (extraClassNames !== undefined) {
+                        classes[extraClassNames[key]] = extraClassNames[key]
+                    }
+
+                    const tdClass = classNames(classes);
                     return (
                         <th className={tdClass} onClick={e => setSort(e, key)} key={key}>
                             {prop}

@@ -1,8 +1,9 @@
-import React from 'react';
+import React, {Fragment} from 'react';
 import Table from "../BaseReactComponents/Table/Table";
 import UserRoles from "../../UserRoles";
 import Button from "../BaseReactComponents/Button/Button";
 import DeletePlayerService from "../../services/DeletePlayerService";
+import StreakFlame from '../../assets/img/grey-flame.png'
 
 export default function LeagueDisplay({leagueName, players, ...props}) {
     const deletePlayer = p => {
@@ -14,12 +15,31 @@ export default function LeagueDisplay({leagueName, players, ...props}) {
     };
 
     const generateRows = () => players.map(p => {
+        const streakImages = [];
+        for (let i = 1; i <= p.streak; i++) {
+            streakImages.push(<img src={StreakFlame} style={{'height': 20 + 'px'}} alt={"Week streak " + p.streak}
+                                   title={"Week streak " + p.streak}/>);
+        }
+
+        let streakOutput = '';
+        if (streakImages.length > 0) {
+            streakOutput = <Fragment>({streakImages})</Fragment>;
+        }
+
         const baseData = [
             p.rank,
-            <a key={p.name} target="_blank" rel="noopener noreferrer"
-               href={"https://dmginc.gg/profile/" + p.playerId + "-" + p.name}>{p.name}</a>,
-            p.elo,
             p.division,
+            <Fragment>
+                <span className='flex'>
+                    <a key={p.name} target="_blank" rel="noopener noreferrer"
+                       href={"https://dmginc.gg/profile/" + p.playerId + "-" + p.name}>
+                        {p.name}
+                    </a>
+                    &nbsp;
+                    {streakOutput}
+                </span>
+            </Fragment>,
+            p.elo,
             p.wins,
             p.loses,
             getWinRate(p) + ' %',
@@ -45,8 +65,7 @@ export default function LeagueDisplay({leagueName, players, ...props}) {
         <Table
             sortable={true}
             defaultSortKey={0}
-            tableHead={['Rank', 'Player', 'Elo', 'Division', 'Wins', 'Loses', 'Win rate']}
-            extraClassNames={{2: 'pw-hide'}}
+            tableHead={['Rank', 'Division', 'Player (Streak)', 'Elo', 'Wins', 'Loses', 'Win rate']}
             tableData={generateRows()}
         />
     </div>

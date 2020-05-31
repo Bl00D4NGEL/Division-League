@@ -5,10 +5,13 @@ namespace App\Tests\Models;
 use App\Entity\Player;
 use App\Factory\PlayerFactory;
 use App\Models\PlayerModel;
+use App\Repository\ParticipantRepository;
 use App\Repository\PlayerRepository;
 use App\Resource\AddPlayerRequest;
 use App\Resource\JsonResponse\ErrorResponse;
 use App\Resource\JsonResponse\SuccessResponse;
+use App\ValueObjects\Grouper\DateTime\DateTimeGrouperYearWeek;
+use App\ValueObjects\StreakDeterminer;
 use Doctrine\ORM\EntityManager;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -40,6 +43,13 @@ class PlayerModelTest extends TestCase
         $this->buildPlayerModel();
     }
 
+    private function buildPlayerModel(): void
+    {
+        $this->playerModel = new PlayerModel($this->em, $this->playerRepository, $this->playerFactory, new StreakDeterminer(
+            $this->createMock(ParticipantRepository::class), new DateTimeGrouperYearWeek()
+        ));
+    }
+
     public function testAddPlayerReturnsErrorResponseIfRequestIsInvalid()
     {
         /** @var AddPlayerRequest|MockObject $request */
@@ -65,6 +75,19 @@ class PlayerModelTest extends TestCase
         $this->assertInstanceOf(ErrorResponse::class, $result);
         $expectedResponse = new ErrorResponse(sprintf(ErrorResponse::PLAYER_DOES_ALREADY_EXIST, $request->name));
         $this->assertSame($expectedResponse->getContent(), $result->getContent());
+    }
+
+    /**
+     * @return AddPlayerRequest
+     */
+    private function createDummyAddPlayerRequest(): AddPlayerRequest
+    {
+        $request = new AddPlayerRequest();
+        $request->name = 'name';
+        $request->division = 'division';
+        $request->playerId = 123;
+        $request->league = 'league';
+        return $request;
     }
 
     public function testAddPlayerReturnsErrorResponseIfPlayerAlreadyExistsByPlayerId()
@@ -133,26 +156,9 @@ class PlayerModelTest extends TestCase
 
         $this->assertInstanceOf(SuccessResponse::class, $result);
         $expectedResponse = new SuccessResponse([[
-            'test' => 'value'
+            'streak' => 0,
+            'test' => 'value',
         ]]);
         $this->assertSame($expectedResponse->getContent(), $result->getContent());
-    }
-
-    /**
-     * @return AddPlayerRequest
-     */
-    private function createDummyAddPlayerRequest(): AddPlayerRequest
-    {
-        $request = new AddPlayerRequest();
-        $request->name = 'name';
-        $request->division = 'division';
-        $request->playerId = 123;
-        $request->league = 'league';
-        return $request;
-    }
-
-    private function buildPlayerModel(): void
-    {
-        $this->playerModel = new PlayerModel($this->em, $this->playerRepository, $this->playerFactory);
     }
 }

@@ -9,26 +9,25 @@ use App\Resource\AddPlayerRequest;
 use App\Resource\DeletePlayerRequest;
 use App\Resource\JsonResponse\ErrorResponse;
 use App\Resource\JsonResponse\SuccessResponse;
+use App\ValueObjects\StreakDeterminer;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\ORMException;
+use Exception;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class PlayerModel
 {
-    /** @var PlayerRepository */
-    private $playerRepository;
+    private PlayerRepository $playerRepository;
+    private EntityManagerInterface $entityManager;
+    private PlayerFactory $playerFactory;
+    private StreakDeterminer $streakDeterminer;
 
-    /** @var EntityManagerInterface */
-    private $entityManager;
-
-    /** @var PlayerFactory */
-    private $playerFactory;
-
-    public function __construct(EntityManagerInterface $entityManager, PlayerRepository $playerRepository, PlayerFactory $playerFactory)
+    public function __construct(EntityManagerInterface $entityManager, PlayerRepository $playerRepository, PlayerFactory $playerFactory, StreakDeterminer $streakDeterminer)
     {
         $this->playerRepository = $playerRepository;
         $this->entityManager = $entityManager;
         $this->playerFactory = $playerFactory;
+        $this->streakDeterminer = $streakDeterminer;
     }
 
     /**
@@ -82,7 +81,9 @@ class PlayerModel
     {
         $players = [];
         foreach ($this->playerRepository->findAll() as $player) {
-            $players[] = $player->asArray();
+            $players[] = array_merge([
+                'streak' => $this->streakDeterminer->getStreakLengthForPlayer($player)
+            ], $player->asArray());
         }
 
         return new SuccessResponse($players);
@@ -112,7 +113,7 @@ class PlayerModel
             $this->playerRepository->deleteById($request->id);
         } catch (ORMException $ORMException) {
             return new ErrorResponse('Deletion of player failed');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return new ErrorResponse($e->getMessage());
         }
         return new SuccessResponse();
